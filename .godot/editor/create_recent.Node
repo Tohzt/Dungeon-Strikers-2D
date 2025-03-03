@@ -1,3 +1,5 @@
+Button
+MultiplayerSynchronizer
 Node2D
 MultiplayerSpawner
 Sprite2D
@@ -5,7 +7,6 @@ Label
 CanvasLayer
 Marker2D
 Node
-MultiplayerSynchronizer
 CollisionShape2D
 Area2D
 CollisionPolygon2D

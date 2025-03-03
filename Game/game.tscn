@@ -1,21 +1,19 @@
-[gd_scene load_steps=7 format=3 uid="uid://cihs4nfo1pjvn"]
+[gd_scene load_steps=5 format=3 uid="uid://cihs4nfo1pjvn"]
 
-[ext_resource type="PackedScene" uid="uid://cgg53vkkel4lq" path="res://Ball/ball.tscn" id="1_6dktq"]
 [ext_resource type="Script" path="res://Game/game.gd" id="1_rc60p"]
 [ext_resource type="Script" path="res://Game/host_ui.gd" id="2_kysc5"]
 [ext_resource type="Script" path="res://Game/room_controller.gd" id="4_aitnw"]
 [ext_resource type="PackedScene" uid="uid://b4226omcdcsq6" path="res://Game/Room/room.tscn" id="4_nljok"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ts146"]
-bounce = 1.0
-
 [node name="Game" type="Node2D"]
 script = ExtResource("1_rc60p")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-spawn_path = NodePath("../Players")
+_spawnable_scenes = PackedStringArray("res://Player/player.tscn", "res://Ball/ball.tscn")
+spawn_path = NodePath("../Entities")
+spawn_limit = 3
 
-[node name="Players" type="Node2D" parent="."]
+[node name="Entities" type="Node2D" parent="."]
 
 [node name="Host UI" type="CanvasLayer" parent="."]
 script = ExtResource("2_kysc5")
@@ -39,12 +37,20 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Ball" parent="." instance=ExtResource("1_6dktq")]
-position = Vector2(576, 320)
-collision_layer = 4
-collision_mask = 3
-physics_material_override = SubResource("PhysicsMaterial_ts146")
-max_contacts_reported = 4
+[node name="BTN Begin" type="Button" parent="Host UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -28.5
+offset_top = -15.5
+offset_right = 28.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "BEGIN"
+icon_alignment = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -73,3 +79,8 @@ position = Vector2(256, 320)
 
 [node name="P2 Spawn" type="Marker2D" parent="Spawn Points"]
 position = Vector2(896, 320)
+
+[node name="Ball Spawn" type="Marker2D" parent="Spawn Points"]
+position = Vector2(576, 320)
+
+[connection signal="pressed" from="Host UI/BTN Begin" to="." method="_on_btn_begin_pressed"]

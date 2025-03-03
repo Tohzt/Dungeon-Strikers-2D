@@ -17,3 +17,4 @@ res://Opponent/opponent.gd
 res://Opponent/opponent_attack.gd
 res://Opponent/input_synchronizer.gd
 res://Game/host_ui.gd
+res://Ball/ball.tscn

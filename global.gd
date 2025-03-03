@@ -1,7 +1,8 @@
 extends Node
 
-const GAME = "res://Game/game.tscn"
-const MAIN = "res://Main Menu/Main Menu.tscn"
-const ROOM = "res://Game/Room/room.tscn"
+const GAME: String = "res://Game/game.tscn"
+const MAIN: String = "res://Main Menu/Main Menu.tscn"
+const ROOM: String = "res://Game/Room/room.tscn"
 
-const PLAYER = preload("res://Player/player.tscn")
+const PLAYER: PackedScene = preload("res://Player/player.tscn")
+const BALL: PackedScene = preload("res://Ball/ball.tscn")
