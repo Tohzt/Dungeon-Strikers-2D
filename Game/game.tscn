@@ -1,0 +1,75 @@
+[gd_scene load_steps=7 format=3 uid="uid://cihs4nfo1pjvn"]
+
+[ext_resource type="PackedScene" uid="uid://cgg53vkkel4lq" path="res://Ball/ball.tscn" id="1_6dktq"]
+[ext_resource type="Script" path="res://Game/game.gd" id="1_rc60p"]
+[ext_resource type="Script" path="res://Game/host_ui.gd" id="2_kysc5"]
+[ext_resource type="Script" path="res://Game/room_controller.gd" id="4_aitnw"]
+[ext_resource type="PackedScene" uid="uid://b4226omcdcsq6" path="res://Game/Room/room.tscn" id="4_nljok"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ts146"]
+bounce = 1.0
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_rc60p")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../Players")
+
+[node name="Players" type="Node2D" parent="."]
+
+[node name="Host UI" type="CanvasLayer" parent="."]
+script = ExtResource("2_kysc5")
+
+[node name="Label" type="Label" parent="Host UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -80.0
+offset_top = 16.0
+offset_right = 86.0
+offset_bottom = 55.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 28
+text = "HOST MODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Ball" parent="." instance=ExtResource("1_6dktq")]
+position = Vector2(576, 320)
+collision_layer = 4
+collision_mask = 3
+physics_material_override = SubResource("PhysicsMaterial_ts146")
+max_contacts_reported = 4
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="Rooms" type="Node" parent="."]
+script = ExtResource("4_aitnw")
+
+[node name="Room Center" parent="Rooms" instance=ExtResource("4_nljok")]
+
+[node name="Room Bottom" parent="Rooms" instance=ExtResource("4_nljok")]
+position = Vector2(0, 648)
+
+[node name="Room Left" parent="Rooms" instance=ExtResource("4_nljok")]
+position = Vector2(-1152, 0)
+
+[node name="Room Right" parent="Rooms" instance=ExtResource("4_nljok")]
+position = Vector2(1152, 0)
+
+[node name="Room Top" parent="Rooms" instance=ExtResource("4_nljok")]
+position = Vector2(0, -648)
+
+[node name="Spawn Points" type="Node" parent="."]
+
+[node name="P1 Spawn" type="Marker2D" parent="Spawn Points"]
+position = Vector2(256, 320)
+
+[node name="P2 Spawn" type="Marker2D" parent="Spawn Points"]
+position = Vector2(896, 320)

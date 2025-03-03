@@ -1,0 +1,26 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1740894895
+global.gd::GDScript::-1::1740874292::0::1::::<>Node<>::
+icon.svg::CompressedTexture2D::8693956798959770676::1740377408::1740377414::1::::<><>::
+multiplayer.gd::GDScript::-1::1740894443::0::1::::<>Node<>::
+::res://Ball/::1740891775
+ball.gd::GDScript::-1::1740891775::0::1::::BallClass<>RigidBody2D<>::
+ball.tscn::PackedScene::5208233326649649106::1740874234::0::1::::<><>::res://Ball/ball.gd
+::res://Game/::1740894190
+game.gd::GDScript::-1::1740875620::0::1::::<>Node2D<>::
+game.tscn::PackedScene::5349948145860933267::1740894190::0::1::::<><>::uid://cgg53vkkel4lq::::res://Ball/ball.tscn<>uid://btf8e0wnlbd82::::res://Player/player.tscn<>res://Game/game.gd<>res://Game/room_controller.gd<>uid://b4226omcdcsq6::::res://Game/Room/room.tscn
+room_controller.gd::GDScript::-1::1740882264::0::1::::<>Node<>::
+::res://Game/Room/::1740894191
+room.gd::GDScript::-1::1740885156::0::1::::RoomClass<>Node2D<>::
+room.tscn::PackedScene::4479330820930935303::1740894191::0::1::::<><>::res://Game/Room/room.gd
+::res://Main Menu/::1740894443
+Main Menu.tscn::PackedScene::7398492640270228479::1740894443::0::1::::<><>::res://Main Menu/main_menu.gd<>uid://btf8e0wnlbd82::::res://Player/player.tscn
+main_menu.gd::GDScript::-1::1740894443::0::1::::<>Node<>::
+::res://Opponent/::1740894895
+opponent.gd::GDScript::-1::1740894867::0::1::::PlayerClass<>CharacterBody2D<>::
+opponent.tscn::PackedScene::8843906421736921954::1740894867::0::1::::<><>::res://Player/player.gd<>res://Player/player_attack.gd
+player_attack.gd::GDScript::-1::1740894867::0::1::::AttackClass<>RigidBody2D<>::
+::res://Player/::1740894190
+player.gd::GDScript::-1::1740889678::0::1::::PlayerClass<>CharacterBody2D<>::
+player.tscn::PackedScene::3732342753197783009::1740894190::0::1::::<><>::res://Player/player.gd<>res://Player/player_attack.gd
+player_attack.gd::GDScript::-1::1740889452::0::1::::AttackClass<>RigidBody2D<>::

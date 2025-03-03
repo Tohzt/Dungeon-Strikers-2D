@@ -1,0 +1,19 @@
+res://Game/game.tscn
+res://Game/Room/room.tscn
+res://Player/player.tscn
+res://Main Menu/Main Menu.tscn
+res://Game/room_controller.gd
+res://Player/player.gd
+res://Main Menu/main_menu.gd
+res://Game/game.gd
+res://Ball/ball.gd
+res://global.gd
+res://Game/Room/room.gd
+res://Player/attack.gd
+res://Player/player_attack.gd
+res://multiplayer.gd
+res://Opponent/opponent.tscn
+res://Opponent/opponent.gd
+res://Opponent/opponent_attack.gd
+res://Opponent/input_synchronizer.gd
+res://Game/host_ui.gd
