@@ -18,3 +18,6 @@ res://Opponent/opponent_attack.gd
 res://Opponent/input_synchronizer.gd
 res://Game/host_ui.gd
 res://Ball/ball.tscn
+res://Player/Attack/attack.tscn
+res://Player/Attack/player_attack.tscn
+res://Player/Attack/player_attack.gd

@@ -1,15 +1,15 @@
 class_name PlayerClass extends CharacterBody2D
 
 @onready var col_body: CollisionShape2D = $Body  # Reference to the player's collision body
-@onready var col_attack: AttackClass = $Attack  # Reference to the attack projectile
 
 # Movement constants
 const SPEED: float = 300.0  # Player movement speed
 
 # Attack properties
+const ATTACK: PackedScene = preload("res://Player/Attack/player_attack.tscn")
 const ATTACK_POWER: float = 400.0  # Force applied to objects hit by the attack
 var can_attack: bool = true  # Flag to determine if player can attack
-var attack: bool= false  # Flag to track if attack button is pressed
+var attack_confirmed: bool= false  # Flag to track if attack button is pressed
 var attack_cooldown: float = 0.0  # Timer to track attack cooldown
 var attack_cooldown_max: float= 0.5  # Time in seconds before player can attack again
 var attack_direction: Vector2
@@ -35,13 +35,13 @@ func _input(event: InputEvent) -> void:
 	# Handle mouse input for attacking
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed() and can_attack:
-			attack = true
+			attack_confirmed = true
 			# Update target direction based on mouse position
 			#TODO: Consider always tracking mouse_position
 			var mouse_position: Vector2 = get_global_mouse_position()
 			attack_direction = (mouse_position - global_position).normalized()
 		if event.is_released():
-			attack = false
+			attack_confirmed = false
 
 func _process(delta: float) -> void:
 	if !is_multiplayer_authority(): return
@@ -59,16 +59,20 @@ func _handle_attack_cooldown(delta: float) -> void:
 			can_attack = true
 	
 func _handle_attack() -> void:
-	if col_attack:
-		if attack:
-			# Launch attack in direction of mouse cursor
-			col_attack.attack(attack_direction, ATTACK_POWER, velocity)
-			attack = false  # Only apply impulse once per click
-			can_attack = false
-			attack_cooldown = attack_cooldown_max
-		elif can_attack:
-			# Attack is not active and cooldown is complete
-			col_attack.return_to_owner()
+	if attack_confirmed:
+		attack_confirmed = false  # Only apply impulse once per click
+		can_attack = false
+		attack_cooldown = attack_cooldown_max
+		attack.rpc(multiplayer.get_unique_id(), attack_direction)
+
+@rpc("call_local")
+func attack(atk_id: int, atk_dir: Vector2) -> void:
+	if name == str(atk_id):
+		var _atk: AttackClass = ATTACK.instantiate()
+		_atk.modulate = modulate
+		_atk.global_position = $Marker2D.global_position
+		_atk.attack_direction = atk_dir
+		get_parent().add_child(_atk)
 
 func _handle_movement(delta: float) -> void:
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
