@@ -6,14 +6,17 @@
 rough = true
 bounce = 1.0
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xh4y6"]
+[sub_resource type="Gradient" id="Gradient_0tmw3"]
+offsets = PackedFloat32Array(0.533654, 0.600962, 0.620192)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2nxuw"]
+gradient = SubResource("Gradient_0tmw3")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mmb0u"]
 radius = 26.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_yvnxl"]
-radius = 26.0
-height = 52.0
 
 [node name="Ball" type="RigidBody2D" groups=["Ball"]]
 position = Vector2(558, 302)
@@ -25,12 +28,8 @@ gravity_scale = 0.0
 linear_damp = 1.0
 script = ExtResource("1_ixnqm")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_xh4y6")
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("GradientTexture2D_2nxuw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_mmb0u")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-modulate = Color(0.2, 0.6, 1, 1)
-mesh = SubResource("SphereMesh_yvnxl")
