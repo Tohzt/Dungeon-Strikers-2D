@@ -9,10 +9,10 @@ var update_timer: float = 0.0
 var prediction_factor: float = 1.5  # Range: 0.5-3.0 - Higher values predict further ahead of current trajectory
 
 # Ball physics parameters
-var max_ball_speed: float = 800.0  # Maximum speed the ball can travel at
+var max_ball_speed: float = 600.0  # Maximum speed the ball can travel at
 
 # Knockback parameters
-var knockback_strength: float = 2.5  # Range: 0.5-3.0 - How strongly the ball pushes players (increased from 1.5)
+var knockback_strength: float = 5.5  # Range: 0.5-3.0 - How strongly the ball pushes players (increased from 1.5)
 var min_velocity_for_knockback: float = 150.0  # Range: 50-200 - Minimum ball velocity to cause knockback
 
 # Visual representation for client
@@ -27,6 +27,14 @@ var last_sent_position: Vector2
 var last_sent_velocity: Vector2
 var is_moving: bool = false
 
+# Color settings
+var color_slow: Color = Color.GREEN
+var color_medium: Color = Color.YELLOW
+var color_fast: Color = Color.ORANGE
+var color_max: Color = Color.RED
+var speed_medium_threshold: float = max_ball_speed * 0.3  # 30% of max speed
+var speed_fast_threshold: float = max_ball_speed * 0.6    # 60% of max speed
+
 func _ready() -> void:
 	global_position = get_tree().current_scene.get_node("Spawn Points/Ball Spawn").global_position
 	last_sent_position = global_position
@@ -34,7 +42,8 @@ func _ready() -> void:
 	
 	if multiplayer.is_server():
 		body_entered.connect(_on_body_entered)
-		modulate = Color.LIME_GREEN
+		# Initial color is green
+		_update_ball_color(0)
 	else:
 		_setup_client()
 
@@ -52,25 +61,51 @@ func _setup_client() -> void:
 	# Create visual representation
 	visual_node = Sprite2D.new()
 	visual_node.texture = $Sprite2D.texture
-	visual_node.modulate = $Sprite2D.modulate
+	visual_node.modulate = color_slow  # Start with green
 	add_child(visual_node)
 	
 	# Hide original sprite
 	$Sprite2D.visible = false
 
 func _process(delta: float) -> void:
-	if !multiplayer.is_server() and visual_node:
+	if multiplayer.is_server():
+		# Update ball color on server based on speed
+		_update_ball_color(linear_velocity.length())
+	elif visual_node:
 		_update_client_visuals(delta)
 	
 	# Update collision cooldown timers
-	var keys_to_remove = []
-	for player_id in last_collision_time:
+	var keys_to_remove: Array = []
+	for player_id: int in last_collision_time:
 		last_collision_time[player_id] -= delta
 		if last_collision_time[player_id] <= 0:
 			keys_to_remove.append(player_id)
 	
-	for key in keys_to_remove:
+	for key: int in keys_to_remove:
 		last_collision_time.erase(key)
+
+func _update_ball_color(speed: float) -> void:
+	var new_color: Color
+	
+	if speed < speed_medium_threshold:
+		# Interpolate between green and yellow
+		var t: float = speed / speed_medium_threshold
+		new_color = color_slow.lerp(color_medium, t)
+	elif speed < speed_fast_threshold:
+		# Interpolate between yellow and orange
+		var t: float = (speed - speed_medium_threshold) / (speed_fast_threshold - speed_medium_threshold)
+		new_color = color_medium.lerp(color_fast, t)
+	else:
+		# Interpolate between orange and red
+		var t: float = (speed - speed_fast_threshold) / (max_ball_speed - speed_fast_threshold)
+		t = min(t, 1.0)  # Cap at 1.0 for speeds exceeding max_ball_speed
+		new_color = color_fast.lerp(color_max, t)
+	
+	# Apply color to the appropriate sprite
+	if multiplayer.is_server():
+		$Sprite2D.modulate = new_color
+	elif visual_node:
+		visual_node.modulate = new_color
 
 func _update_client_visuals(delta: float) -> void:
 	# Calculate smoothing factor based on delta and smoothing speed
@@ -85,6 +120,9 @@ func _update_client_visuals(delta: float) -> void:
 	# Update the actual ball position for collision purposes
 	global_position = global_position.lerp(target_position, factor * 1.5)
 	linear_velocity = linear_velocity.lerp(target_velocity, factor * 1.5)
+	
+	# Update ball color based on current velocity
+	_update_ball_color(target_velocity.length())
 
 func _physics_process(delta: float) -> void:
 	# This will only run on the server due to set_physics_process(false) on clients
