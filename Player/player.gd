@@ -92,18 +92,42 @@ func _handle_movement(delta: float) -> void:
 	# Apply movement
 	move_and_slide()
 
-@rpc("authority")
+# Changed from "authority" to "any_peer" to allow direct RPC calls from server to client
+@rpc("any_peer")
 func apply_knockback_rpc(direction: Vector2, force: float) -> void:
-	# This can only be called by the server now due to the "authority" annotation
-	apply_knockback(direction, force)
+	var player_type: String = "HOST" if multiplayer.is_server() else "CLIENT"
+	print("🛡️ %s RECEIVED KNOCKBACK RPC - Force: %.2f, Direction: %.2f,%.2f" % 
+		[player_type, force, direction.x, direction.y])
+	
+	# Make sure this RPC is being called on the correct player
+	if int(str(name)) == multiplayer.get_remote_sender_id() or multiplayer.get_remote_sender_id() == 1:
+		apply_knockback(direction, force)
+	else:
+		print("⚠️ %s RECEIVED KNOCKBACK FOR WRONG PLAYER ID! Expected %s, got %s" %
+			[player_type, name, multiplayer.get_remote_sender_id()])
 
 func apply_knockback(direction: Vector2, force: float) -> void:
+	var player_type: String = "HOST" if multiplayer.is_server() else "CLIENT"
+	var call_type: String = "DIRECT" if multiplayer.is_server() else "RPC"
+	
+	print("⚡ %s KNOCKBACK (%s CALL) - Force: %.2f, Direction: %.2f,%.2f" % 
+		[player_type, call_type, force, direction.x, direction.y])
+	
 	# Only apply knockback if this is the authority for this player and not in iFrames
-	if !is_multiplayer_authority() or is_in_iframes:
+	if !is_multiplayer_authority():
+		print("❌ %s NOT AUTHORITY - Knockback ignored" % player_type)
+		return
+		
+	if is_in_iframes:
+		print("🛡️ %s IN IFRAMES - Knockback ignored" % player_type)
 		return
 	
 	# Apply an impulse to the player
+	var prev_velocity: Vector2 = velocity
 	velocity += direction * force
+	
+	print("💨 %s KNOCKBACK APPLIED - Velocity before: %.2f,%.2f, after: %.2f,%.2f" % 
+		[player_type, prev_velocity.x, prev_velocity.y, velocity.x, velocity.y])
 	
 	# Start iFrames
 	is_in_iframes = true

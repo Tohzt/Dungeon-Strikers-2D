@@ -83,27 +83,50 @@ func _on_body_entered(body: Node) -> void:
 		return
 	
 	var player_id: int = int(str(body.name))
+	var is_host: bool = player_id == 1
+	var player_type: String = "HOST" if is_host else "CLIENT"
+	
+	print("⚽ BALL COLLISION with %s (ID: %s)" % [player_type, player_id])
+	
 	var ball_speed: float = linear_velocity.length()
 	var ball_to_player: Vector2 = (body.global_position - global_position).normalized()
 	
+	print("  ⚡ Ball speed: %.2f, Player speed: %.2f" % [ball_speed, body.velocity.length()])
+	
 	# Check if player is deliberately moving toward the ball
-	if _is_player_moving_toward_ball(body, ball_to_player):
+	var player_moving_toward_ball: bool = _is_player_moving_toward_ball(body, ball_to_player)
+	if player_moving_toward_ball:
+		print("  ❌ NO KNOCKBACK: %s player is walking into ball" % player_type)
 		return
 	
 	# Check if the ball is moving toward the player and is fast enough
 	var ball_dir: Vector2 = linear_velocity.normalized()
 	var ball_moving_toward_player: bool = ball_dir.dot(ball_to_player) < -0.3
+	print("  🔍 Ball moving toward player: %s (dot: %.2f)" % [ball_moving_toward_player, ball_dir.dot(ball_to_player)])
 	
 	# For clients, require a higher minimum velocity to account for prediction error
 	var effective_min_velocity: float = min_velocity_for_knockback
 	if player_id != 1:  # If not the host
 		effective_min_velocity = min_velocity_for_knockback * 1.5  # Higher threshold for non-host players
 	
+	print("  📊 Effective min velocity: %.2f (base: %.2f)" % [effective_min_velocity, min_velocity_for_knockback])
+	
 	if ball_speed > effective_min_velocity and ball_moving_toward_player:
 		var knockback_force: float = ball_speed * knockback_strength
+		print("  ✅ APPLYING KNOCKBACK to %s: Force=%.2f, Direction=%.2f,%.2f" % 
+			[player_type, knockback_force, ball_to_player.x, ball_to_player.y])
 		
-		# The server has authority over all players, so we can call the RPC directly
-		body.apply_knockback_rpc(ball_to_player, knockback_force)
+		# Fix: Handle host and client knockback differently
+		if is_host:
+			# For the host (server), directly call apply_knockback instead of using RPC
+			print("  🌐 Direct knockback for HOST")
+			body.apply_knockback(ball_to_player, knockback_force)
+		else:
+			# For remote clients, use RPC to send knockback
+			print("  📡 RPC knockback for CLIENT")
+			body.apply_knockback_rpc.rpc_id(player_id, ball_to_player, knockback_force)
+	else:
+		print("  ❌ NO KNOCKBACK: Ball not fast enough or not moving toward player")
 
 func _is_player_moving_toward_ball(player: PlayerClass, ball_to_player: Vector2) -> bool:
 	if player.velocity.length() <= 50:
