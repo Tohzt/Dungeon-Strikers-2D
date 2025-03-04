@@ -4,7 +4,7 @@ class_name AttackClass extends RigidBody2D
 
 # State variables
 var is_active: bool = false  # Flag to track if attack is currently active
-var attack_power: int = 100
+var attack_power: int = 300
 var attack_direction: Vector2 = Vector2.ZERO  # Direction of the attack
 var owner_velocity: Vector2 = Vector2.ZERO  # Reference to the owner's velocity for combined hits
 

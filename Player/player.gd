@@ -14,6 +14,10 @@ var attack_cooldown: float = 0.0  # Timer to track attack cooldown
 var attack_cooldown_max: float= 0.5  # Time in seconds before player can attack again
 var attack_direction: Vector2
 
+# Knockback and iFrame properties
+var is_in_iframes: bool = false
+var iframes_duration: float = 0.5  # Duration of invincibility in seconds
+
 func _enter_tree() -> void:
 	# Set the appropriate player ID for network identity
 	if multiplayer.has_multiplayer_peer():
@@ -87,3 +91,30 @@ func _handle_movement(delta: float) -> void:
 		velocity.y = move_toward(velocity.y, 0, SPEED)
 	# Apply movement
 	move_and_slide()
+
+@rpc("authority")
+func apply_knockback_rpc(direction: Vector2, force: float) -> void:
+	# This can only be called by the server now due to the "authority" annotation
+	apply_knockback(direction, force)
+
+func apply_knockback(direction: Vector2, force: float) -> void:
+	# Only apply knockback if this is the authority for this player and not in iFrames
+	if !is_multiplayer_authority() or is_in_iframes:
+		return
+	
+	# Apply an impulse to the player
+	velocity += direction * force
+	
+	# Start iFrames
+	is_in_iframes = true
+	
+	# Visual feedback for iFrames (optional)
+	modulate.a = 0.5  # Make player semi-transparent
+	
+	# Create a timer to end iFrames
+	var timer: SceneTreeTimer = get_tree().create_timer(iframes_duration)
+	timer.timeout.connect(_end_iframes)
+
+func _end_iframes() -> void:
+	is_in_iframes = false
+	modulate.a = 1.0  # Restore normal appearance
