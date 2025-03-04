@@ -15,8 +15,19 @@ var min_velocity_for_knockback: float = 150.0  # Range: 50-200 - Minimum ball ve
 # Visual representation for client
 var visual_node: Sprite2D = null
 
+# Collision tracking
+var last_collision_time: Dictionary = {}
+var collision_cooldown: float = 0.3
+
+# Debug tracking
+var last_sent_position: Vector2
+var last_sent_velocity: Vector2
+var is_moving: bool = false
+
 func _ready() -> void:
 	global_position = get_tree().current_scene.get_node("Spawn Points/Ball Spawn").global_position
+	last_sent_position = global_position
+	last_sent_velocity = Vector2.ZERO
 	
 	if multiplayer.is_server():
 		body_entered.connect(_on_body_entered)
@@ -27,6 +38,8 @@ func _ready() -> void:
 func _setup_client() -> void:
 	# Disable physics on client
 	set_collision_layer_value(3, false)
+	set_collision_mask_value(1, false)  # Don't collide with world
+	set_collision_mask_value(2, false)  # Don't collide with players
 	set_physics_process(false)
 	
 	# Initialize target values
@@ -45,6 +58,16 @@ func _setup_client() -> void:
 func _process(delta: float) -> void:
 	if !multiplayer.is_server() and visual_node:
 		_update_client_visuals(delta)
+	
+	# Update collision cooldown timers
+	var keys_to_remove = []
+	for player_id in last_collision_time:
+		last_collision_time[player_id] -= delta
+		if last_collision_time[player_id] <= 0:
+			keys_to_remove.append(player_id)
+	
+	for key in keys_to_remove:
+		last_collision_time.erase(key)
 
 func _update_client_visuals(delta: float) -> void:
 	# Calculate smoothing factor based on delta and smoothing speed
@@ -66,6 +89,11 @@ func _physics_process(delta: float) -> void:
 	if update_timer >= update_frequency:
 		_update_ball_state()
 		update_timer = 0.0
+		
+		# Track if the ball is actually moving significantly
+		is_moving = (global_position - last_sent_position).length() > 1.0
+		last_sent_position = global_position
+		last_sent_velocity = linear_velocity
 
 func _update_ball_state() -> void:
 	# Broadcast the ball's position and velocity to clients
@@ -86,10 +114,23 @@ func _on_body_entered(body: Node) -> void:
 	var is_host: bool = player_id == 1
 	var player_type: String = "HOST" if is_host else "CLIENT"
 	
+	# Apply collision cooldown
+	if player_id in last_collision_time and last_collision_time[player_id] > 0:
+		print("⚠️ COLLISION REJECTED - Too soon after last collision with %s" % player_type)
+		return
+	
+	# Set collision cooldown
+	last_collision_time[player_id] = collision_cooldown
+	
 	print("⚽ BALL COLLISION with %s (ID: %s)" % [player_type, player_id])
 	
 	var ball_speed: float = linear_velocity.length()
 	var ball_to_player: Vector2 = (body.global_position - global_position).normalized()
+	
+	# CRITICAL CHECK: Is the ball really moving?
+	if !is_moving or ball_speed < 50:
+		print("  ⚠️ Ball appears stationary (moved: %s, speed: %.2f) - NO KNOCKBACK" % [is_moving, ball_speed])
+		return
 	
 	print("  ⚡ Ball speed: %.2f, Player speed: %.2f" % [ball_speed, body.velocity.length()])
 	
@@ -104,6 +145,10 @@ func _on_body_entered(body: Node) -> void:
 	var ball_moving_toward_player: bool = ball_dir.dot(ball_to_player) < -0.3
 	print("  🔍 Ball moving toward player: %s (dot: %.2f)" % [ball_moving_toward_player, ball_dir.dot(ball_to_player)])
 	
+	if !ball_moving_toward_player:
+		print("  ❌ NO KNOCKBACK: Ball is not moving toward player")
+		return
+	
 	# For clients, require a higher minimum velocity to account for prediction error
 	var effective_min_velocity: float = min_velocity_for_knockback
 	if player_id != 1:  # If not the host
@@ -111,7 +156,7 @@ func _on_body_entered(body: Node) -> void:
 	
 	print("  📊 Effective min velocity: %.2f (base: %.2f)" % [effective_min_velocity, min_velocity_for_knockback])
 	
-	if ball_speed > effective_min_velocity and ball_moving_toward_player:
+	if ball_speed > effective_min_velocity:
 		var knockback_force: float = ball_speed * knockback_strength
 		print("  ✅ APPLYING KNOCKBACK to %s: Force=%.2f, Direction=%.2f,%.2f" % 
 			[player_type, knockback_force, ball_to_player.x, ball_to_player.y])
