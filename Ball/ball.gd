@@ -8,8 +8,11 @@ var update_frequency: float = 0.01  # Range: 0.005-0.05 - Lower values send more
 var update_timer: float = 0.0
 var prediction_factor: float = 1.5  # Range: 0.5-3.0 - Higher values predict further ahead of current trajectory
 
+# Ball physics parameters
+var max_ball_speed: float = 800.0  # Maximum speed the ball can travel at
+
 # Knockback parameters
-var knockback_strength: float = 1.5  # Range: 0.5-3.0 - How strongly the ball pushes players
+var knockback_strength: float = 2.5  # Range: 0.5-3.0 - How strongly the ball pushes players (increased from 1.5)
 var min_velocity_for_knockback: float = 150.0  # Range: 50-200 - Minimum ball velocity to cause knockback
 
 # Visual representation for client
@@ -85,6 +88,12 @@ func _update_client_visuals(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	# This will only run on the server due to set_physics_process(false) on clients
+	
+	# Cap the ball speed to the maximum
+	if linear_velocity.length() > max_ball_speed:
+		linear_velocity = linear_velocity.normalized() * max_ball_speed
+		print("⚠️ Ball speed capped at maximum: %.2f" % max_ball_speed)
+	
 	update_timer += delta
 	if update_timer >= update_frequency:
 		_update_ball_state()
