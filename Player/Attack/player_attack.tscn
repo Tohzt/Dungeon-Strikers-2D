@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cd37ndthdlhls"]
 
-[ext_resource type="Script" path="res://Player/Attack/player_attack.gd" id="1_fa5ys"]
+[ext_resource type="Script" uid="uid://fnxmv5u84yxa" path="res://Player/Attack/player_attack.gd" id="1_fa5ys"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5d0fw"]
 radius = 23.0217

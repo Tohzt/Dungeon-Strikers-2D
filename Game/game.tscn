@@ -1,15 +1,15 @@
 [gd_scene load_steps=5 format=3 uid="uid://cihs4nfo1pjvn"]
 
-[ext_resource type="Script" path="res://Game/game.gd" id="1_rc60p"]
-[ext_resource type="Script" path="res://Game/host_ui.gd" id="2_kysc5"]
-[ext_resource type="Script" path="res://Game/room_controller.gd" id="4_aitnw"]
+[ext_resource type="Script" uid="uid://beqdrbp46pc36" path="res://Game/game.gd" id="1_rc60p"]
+[ext_resource type="Script" uid="uid://c71ixtnhvv15y" path="res://Game/host_ui.gd" id="2_kysc5"]
+[ext_resource type="Script" uid="uid://d35y81sadj0bb" path="res://Game/room_controller.gd" id="4_aitnw"]
 [ext_resource type="PackedScene" uid="uid://b4226omcdcsq6" path="res://Game/Room/room.tscn" id="4_nljok"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_rc60p")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Player/player.tscn", "res://Ball/ball.tscn")
+_spawnable_scenes = PackedStringArray("uid://btf8e0wnlbd82", "uid://cgg53vkkel4lq")
 spawn_path = NodePath("../Entities")
 spawn_limit = 3
 

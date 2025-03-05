@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cgg53vkkel4lq"]
 
-[ext_resource type="Script" path="res://Ball/ball.gd" id="1_ixnqm"]
+[ext_resource type="Script" uid="uid://dgq14ej6t3n21" path="res://Ball/ball.gd" id="1_ixnqm"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_eo4ax"]
 rough = true
@@ -19,7 +19,6 @@ fill_from = Vector2(0.5, 0.5)
 radius = 26.0
 
 [node name="Ball" type="RigidBody2D" groups=["Ball"]]
-position = Vector2(558, 302)
 collision_layer = 4
 collision_mask = 3
 mass = 0.5

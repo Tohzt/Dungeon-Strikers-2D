@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://dyab31y6x23y1"]
 
-[ext_resource type="Script" path="res://Opponent/opponent.gd" id="1_8kbum"]
-[ext_resource type="Script" path="res://Opponent/opponent_attack.gd" id="2_76yel"]
-[ext_resource type="Script" path="res://Opponent/input_synchronizer.gd" id="2_h5ev6"]
+[ext_resource type="Script" uid="uid://cy2l8sy2ajuqk" path="res://Opponent/opponent.gd" id="1_8kbum"]
+[ext_resource type="Script" uid="uid://dp0y6k47doaqa" path="res://Opponent/opponent_attack.gd" id="2_76yel"]
+[ext_resource type="Script" uid="uid://cv42ij7q14nsk" path="res://Opponent/input_synchronizer.gd" id="2_h5ev6"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4tpng"]
 properties/0/path = NodePath(".:player_id")

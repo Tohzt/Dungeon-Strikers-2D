@@ -1,14 +1,7 @@
-res://Game/Room/room.gd
-res://Main Menu/Main Menu.tscn
-res://Player/Attack/player_attack.gd
-res://Player/player.tscn
-res://Game/game.tscn
-res://Game/Room/room.tscn
 res://Ball/ball.tscn
+res://Game/Room/room.tscn
+res://Game/game.tscn
+res://Main Menu/Main Menu.tscn
+res://Opponent/opponent.tscn
 res://Player/Attack/player_attack.tscn
-res://multiplayer.gd
-res://Main Menu/main_menu.gd
-res://global.gd
-res://Player/player.gd
-res://Ball/ball.gd
-res://Opponent/opponent.gd
+res://Player/player.tscn
