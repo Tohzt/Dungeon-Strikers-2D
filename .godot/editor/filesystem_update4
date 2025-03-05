@@ -5,3 +5,21 @@ res://Main Menu/Main Menu.tscn
 res://Opponent/opponent.tscn
 res://Player/Attack/player_attack.tscn
 res://Player/player.tscn
+res://global.gd
+res://multiplayer.gd
+res://Ball/ball.gd
+res://Game/game.gd
+res://Game/host_ui.gd
+res://Game/room_controller.gd
+res://Game/Room/room.gd
+res://Main Menu/main_menu.gd
+res://Player/player.gd
+res://Player/Attack/player_attack.gd
+res://Game/server.gd
+res://_Multiplayer/multiplayer.gd
+res://_Multiplayer/Server.tscn
+res://_Multiplayer/Server.gd
+res://_Multiplayer/Spawn/spawn.gd
+res://_Multiplayer/connect.gd
+res://_Multiplayer/server_connect.gd
+res://_Multiplayer/server_spawn.gd

@@ -4,6 +4,7 @@ class_name PlayerClass extends CharacterBody2D
 
 # Movement constants
 const SPEED: float = 300.0  # Player movement speed
+var spawn_pos: Vector2
 
 # Attack properties
 const ATTACK: PackedScene = preload("res://Player/Attack/player_attack.tscn")
@@ -24,14 +25,9 @@ func _enter_tree() -> void:
 		set_multiplayer_authority(int(str(name)))
 
 func _ready() -> void:
-	var _spawn_id: int = 1 if multiplayer.is_server() else 2
+	global_position = spawn_pos
 	if multiplayer.get_unique_id() != int(str(name)):
 		modulate = Color.RED
-		_spawn_id = 1 if _spawn_id == 2 else 2
-	var _spawn_point: String = "Spawn Points/P%s Spawn" % _spawn_id
-	var current_scene: Node = get_tree().current_scene
-	var _spwner: Node = current_scene.get_node(_spawn_point)
-	global_position = _spwner.global_position
 
 func _input(event: InputEvent) -> void:
 	if !is_multiplayer_authority(): return

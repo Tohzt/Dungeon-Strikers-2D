@@ -1,6 +1,7 @@
-extends Node2D
+class_name GameClass extends Node2D
 
 @onready var Player: PlayerClass
+@onready var Spawn_Points: Node = $"Spawn Points"
 
 
 func _process(delta: float) -> void:

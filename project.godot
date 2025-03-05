@@ -18,12 +18,11 @@ config/icon="res://icon.svg"
 [autoload]
 
 Global="*res://global.gd"
-Multiplayer="*res://multiplayer.gd"
+Server="*res://_Multiplayer/Server.tscn"
 
 [debug]
 
 gdscript/warnings/untyped_declaration=1
-gdscript/warnings/inferred_declaration=1
 
 [display]
 
