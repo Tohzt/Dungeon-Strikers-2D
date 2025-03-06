@@ -36,5 +36,5 @@ func _establish_client(IP_ADDRESS: String, PORT: int) -> void:
 	#multiplayer.connection_failed.connect(_on_connection_failed)
 	#multiplayer.server_disconnected.connect(_on_server_disconnected)
 
-func _go_to_game(scene: String, is_client: bool = false) -> void:
+func _go_to_game(scene: String, _is_client: bool = false) -> void:
 	get_tree().change_scene_to_file(scene)
