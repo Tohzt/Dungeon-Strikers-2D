@@ -26,69 +26,32 @@ func _enter_tree() -> void:
 		set_multiplayer_authority(int(str(name)))
 
 func _ready() -> void:
+	hide()
 	# Set player color based on whether it's local or remote
 	if multiplayer.get_unique_id() != int(str(name)):
 		modulate = Color.RED
 	
-	# Register callbacks for network events
-	if multiplayer.has_multiplayer_peer():
-		if !multiplayer.connected_to_server.is_connected(_on_connected_to_server):
-			multiplayer.connected_to_server.connect(_on_connected_to_server)
-	
-	# If we're the server, we can set the position immediately
-	if multiplayer.is_server():
-		global_position = spawn_pos
-		print("SERVER setting player " + str(name) + " position to " + str(spawn_pos))
-		
-		# Call the RPC to set position on clients (only for the authority client)
-		if spawn_pos != Vector2.ZERO:
-			print("SERVER sending position RPC to client " + str(name) + ": " + str(spawn_pos))
-			# Delay the RPC a bit to ensure client is ready
-			get_tree().create_timer(0.2).timeout.connect(func() -> void:
-				set_spawn_position_rpc.rpc(spawn_pos)
-			)
-	
-	# If we're a client and the authority for this player, log and wait for RPC
+	# If we're a client and the authority for this player, set a default position while waiting for RPC
 	elif is_multiplayer_authority():
-		print("CLIENT " + str(name) + " waiting for spawn position")
-		
 		# Set a default position in case no RPC is received
 		var default_pos: Vector2 = Vector2(100, 100) * (int(name) % 5)  # Spread players out a bit
 		global_position = default_pos
-		
-		# Start a timer to report if we never receive the position
-		get_tree().create_timer(2.0).timeout.connect(func() -> void:
-			if !spawn_position_set:
-				print("CLIENT " + str(name) + " never received spawn position after 2 seconds! Using default: " + str(default_pos))
-				spawn_pos = default_pos
-				spawn_position_set = true
-		)
-
-# Called when client connects to server
-func _on_connected_to_server() -> void:
-	if is_multiplayer_authority():
-		print("CLIENT " + str(name) + " connected to server, ready to receive position")
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_spawn_position_rpc(pos: Vector2) -> void:
 	# Security check: only accept position updates from the server
 	if multiplayer.get_remote_sender_id() != 1:
-		print("WARNING: Ignoring position update from non-server peer: " + str(multiplayer.get_remote_sender_id()))
+		push_error("WARNING: Ignoring position update from non-server peer: " + str(multiplayer.get_remote_sender_id()))
 		return
-		
-	print("Received spawn position RPC: " + str(pos) + " for player " + str(name))
 	
 	# Safety check - make sure the position is valid
 	if pos == Vector2.ZERO:
-		print("WARNING: Received zero position, using default fallback position")
 		pos = Vector2(100, 100) * (int(name) % 5)  # Use a fallback position
 		
 	spawn_pos = pos
 	global_position = pos
 	spawn_position_set = true
-	
-	# Additional validation
-	print("Position set confirmed: " + str(name) + " at position " + str(global_position))
+	show()
 
 func _input(event: InputEvent) -> void:
 	if !is_multiplayer_authority(): return
@@ -98,7 +61,6 @@ func _input(event: InputEvent) -> void:
 		if event.is_pressed() and can_attack:
 			attack_confirmed = true
 			# Update target direction based on mouse position
-			#TODO: Consider always tracking mouse_position
 			var mouse_position: Vector2 = get_global_mouse_position()
 			attack_direction = (mouse_position - global_position).normalized()
 		if event.is_released():
@@ -106,14 +68,6 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	if !is_multiplayer_authority(): return
-	
-	# More detailed debugging information
-	if spawn_pos != Vector2.ZERO:
-		# Only print occasionally to reduce spam
-		if Engine.get_physics_frames() % 60 == 0:
-			var distance: float = global_position.distance_to(spawn_pos)
-			print("Player " + str(name) + ": spawn_pos=" + str(spawn_pos) + ", position=" + str(global_position) + ", distance=" + str(distance))
-	
 	_handle_attack_cooldown(delta)
 
 func _physics_process(delta: float) -> void:
@@ -172,35 +126,20 @@ func _handle_movement(delta: float) -> void:
 # Changed from "authority" to "any_peer" to allow direct RPC calls from server to client
 @rpc("any_peer")
 func apply_knockback_rpc(direction: Vector2, force: float) -> void:
-	var player_type: String = "HOST" if multiplayer.is_server() else "CLIENT"
-	print("🛡️ " + player_type + " RECEIVED KNOCKBACK RPC - Force: " + str(force) + ", Direction: " + str(direction.x) + "," + str(direction.y))
-	
 	# Make sure this RPC is being called on the correct player
 	if int(str(name)) == multiplayer.get_remote_sender_id() or multiplayer.get_remote_sender_id() == 1:
 		apply_knockback(direction, force)
-	else:
-		print("⚠️ " + player_type + " RECEIVED KNOCKBACK FOR WRONG PLAYER ID! Expected " + str(name) + ", got " + str(multiplayer.get_remote_sender_id()))
 
 func apply_knockback(direction: Vector2, force: float) -> void:
-	var player_type: String = "HOST" if multiplayer.is_server() else "CLIENT"
-	var call_type: String = "DIRECT" if multiplayer.is_server() else "RPC"
-	
-	print("⚡ " + player_type + " KNOCKBACK (" + call_type + " CALL) - Force: " + str(force) + ", Direction: " + str(direction.x) + "," + str(direction.y))
-	
 	# Only apply knockback if this is the authority for this player and not in iFrames
 	if !is_multiplayer_authority():
-		print("❌ " + player_type + " NOT AUTHORITY - Knockback ignored")
 		return
 		
 	if is_in_iframes:
-		print("🛡️ " + player_type + " IN IFRAMES - Knockback ignored")
 		return
 	
 	# Apply an impulse to the player
-	var prev_velocity: Vector2 = velocity
 	velocity += direction * force
-	
-	print("💨 " + player_type + " KNOCKBACK APPLIED - Velocity before: " + str(prev_velocity.x) + "," + str(prev_velocity.y) + ", after: " + str(velocity.x) + "," + str(velocity.y))
 	
 	# Start iFrames
 	is_in_iframes = true

@@ -2,11 +2,11 @@ extends Node
 
 var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 
-func Host(IP_ADDRESS: String, PORT: int, MAX_CLIENTS: int) -> void: 
-	_establish_host(IP_ADDRESS, PORT, MAX_CLIENTS)
-	_go_to_game(Global.GAME, false)
+func Host(PORT: int, MAX_CLIENTS: int) -> void: 
+	_establish_host(PORT, MAX_CLIENTS)
+	get_tree().change_scene_to_file(Global.GAME)
 
-func _establish_host(_IP_ADDRESS: String, PORT: int, MAX_CLIENTS: int) -> void:
+func _establish_host(PORT: int, MAX_CLIENTS: int) -> void:
 	print("Host connecting to server...")
 	var error: Error = peer.create_server(PORT, MAX_CLIENTS)
 	if error != OK:
@@ -21,7 +21,7 @@ func _establish_host(_IP_ADDRESS: String, PORT: int, MAX_CLIENTS: int) -> void:
 # Client Code
 func Client(IP_ADDRESS: String, PORT: int) -> void:
 	_establish_client(IP_ADDRESS, PORT)
-	_go_to_game(Global.GAME, true)
+	get_tree().change_scene_to_file(Global.GAME)
 
 func _establish_client(IP_ADDRESS: String, PORT: int) -> void:
 	print("Client connecting to server...")
@@ -35,6 +35,3 @@ func _establish_client(IP_ADDRESS: String, PORT: int) -> void:
 	#multiplayer.connected_to_server.connect(_on_connected_to_server)
 	#multiplayer.connection_failed.connect(_on_connection_failed)
 	#multiplayer.server_disconnected.connect(_on_server_disconnected)
-
-func _go_to_game(scene: String, _is_client: bool = false) -> void:
-	get_tree().change_scene_to_file(scene)

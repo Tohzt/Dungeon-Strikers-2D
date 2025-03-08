@@ -1,12 +1,6 @@
 res://Main Menu/Main Menu.tscn
-res://_Multiplayer/server_spawn.gd
 res://Player/player.tscn
 res://Game/game.tscn
-res://Game/Room/room.tscn
 res://Ball/ball.tscn
 res://Player/Attack/player_attack.tscn
 res://_Multiplayer/Server.tscn
-res://_Multiplayer/server_connect.gd
-res://Player/player.gd
-res://Game/game.gd
-res://_Multiplayer/Server.gd
