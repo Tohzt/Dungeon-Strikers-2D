@@ -31,7 +31,6 @@ func _establish_client(IP_ADDRESS: String, PORT: int) -> void:
 		return
 	
 	multiplayer.multiplayer_peer = peer
-	# Setup client-side events
 	#multiplayer.connected_to_server.connect(_on_connected_to_server)
 	#multiplayer.connection_failed.connect(_on_connection_failed)
 	#multiplayer.server_disconnected.connect(_on_server_disconnected)

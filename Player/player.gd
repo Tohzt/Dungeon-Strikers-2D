@@ -30,13 +30,12 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 @rpc("call_local")
-func attack(atk_id: int, atk_dir: Vector2) -> void:
-	if name == str(atk_id):
-		var _atk: AttackClass = Global.ATTACK.instantiate()
-		_atk.modulate = modulate
-		_atk.global_position = $"Attack Origin".global_position
-		_atk.attack_direction = atk_dir
-		get_parent().add_child(_atk)
+func attack(atk_dir: Vector2) -> void:
+	var _atk: AttackClass = Global.ATTACK.instantiate()
+	_atk.modulate = modulate
+	_atk.global_position = $"Attack Origin".global_position
+	_atk.attack_direction = atk_dir
+	get_parent().add_child(_atk)
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_spawn_position_rpc(pos: Vector2) -> void:
@@ -50,15 +49,11 @@ func reset() -> void:
 	show()
 
 @rpc("any_peer")
-func apply_knockback_rpc(direction: Vector2, force: float) -> void:
-	if !is_multiplayer_authority(): return
-	apply_knockback(direction, force)
-
 func apply_knockback(direction: Vector2, force: float) -> void:
-	if is_in_iframes: return
+	if !is_multiplayer_authority() or is_in_iframes: return
 	is_in_iframes = true
-	
 	Input_Handler.velocity += direction * force
+	
 	# Visualize Effect
 	modulate.a = 0.5
 	var timer: SceneTreeTimer = get_tree().create_timer(iframes_duration)
