@@ -18,15 +18,39 @@ spawn_limit = 3
 [node name="Host UI" type="CanvasLayer" parent="."]
 script = ExtResource("2_kysc5")
 
-[node name="Label" type="Label" parent="Host UI"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -80.0
-offset_top = 16.0
-offset_right = 86.0
-offset_bottom = 55.0
+[node name="MarginContainer" type="MarginContainer" parent="Host UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 192.0
 grow_horizontal = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Host UI/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Play 1 Stats" type="VBoxContainer" parent="Host UI/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+
+[node name="Label" type="Label" parent="Host UI/MarginContainer/HBoxContainer/Play 1 Stats"]
+layout_mode = 2
+text = "Player 1"
+horizontal_alignment = 1
+
+[node name="Btn P1_ResetPosition" type="Button" parent="Host UI/MarginContainer/HBoxContainer/Play 1 Stats"]
+layout_mode = 2
+text = "Reset Position"
+
+[node name="Host Container" type="VBoxContainer" parent="Host UI/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 41
+
+[node name="Label" type="Label" parent="Host UI/MarginContainer/HBoxContainer/Host Container"]
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -37,20 +61,23 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="BTN Begin" type="Button" parent="Host UI"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -32.0
-offset_top = -212.0
-offset_right = 25.0
-offset_bottom = -181.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="BTN Begin" type="Button" parent="Host UI/MarginContainer/HBoxContainer/Host Container"]
+layout_mode = 2
 text = "BEGIN"
 icon_alignment = 1
+
+[node name="Play 1 Stats2" type="VBoxContainer" parent="Host UI/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+
+[node name="Label" type="Label" parent="Host UI/MarginContainer/HBoxContainer/Play 1 Stats2"]
+layout_mode = 2
+text = "Player 2"
+horizontal_alignment = 1
+
+[node name="Btn P2_ResetPosition" type="Button" parent="Host UI/MarginContainer/HBoxContainer/Play 1 Stats2"]
+layout_mode = 2
+text = "Reset Position"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -107,4 +134,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[connection signal="pressed" from="Host UI/BTN Begin" to="." method="_on_btn_begin_pressed"]
+[connection signal="pressed" from="Host UI/MarginContainer/HBoxContainer/Play 1 Stats/Btn P1_ResetPosition" to="Host UI" method="_p1_reset_pos"]
+[connection signal="pressed" from="Host UI/MarginContainer/HBoxContainer/Host Container/BTN Begin" to="Host UI" method="_spawn_ball"]
+[connection signal="pressed" from="Host UI/MarginContainer/HBoxContainer/Play 1 Stats2/Btn P2_ResetPosition" to="Host UI" method="_p2_reset_pos"]

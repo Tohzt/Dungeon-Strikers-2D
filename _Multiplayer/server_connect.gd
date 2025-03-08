@@ -27,7 +27,7 @@ func _establish_client(IP_ADDRESS: String, PORT: int) -> void:
 	print("Client connecting to server...")
 	var error: Error = peer.create_client(IP_ADDRESS, PORT)
 	if error != OK:
-		print("Client cannot connect: " + str(error))
+		print_debug("Client cannot connect: " + str(error))
 		return
 	
 	multiplayer.multiplayer_peer = peer

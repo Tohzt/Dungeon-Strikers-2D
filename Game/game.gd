@@ -21,15 +21,6 @@ func _process(delta: float) -> void:
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_loading(TorF: bool) -> void: 
-	print("Removing Loading From: %s" % multiplayer.get_unique_id())
 	match TorF:
 		true: Loading.show()
 		false: Loading.hide()
-
-## Host Mechanics
-func _on_btn_begin_pressed() -> void:
-	$"Host UI/BTN Begin".hide()
-	if multiplayer.get_unique_id() != 1: return
-	var _ball: BallClass = Global.BALL.instantiate()
-	_ball.global_position = $"Spawn Points/Ball Spawn".global_position
-	$Entities.add_child(_ball)

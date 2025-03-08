@@ -1,8 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://btf8e0wnlbd82"]
+[gd_scene load_steps=6 format=3 uid="uid://btf8e0wnlbd82"]
 
 [ext_resource type="Script" uid="uid://b1wxwtmfhlg00" path="res://Player/player.gd" id="1_iyeam"]
-[ext_resource type="Script" uid="uid://q3o4p2j5hpsk" path="res://Player/handler_playerInput.gd" id="2_4ntmi"]
-[ext_resource type="Script" uid="uid://fhp5dwkco2h" path="res://Player/handler_playerAttack.gd" id="3_btcbx"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_emixd"]
 properties/0/path = NodePath(".:position")
@@ -31,13 +29,6 @@ radius = 30.0
 collision_layer = 2
 script = ExtResource("1_iyeam")
 
-[node name="Input Handler" type="Node" parent="." node_paths=PackedStringArray("attack_handler")]
-script = ExtResource("2_4ntmi")
-attack_handler = NodePath("../Attack Handler")
-
-[node name="Attack Handler" type="Node" parent="."]
-script = ExtResource("3_btcbx")
-
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_emixd")
 
@@ -47,4 +38,4 @@ texture = SubResource("GradientTexture2D_sfcxh")
 [node name="Body" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_m6ryd")
 
-[node name="Attack Origin" type="Marker2D" parent="."]
+[node name="Marker2D" type="Marker2D" parent="."]

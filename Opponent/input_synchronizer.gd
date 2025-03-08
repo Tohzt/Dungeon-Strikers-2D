@@ -17,7 +17,7 @@ func _ready():
 	multiplayer.peer_connected.connect(_on_network_peer_change)
 	multiplayer.peer_disconnected.connect(_on_network_peer_change)
 	
-	print("InputSynchronizer ready, has_authority: ", has_authority)
+	#rint("InputSynchronizer ready, has_authority: ", has_authority)
 
 func _on_network_peer_change(_id = 0):
 	# Update when network peers change
@@ -26,7 +26,7 @@ func _on_network_peer_change(_id = 0):
 	set_process_input(has_authority)
 	set_physics_process(has_authority)
 	
-	print("Network change, now has_authority: ", has_authority)
+	#rint("Network change, now has_authority: ", has_authority)
 
 func _physics_process(_delta):
 	if has_authority:

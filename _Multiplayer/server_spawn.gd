@@ -9,15 +9,12 @@ func Player(peer_id: int) -> PlayerClass:
 	var spawn_points_node: Node = Game.get_node("Spawn Points")
 	
 	# Check if player already exists
-	if entities_node.has_node(str(peer_id)):
-		print("Player " + str(peer_id) + " already exists, not spawning again")
-		return null
+	if entities_node.has_node(str(peer_id)): return null
 
 	var spawn_position: Vector2 = spawn_points_node.get_child(Server.Connected_Clients.size()-1).global_position
 	var _player: PlayerClass = Global.PLAYER.instantiate()
 	_player.name = str(peer_id)
 	_player.spawn_pos = spawn_position
-	print("Spawning player " + str(peer_id) + " at position " + str(spawn_position))
 	
 	entities_node.add_child(_player)
 	Game.Loading.hide()
