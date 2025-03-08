@@ -68,11 +68,12 @@ func _setup_client() -> void:
 	$Sprite2D.visible = false
 
 func _process(delta: float) -> void:
-	if multiplayer.is_server():
-		# Update ball color on server based on speed
-		_update_ball_color(linear_velocity.length())
-	elif visual_node:
-		_update_client_visuals(delta)
+	_update_ball_color(linear_velocity.length())
+	#if multiplayer.is_server():
+		## Update ball color on server based on speed
+		#_update_ball_color(linear_velocity.length())
+	#elif visual_node:
+		#_update_client_visuals(delta)
 	
 	# Update collision cooldown timers
 	var keys_to_remove: Array = []

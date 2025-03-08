@@ -16,3 +16,4 @@ res://Game/game.gd
 res://Opponent/input_synchronizer.gd
 res://_Multiplayer/server_connect.gd
 res://_Multiplayer/server_spawn.gd
+res://Ball/ball.gd

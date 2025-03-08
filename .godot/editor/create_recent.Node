@@ -1,3 +1,4 @@
+MultiplayerSynchronizer
 Node
 MarginContainer
 Button
@@ -8,7 +9,6 @@ Container
 CanvasLayer
 Sprite2D
 Marker2D
-MultiplayerSynchronizer
 Node2D
 MultiplayerSpawner
 CollisionShape2D
