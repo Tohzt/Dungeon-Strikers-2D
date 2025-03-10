@@ -1,0 +1,51 @@
+[gd_scene load_steps=9 format=3 uid="uid://bjesokgs5hi8v"]
+
+[ext_resource type="Script" uid="uid://d1tpr63urbdo2" path="res://Player/Hand/hand.gd" id="1_wcw2t"]
+[ext_resource type="Texture2D" uid="uid://om2kg2wult28" path="res://Player/Assets/Skribble hands.png" id="2_er2ng"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wcw2t"]
+properties/0/path = NodePath("Arm/Hand:frame")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_wcw2t"]
+offsets = PackedFloat32Array(0.224638, 0.275362, 0.311594)
+colors = PackedColorArray(0, 0.631373, 0.54902, 1, 0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_er2ng"]
+gradient = SubResource("Gradient_wcw2t")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Curve" id="Curve_drlnh"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.0337079), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_oukdn"]
+curve = SubResource("Curve_drlnh")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_or0a8"]
+lifetime_randomness = 0.16
+scale_curve = SubResource("CurveTexture_oukdn")
+
+[node name="Player Hand" type="Node2D"]
+script = ExtResource("1_wcw2t")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_wcw2t")
+
+[node name="Arm" type="RayCast2D" parent="."]
+target_position = Vector2(0, 60)
+
+[node name="Hand" type="Sprite2D" parent="Arm"]
+position = Vector2(0, 32)
+texture = ExtResource("2_er2ng")
+hframes = 4
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Arm/Hand"]
+emitting = false
+amount = 10
+texture = SubResource("GradientTexture2D_er2ng")
+lifetime = 0.19
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_or0a8")

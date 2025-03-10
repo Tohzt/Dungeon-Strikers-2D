@@ -13,5 +13,12 @@ func _ready() -> void:
 
 
 func _on_body_entered(_body: Node2D) -> void:
-	if !get_multiplayer_authority(): return
+	# Only the server or the current authority should determine when to destroy the attack
+	if is_multiplayer_authority():
+		# Call destroy across the network
+		rpc("destroy")
+
+@rpc("any_peer", "call_local")
+func destroy() -> void:
+	# When this RPC is called, all clients should destroy their instance of the attack
 	queue_free()

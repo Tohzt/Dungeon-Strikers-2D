@@ -1,3 +1,4 @@
+#TODO: Needs Cleaning
 extends Node
 
 var Connected_Clients: Array[int]
@@ -32,6 +33,7 @@ func spawn_player(peer_id: int) -> void:
 		if entities_node.has_node(str(peer_id)):
 			var player_node: PlayerClass = entities_node.get_node(str(peer_id))
 			var spawn_position: Vector2 = player_node.spawn_pos
+			var spawn_rotation: float = player_node.spawn_rot
 			
 			# Wait for another frame to ensure network synchronization
 			await get_tree().process_frame
@@ -39,7 +41,7 @@ func spawn_player(peer_id: int) -> void:
 			# Use RPC to set the player's position on their client
 			if  multiplayer.has_multiplayer_peer() \
 			and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
-				player_node.set_spawn_position_rpc.rpc_id(peer_id, spawn_position)
+				player_node.set_pos_and_sprite.rpc_id(peer_id, spawn_position, spawn_rotation, Connected_Clients.size()-1)
 				game.set_loading.rpc_id(peer_id, false)
 
 func client_disconnected(peer_id: int) -> void:

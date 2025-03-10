@@ -1,3 +1,5 @@
+res://Player/Hand
+res://Game/Room/TileMap
 res://_Multiplayer
 res://Player/Attack
 res://Ball
@@ -5,7 +7,6 @@ C:/Users/Steve/Projects/Godot/dungeonstrikers_2d_mult/_Exports/DS v0.1.1/DS v0.1
 C:/Users/Steve/Projects/Godot/dungeonstrikers_2d_mult/_Exports/DS v0.1.1
 C:/Users/Steve/Projects/Godot/dungeonstrikers_2d_mult/_Exports
 res://Player
-res://Opponent
 res://Game/Room
 res://Main Menu
 res://Game

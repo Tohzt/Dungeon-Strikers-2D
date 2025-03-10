@@ -8,12 +8,40 @@
 [node name="Game" type="Node2D"]
 script = ExtResource("1_rc60p")
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://btf8e0wnlbd82", "uid://cgg53vkkel4lq")
-spawn_path = NodePath("../Entities")
-spawn_limit = 3
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
 
 [node name="Entities" type="Node2D" parent="."]
+
+[node name="Rooms" type="Node" parent="."]
+script = ExtResource("4_aitnw")
+
+[node name="Room Center" parent="Rooms" instance=ExtResource("4_nljok")]
+
+[node name="Room Bottom" parent="Rooms" instance=ExtResource("4_nljok")]
+position = Vector2(0, 660)
+
+[node name="Room Left" parent="Rooms" instance=ExtResource("4_nljok")]
+position = Vector2(-1140, 0)
+
+[node name="Room Right" parent="Rooms" instance=ExtResource("4_nljok")]
+position = Vector2(1140, 0)
+
+[node name="Room Top" parent="Rooms" instance=ExtResource("4_nljok")]
+position = Vector2(0, -660)
+
+[node name="Spawn Points" type="Node" parent="."]
+
+[node name="P1 Spawn" type="Marker2D" parent="Spawn Points"]
+position = Vector2(256, 330)
+rotation = 1.5708
+
+[node name="P2 Spawn" type="Marker2D" parent="Spawn Points"]
+position = Vector2(896, 330)
+rotation = -1.5708
+
+[node name="Ball Spawn" type="Marker2D" parent="Spawn Points"]
+position = Vector2(576, 320)
 
 [node name="Host UI" type="CanvasLayer" parent="."]
 script = ExtResource("2_kysc5")
@@ -79,37 +107,6 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "Reset Position"
 
-[node name="Camera2D" type="Camera2D" parent="."]
-anchor_mode = 0
-
-[node name="Rooms" type="Node" parent="."]
-script = ExtResource("4_aitnw")
-
-[node name="Room Center" parent="Rooms" instance=ExtResource("4_nljok")]
-
-[node name="Room Bottom" parent="Rooms" instance=ExtResource("4_nljok")]
-position = Vector2(0, 648)
-
-[node name="Room Left" parent="Rooms" instance=ExtResource("4_nljok")]
-position = Vector2(-1152, 0)
-
-[node name="Room Right" parent="Rooms" instance=ExtResource("4_nljok")]
-position = Vector2(1152, 0)
-
-[node name="Room Top" parent="Rooms" instance=ExtResource("4_nljok")]
-position = Vector2(0, -648)
-
-[node name="Spawn Points" type="Node" parent="."]
-
-[node name="P1 Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(256, 320)
-
-[node name="P2 Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(896, 320)
-
-[node name="Ball Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(576, 320)
-
 [node name="Loading" type="CanvasLayer" parent="."]
 
 [node name="Label" type="Label" parent="Loading"]
@@ -133,6 +130,11 @@ text = "Connecting to Host ..."
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://btf8e0wnlbd82", "uid://cgg53vkkel4lq")
+spawn_path = NodePath("../Entities")
+spawn_limit = 3
 
 [connection signal="pressed" from="Host UI/MarginContainer/HBoxContainer/Play 1 Stats/Btn P1_ResetPosition" to="Host UI" method="_p1_reset_pos"]
 [connection signal="pressed" from="Host UI/MarginContainer/HBoxContainer/Host Container/BTN Begin" to="Host UI" method="_spawn_ball"]

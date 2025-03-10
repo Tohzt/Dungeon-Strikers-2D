@@ -3,16 +3,24 @@ class_name PlayerInputHandler extends HandlerClass
 @export var attack_handler: HandlerClass
 
 var velocity: Vector2 = Vector2.ZERO
+var input_direction: Vector2
+var input_confirmed: bool = false
+var is_aiming: bool = false
 
 func _input(event: InputEvent) -> void:
 	if !is_multiplayer_authority(): return
+	var mouse_position: Vector2 = Master.get_global_mouse_position()
+	input_direction = (mouse_position - Master.global_position).normalized()
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed() and attack_handler.can_attack:
-			attack_handler.attack_confirmed = true
-			var mouse_position: Vector2 = Master.get_global_mouse_position()
-			attack_handler.attack_direction = (mouse_position - Master.global_position).normalized()
+			input_confirmed = true
 		if event.is_released():
-			attack_handler.attack_confirmed = false
+			input_confirmed = false
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+		if event.is_pressed():
+			is_aiming = true
+		if event.is_released():
+			is_aiming = false
 
 func _process(delta: float) -> void:
 	if !Master.has_authority: return

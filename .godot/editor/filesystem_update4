@@ -1,21 +1,16 @@
 res://Main Menu/Main Menu.tscn
-res://Game/host_ui.gd
 res://Player/player.tscn
 res://Game/game.tscn
 res://Ball/ball.tscn
 res://Player/Attack/player_attack.tscn
 res://_Multiplayer/Server.tscn
-res://Player/player.gd
-res://Player/input_handler.gd
-res://Player/attack_handler.gd
-res://Player/handler_class.gd
-res://global.gd
-res://Player/handler_playerAttack.gd
-res://Player/handler_playerInput.gd
-res://Game/game.gd
-res://Opponent/input_synchronizer.gd
-res://_Multiplayer/server_connect.gd
-res://_Multiplayer/server_spawn.gd
-res://Ball/ball.gd
-res://Main Menu/main_menu.gd
 res://Player/Attack/player_attack.gd
+res://Game/Room/room.tscn
+res://Player/player.gd
+res://_Multiplayer/server_spawn.gd
+res://_Multiplayer/Server.gd
+res://Player/Hand/hand.tscn
+res://Player/Hand/hand.gd
+res://Player/hands.gd
+res://Player/handler_playerInput.gd
+res://Player/handler_playerAttack.gd
