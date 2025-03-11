@@ -55,19 +55,19 @@ script = ExtResource("5_fhl08")
 handedness = "left"
 
 [node name="Arm" parent="Hands/Left Hand" index="1"]
-rotation = 2.0944
+rotation = 1.74533
 
 [node name="Hand" parent="Hands/Left Hand/Arm" index="0"]
-position = Vector2(1.59104, 78.7558)
+position = Vector2(0, 60)
 
 [node name="Right Hand" parent="Hands" instance=ExtResource("5_k53q1")]
 handedness = "right"
 
 [node name="Arm" parent="Hands/Right Hand" index="1"]
-rotation = -2.0944
+rotation = -1.74533
 
 [node name="Hand" parent="Hands/Right Hand/Arm" index="0"]
-position = Vector2(-0.59104, 77.0237)
+position = Vector2(0, 60)
 
 [node name="Attack Origin" type="Marker2D" parent="."]
 

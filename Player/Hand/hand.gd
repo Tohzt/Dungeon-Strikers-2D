@@ -1,15 +1,15 @@
 class_name PlayerHandClass extends Node2D
 @onready var arm: RayCast2D = $Arm
 @onready var hand: Sprite2D = $Arm/Hand
-@onready var particles = $Arm/Hand/GPUParticles2D
+@onready var particles: GPUParticles2D = $Arm/Hand/GPUParticles2D
 
 @export_enum("left", "right") var handedness: String
 @export var hand_offset: Vector2 = Vector2(0,-16)
 var default_hand_distance: float
 
 var is_attacking: bool = false
-var attack_dur := 0.15
-var attack_dur_max := 0.15
+var attack_dur := 0.1
+var attack_dur_max := 0.1
 var def_arm_rot: float
 
 func _ready() -> void:

@@ -2,6 +2,7 @@ extends Node
 
 var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 
+# Host Code
 func Host(PORT: int, MAX_CLIENTS: int) -> void: 
 	_establish_host(PORT, MAX_CLIENTS)
 	get_tree().change_scene_to_file(Global.GAME)

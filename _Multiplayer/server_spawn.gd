@@ -2,7 +2,6 @@ extends Node
 
 
 func Player(peer_id: int) -> PlayerClass:
-	# Get the Game scene
 	var Game: GameClass = get_tree().current_scene
 	var Entities: Node = Game.get_node("Entities")
 	var id: int = Server.Connected_Clients.size()-1

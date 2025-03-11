@@ -1,3 +1,7 @@
+ShapeCast2D
+CollisionShape2D
+Area2D
+AnimationTree
 GPUParticles2D
 RayCast2D
 DampedSpringJoint2D
@@ -9,7 +13,3 @@ TileMapLayer
 MarginContainer
 Button
 Label
-VBoxContainer
-HBoxContainer
-Container
-CanvasLayer

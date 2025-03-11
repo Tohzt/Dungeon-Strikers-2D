@@ -34,20 +34,22 @@ func _physics_process(_delta: float) -> void:
 	velocity = Input_Handler.velocity
 	move_and_slide()
 
-var atk_side = 0
+var atk_side: int = 0
 @rpc("call_local")
 func attack(atk_dir: Vector2) -> void:
+	var _atk: AttackClass = Global.ATTACK.instantiate()
 	if Input_Handler.is_aiming:
-		var _atk: AttackClass = Global.ATTACK.instantiate()
-		_atk.modulate = modulate
-		_atk.global_position = $"Attack Origin".global_position
-		_atk.attack_direction = atk_dir
+		_atk.set_props(Color.GREEN, $"Attack Origin".global_position, 300, atk_dir, INF)
 		get_parent().add_child(_atk)
-	_throw_punch(atk_side)
-	atk_side = (atk_side+1)%2
+	else:
+		_atk.set_props(Color.TEAL, $"Attack Origin".global_position, 500, Vector2.from_angle(rotation-PI/2), 50.0)
+		get_parent().add_child(_atk)
+	
+	atk_side = _throw_punch(atk_side)
 
-func _throw_punch(side: int = 1):
+func _throw_punch(side: int = 1) -> int:
 	Hands.get_child(side).is_attacking = true
+	return (side+1)%2
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_pos_and_sprite(pos: Vector2, rot: float, index: int) -> void:

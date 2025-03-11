@@ -26,6 +26,8 @@ curve = SubResource("Curve_drlnh")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_or0a8"]
 lifetime_randomness = 0.16
+particle_flag_disable_z = true
+gravity = Vector3(0, 98, 0)
 scale_curve = SubResource("CurveTexture_oukdn")
 
 [node name="Player Hand" type="Node2D"]
@@ -38,7 +40,7 @@ replication_config = SubResource("SceneReplicationConfig_wcw2t")
 target_position = Vector2(0, 60)
 
 [node name="Hand" type="Sprite2D" parent="Arm"]
-position = Vector2(0, 32)
+position = Vector2(0, 44)
 texture = ExtResource("2_er2ng")
 hframes = 4
 

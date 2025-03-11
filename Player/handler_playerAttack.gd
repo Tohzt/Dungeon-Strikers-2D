@@ -4,7 +4,7 @@ class_name PlayerAttackHandler extends HandlerClass
 var can_attack: bool = true
 var attack_confirmed: bool= false
 var attack_cooldown: float = 0.0
-var attack_cooldown_max: float= 0.5
+var attack_cooldown_max: float= 0.25
 var attack_direction: Vector2 = Vector2.ZERO
 
 func _process(delta: float) -> void:

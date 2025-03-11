@@ -2,23 +2,40 @@ class_name AttackClass extends RigidBody2D
 
 @onready var mesh_instance: MeshInstance2D = $MeshInstance2D
 
-var is_active: bool = false 
+var spawn_position: Vector2
 var attack_power: int = 300
 var attack_direction: Vector2 = Vector2.ZERO
-var owner_velocity: Vector2 = Vector2.ZERO
+var attack_distance: float = INF
 
 func _ready() -> void:
+	spawn_position = global_position
 	apply_central_impulse(attack_direction * attack_power)
-	is_active = true
 
+func _process(_delta: float) -> void:
+	if abs((global_position-spawn_position).length()) > attack_distance:
+		if is_multiplayer_authority():
+			rpc("destroy")
+
+func set_props(col: Color, pos: Vector2, power: int, dir: Vector2, dist: float = INF) -> void:
+	modulate = col
+	global_position = pos
+	attack_power = power
+	attack_direction = dir
+	attack_distance = dist
 
 func _on_body_entered(_body: Node2D) -> void:
-	# Only the server or the current authority should determine when to destroy the attack
 	if is_multiplayer_authority():
-		# Call destroy across the network
 		rpc("destroy")
 
-@rpc("any_peer", "call_local")
+@rpc("authority", "call_local", "reliable")
 func destroy() -> void:
-	# When this RPC is called, all clients should destroy their instance of the attack
+	# Make sure we're not already being destroyed
+	if not is_instance_valid(self) or not is_inside_tree():
+		return
 	queue_free()
+
+# Optional additional safety measure
+func _exit_tree() -> void:
+	# Ensure we clean up any pending references
+	set_process(false)
+	set_physics_process(false)
