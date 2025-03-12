@@ -14,8 +14,6 @@ var def_arm_rot: float
 
 func _ready() -> void:
 	def_arm_rot = arm.rotation
-	if !multiplayer.is_server():
-		print(rad_to_deg(def_arm_rot))
 	hand_offset = Vector2(0,-16)
 
 func _physics_process(delta: float) -> void:

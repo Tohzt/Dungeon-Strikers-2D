@@ -20,6 +20,7 @@ script = ExtResource("1_fa5ys")
 shape = SubResource("CircleShape2D_5d0fw")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+visible = false
 mesh = SubResource("SphereMesh_attack")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

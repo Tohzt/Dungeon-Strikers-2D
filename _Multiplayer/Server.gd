@@ -1,4 +1,3 @@
-#TODO: Needs Cleaning
 extends Node
 
 # Configuration

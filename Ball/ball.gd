@@ -49,13 +49,16 @@ func _update_ball_color(speed: float) -> void:
 
 
 func _on_body_entered(body: Node) -> void:
-	if !multiplayer.is_server() or not body is PlayerClass:
-		return
-	var ball_speed: float = linear_velocity.length()
-	var ball_to_player: Vector2 = (body.global_position - global_position).normalized()
-	
-	var effective_min_velocity: float = min_velocity_for_knockback
-	
-	if ball_speed > effective_min_velocity:
-		var knockback_force: float = ball_speed * knockback_strength
-		body.apply_knockback.rpc(ball_to_player, knockback_force)
+	if !multiplayer.is_server(): return
+	if body is PlayerClass:
+		var ball_speed: float = linear_velocity.length()
+		var ball_to_player: Vector2 = (body.global_position - global_position).normalized()
+		
+		var effective_min_velocity: float = min_velocity_for_knockback
+		
+		if ball_speed > effective_min_velocity:
+			var knockback_force: float = ball_speed * knockback_strength
+			body.apply_knockback.rpc(ball_to_player, knockback_force)
+		
+	elif body is DoorClass:
+		body.under_attack = true

@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://b6tqbqvxpm0pi"]
+
+[ext_resource type="Script" uid="uid://cqfnxk6ba4jpe" path="res://door.gd" id="1_v6xrn"]
+[ext_resource type="Texture2D" uid="uid://dd5j74bg2syef" path="res://Game/Room/Doors/wall_damaged.png" id="2_0phs7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f0uf5"]
+size = Vector2(180, 20)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_v6xrn"]
+properties/0/path = NodePath("Block1:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("Block2:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Block3:position")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Door" type="StaticBody2D"]
+collision_mask = 4
+script = ExtResource("1_v6xrn")
+
+[node name="Block1" type="Sprite2D" parent="."]
+position = Vector2(-60, 20)
+texture = ExtResource("2_0phs7")
+
+[node name="Block2" type="Sprite2D" parent="."]
+position = Vector2(0, 20)
+texture = ExtResource("2_0phs7")
+
+[node name="Block3" type="Sprite2D" parent="."]
+position = Vector2(60, 20)
+texture = ExtResource("2_0phs7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_f0uf5")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_v6xrn")
