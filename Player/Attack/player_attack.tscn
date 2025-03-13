@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cd37ndthdlhls"]
+[gd_scene load_steps=5 format=3 uid="uid://cd37ndthdlhls"]
 
 [ext_resource type="Script" uid="uid://fnxmv5u84yxa" path="res://Player/Attack/player_attack.gd" id="1_fa5ys"]
 
@@ -9,18 +9,20 @@ radius = 23.0217
 radius = 23.0
 height = 46.0
 
-[node name="Attack" type="RigidBody2D"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hocnk"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Attack" type="Area2D"]
 collision_layer = 2
-custom_integrator = true
-contact_monitor = true
-max_contacts_reported = 2
 script = ExtResource("1_fa5ys")
 
 [node name="Attack" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_5d0fw")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-visible = false
 mesh = SubResource("SphereMesh_attack")
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_hocnk")

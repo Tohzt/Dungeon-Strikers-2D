@@ -1,7 +1,10 @@
 class_name DoorClass extends StaticBody2D
-@onready var block_1: Sprite2D = $Block1
-@onready var block_2: Sprite2D = $Block2
-@onready var block_3: Sprite2D = $Block3
+@onready var block_1: Sprite2D = $Blocks/Block1
+@onready var block_2: Sprite2D = $Blocks/Block2
+@onready var block_3: Sprite2D = $Blocks/Block3
+@onready var block_4: Sprite2D = $Blocks/Block4
+@onready var block_5: Sprite2D = $Blocks/Block5
+@onready var block_6: Sprite2D = $Blocks/Block6
 
 @export var placement: String
 var durability_max: int = 3
@@ -15,14 +18,17 @@ var original_positions: Array = []
 var rumble_intensity: float = 1.0
 var is_rumbling: bool = false
 
-var broken = preload("res://Game/Room/Doors/wall_demolished.png")
+var broken: CompressedTexture2D = preload("res://Game/Room/Doors/wall_demolished.png")
 
 func _ready() -> void:
 	# Store original positions of blocks
 	original_positions = [
 		block_1.position,
 		block_2.position,
-		block_3.position
+		block_3.position,
+		block_4.position,
+		block_5.position,
+		block_6.position
 	]
 
 func _process(delta: float) -> void:
@@ -47,19 +53,24 @@ func _process(delta: float) -> void:
 		under_attack = false
 		iframes = iframes_max_sec
 		durability -= 1
-		print("Under Attack: ", durability)
 
 func apply_rumble() -> void:
 	# Apply random offset to each block
 	block_1.position = original_positions[0] + Vector2(randf_range(-rumble_intensity, rumble_intensity), randf_range(-rumble_intensity, rumble_intensity))
 	block_2.position = original_positions[1] + Vector2(randf_range(-rumble_intensity, rumble_intensity), randf_range(-rumble_intensity, rumble_intensity))
 	block_3.position = original_positions[2] + Vector2(randf_range(-rumble_intensity, rumble_intensity), randf_range(-rumble_intensity, rumble_intensity))
+	block_4.position = original_positions[3] + Vector2(randf_range(-rumble_intensity, rumble_intensity), randf_range(-rumble_intensity, rumble_intensity))
+	block_5.position = original_positions[4] + Vector2(randf_range(-rumble_intensity, rumble_intensity), randf_range(-rumble_intensity, rumble_intensity))
+	block_6.position = original_positions[5] + Vector2(randf_range(-rumble_intensity, rumble_intensity), randf_range(-rumble_intensity, rumble_intensity))
 
 func reset_block_positions() -> void:
 	# Reset blocks to original positions
 	block_1.position = original_positions[0]
 	block_2.position = original_positions[1]
 	block_3.position = original_positions[2]
+	block_4.position = original_positions[3]
+	block_5.position = original_positions[4]
+	block_6.position = original_positions[5]
 
 @rpc("any_peer", "call_local", "reliable")
 func destroy() -> void:
@@ -67,6 +78,13 @@ func destroy() -> void:
 	self.set_collision_layer_value(1, false)
 	self.set_process(false)
 	#hide()
-	block_1.texture = broken
-	block_2.texture = broken
-	block_3.texture = broken
+	#block_1.texture = broken
+	#block_2.texture = broken
+	#block_3.texture = broken
+	block_1.hide()
+	block_2.hide()
+	block_3.hide()
+	block_4.hide()
+	block_5.hide()
+	block_6.hide()
+	$Broken.show()

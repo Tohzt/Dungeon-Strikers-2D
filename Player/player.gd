@@ -1,6 +1,7 @@
 class_name PlayerClass extends CharacterBody2D
 @onready var Input_Handler: PlayerInputHandler = $"Input Handler"
 @onready var Attack_Handler: PlayerAttackHandler = $"Attack Handler"
+@onready var Attack_Origin: Marker2D = $"Attack Origin"
 @onready var Sprite: Sprite2D = $Sprite2D
 @onready var Hands: Node2D = $Hands
 
@@ -38,12 +39,15 @@ var atk_side: int = 0
 @rpc("call_local")
 func attack(atk_dir: Vector2) -> void:
 	var _atk: AttackClass = Global.ATTACK.instantiate()
+	_atk.Attacker = self
 	if Input_Handler.is_aiming:
-		_atk.set_props(Color.GREEN, $"Attack Origin".global_position, 300, atk_dir, INF)
+		_atk.modulate = Color.GREEN
 		get_parent().add_child(_atk)
+		_atk.set_props.rpc($"Attack Origin".global_position, "ranged", 50, atk_dir)
 	else:
-		_atk.set_props(Color.TEAL, $"Attack Origin".global_position, 500, Vector2.from_angle(rotation-PI/2), 50.0)
+		_atk.modulate = Color.RED
 		get_parent().add_child(_atk)
+		_atk.set_props.rpc($"Attack Origin".position, "melee", 100, atk_dir, 0.5)
 	
 	atk_side = _throw_punch(atk_side)
 

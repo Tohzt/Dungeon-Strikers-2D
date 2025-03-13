@@ -70,6 +70,7 @@ rotation = -1.74533
 position = Vector2(0, 60)
 
 [node name="Attack Origin" type="Marker2D" parent="."]
+position = Vector2(0, -40)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_emixd")

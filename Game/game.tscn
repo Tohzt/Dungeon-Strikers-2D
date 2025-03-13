@@ -2,21 +2,20 @@
 
 [ext_resource type="Script" uid="uid://beqdrbp46pc36" path="res://Game/game.gd" id="1_rc60p"]
 [ext_resource type="Script" uid="uid://c71ixtnhvv15y" path="res://Game/host_ui.gd" id="2_kysc5"]
-[ext_resource type="Script" uid="uid://d35y81sadj0bb" path="res://Game/room_controller.gd" id="4_aitnw"]
+[ext_resource type="PackedScene" uid="uid://b6tqbqvxpm0pi" path="res://door.tscn" id="3_jcm6v"]
 [ext_resource type="PackedScene" uid="uid://b4226omcdcsq6" path="res://Game/Room/room.tscn" id="4_nljok"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_rc60p")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-anchor_mode = 0
 
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Rooms" type="Node" parent="."]
-script = ExtResource("4_aitnw")
 
 [node name="Room Center" parent="Rooms" instance=ExtResource("4_nljok")]
+current_room = true
 
 [node name="Room Bottom" parent="Rooms" instance=ExtResource("4_nljok")]
 position = Vector2(0, 660)
@@ -30,18 +29,37 @@ position = Vector2(1140, 0)
 [node name="Room Top" parent="Rooms" instance=ExtResource("4_nljok")]
 position = Vector2(0, -660)
 
+[node name="Doors" type="Node" parent="."]
+
+[node name="Doors" type="Node2D" parent="Doors"]
+position = Vector2(-570, -330)
+
+[node name="Door" parent="Doors/Doors" instance=ExtResource("3_jcm6v")]
+position = Vector2(570, 0)
+
+[node name="Door2" parent="Doors/Doors" instance=ExtResource("3_jcm6v")]
+position = Vector2(1140, 330)
+rotation = -1.5708
+
+[node name="Door3" parent="Doors/Doors" instance=ExtResource("3_jcm6v")]
+position = Vector2(570, 660)
+
+[node name="Door4" parent="Doors/Doors" instance=ExtResource("3_jcm6v")]
+position = Vector2(0, 329)
+rotation = 1.5708
+
 [node name="Spawn Points" type="Node" parent="."]
 
 [node name="P1 Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(256, 330)
+position = Vector2(-320, 10)
 rotation = 1.5708
 
 [node name="P2 Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(896, 330)
+position = Vector2(320, 10)
 rotation = -1.5708
 
 [node name="Ball Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(576, 320)
+position = Vector2(3.05176e-05, 0)
 
 [node name="Host UI" type="CanvasLayer" parent="."]
 script = ExtResource("2_kysc5")
@@ -115,9 +133,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -83.0
+offset_left = -170.5
 offset_top = -19.5
-offset_right = 83.0
+offset_right = 170.5
 offset_bottom = 19.5
 grow_horizontal = 2
 grow_vertical = 2
