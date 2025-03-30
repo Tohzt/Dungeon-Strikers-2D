@@ -13,6 +13,7 @@ config_version=5
 config/name="DS2D"
 run/main_scene="res://Main Menu/Main Menu.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
+boot_splash/image="uid://b7k3wfvekym8w"
 config/icon="uid://b7k3wfvekym8w"
 
 [autoload]

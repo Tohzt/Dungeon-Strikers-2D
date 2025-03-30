@@ -1,8 +1,12 @@
-res://Player/player.tscn
+res://Player/handler_playerAttack.gd
+res://Player/handler_playerInput.gd
+res://Player/player.gd
 res://Main Menu/Main Menu.tscn
+res://Player/player.tscn
 res://Player/Attack/player_attack.tscn
 res://Game/game.tscn
 res://_Multiplayer/Server.tscn
 res://Game/Room/room.tscn
 res://door.tscn
 res://Ball/ball.tscn
+res://Player/Attack/player_attack.gd

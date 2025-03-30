@@ -27,25 +27,29 @@ properties/4/path = NodePath(".:rotation")
 properties/4/spawn = true
 properties/4/replication_mode = 1
 
-[node name="Player" type="CharacterBody2D" groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("Input_Handler", "Attack_Handler", "Attack_Origin", "Sprite", "Hands") groups=["Player"]]
 collision_layer = 2
 script = ExtResource("1_iyeam")
+Input_Handler = NodePath("Input Handler")
+Attack_Handler = NodePath("Attack Handler")
+Attack_Origin = NodePath("Attack Origin")
+Sprite = NodePath("Sprite2D")
+Hands = NodePath("Hands")
 
-[node name="Input Handler" type="Node" parent="." node_paths=PackedStringArray("attack_handler")]
+[node name="Input Handler" type="Node" parent="."]
 script = ExtResource("2_4ntmi")
-attack_handler = NodePath("../Attack Handler")
 
 [node name="Attack Handler" type="Node" parent="." node_paths=PackedStringArray("Input_Handler")]
 script = ExtResource("3_btcbx")
 Input_Handler = NodePath("../Input Handler")
 
+[node name="Attack Origin" type="Marker2D" parent="."]
+position = Vector2(0, -40)
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("4_gwnis")
 hframes = 4
-
-[node name="Body" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_m6ryd")
 
 [node name="Hands" type="Node2D" parent="."]
 scale = Vector2(0.8, 0.8)
@@ -69,8 +73,8 @@ rotation = -1.74533
 [node name="Hand" parent="Hands/Right Hand/Arm" index="0"]
 position = Vector2(0, 60)
 
-[node name="Attack Origin" type="Marker2D" parent="."]
-position = Vector2(0, -40)
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_m6ryd")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_emixd")

@@ -10,7 +10,7 @@ script = ExtResource("1_rc60p")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="Entities" type="Node2D" parent="."]
+[node name="Entities" type="Node2D" parent="." groups=["Entities"]]
 
 [node name="Rooms" type="Node" parent="."]
 
@@ -152,7 +152,7 @@ uppercase = true
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://btf8e0wnlbd82", "uid://cgg53vkkel4lq")
 spawn_path = NodePath("../Entities")
-spawn_limit = 3
+spawn_limit = 16
 
 [connection signal="pressed" from="Host UI/MarginContainer/HBoxContainer/Play 1 Stats/Btn P1_ResetPosition" to="Host UI" method="_p1_reset_pos"]
 [connection signal="pressed" from="Host UI/MarginContainer/HBoxContainer/Host Container/BTN Begin" to="Host UI" method="_spawn_ball"]

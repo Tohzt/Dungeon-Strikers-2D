@@ -1,4 +1,5 @@
 MultiplayerSynchronizer
+Label
 Area2D
 Node
 Node2D
@@ -11,4 +12,3 @@ GPUParticles2D
 RayCast2D
 DampedSpringJoint2D
 TileMapLayer
-MarginContainer

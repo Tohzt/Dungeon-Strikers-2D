@@ -1,9 +1,9 @@
 class_name PlayerClass extends CharacterBody2D
-@onready var Input_Handler: PlayerInputHandler = $"Input Handler"
-@onready var Attack_Handler: PlayerAttackHandler = $"Attack Handler"
-@onready var Attack_Origin: Marker2D = $"Attack Origin"
-@onready var Sprite: Sprite2D = $Sprite2D
-@onready var Hands: Node2D = $Hands
+@export var Input_Handler: PlayerInputHandler
+@export var Attack_Handler: PlayerAttackHandler
+@export var Attack_Origin: Marker2D
+@export var Sprite: Sprite2D
+@export var Hands: Node2D
 
 const SPEED: float = 300.0  
 const ATTACK_POWER: float = 400.0  
@@ -30,24 +30,38 @@ func _process(delta: float) -> void:
 	elif velocity:
 		rotation = lerp_angle(rotation, velocity.angle() + PI/2, delta * 10)
 
+	if Attack_Handler.attack_confirmed:
+		attack.rpc(Input_Handler.input_direction)
+		Attack_Handler.attack_confirmed = false
+	
 func _physics_process(_delta: float) -> void:
 	if !is_multiplayer_authority(): return
 	velocity = Input_Handler.velocity
 	move_and_slide()
 
 var atk_side: int = 0
-@rpc("call_local")
+@rpc("call_local", "authority")
 func attack(atk_dir: Vector2) -> void:
 	var _atk: AttackClass = Global.ATTACK.instantiate()
 	_atk.Attacker = self
+	
+	# Find the proper parent node
+	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
+	if entities_node:
+		print("%s: Adding attack %s to Entities node" % [name, _atk.name])
+		entities_node.add_child(_atk, true)
+	
+	# Configure attack properties
 	if Input_Handler.is_aiming:
+		# Ranged attack from attack origin
+		_atk.global_position = Attack_Origin.global_position
 		_atk.modulate = Color.GREEN
-		get_parent().add_child(_atk)
-		_atk.set_props.rpc($"Attack Origin".global_position, "ranged", 50, atk_dir)
+		_atk.set_props.rpc("ranged", 50, atk_dir)
 	else:
+		# Melee attack from player position
+		_atk.global_position = Attack_Origin.global_position
 		_atk.modulate = Color.RED
-		get_parent().add_child(_atk)
-		_atk.set_props.rpc($"Attack Origin".position, "melee", 100, atk_dir, 0.5)
+		_atk.set_props.rpc("melee", 100, atk_dir, 0.5)
 	
 	atk_side = _throw_punch(atk_side)
 
