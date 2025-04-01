@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://btf8e0wnlbd82"]
+[gd_scene load_steps=10 format=3 uid="uid://btf8e0wnlbd82"]
 
 [ext_resource type="Script" uid="uid://b1wxwtmfhlg00" path="res://Player/player.gd" id="1_iyeam"]
 [ext_resource type="Script" uid="uid://q3o4p2j5hpsk" path="res://Player/handler_playerInput.gd" id="2_4ntmi"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://3l8rd03hlbpc" path="res://Player/Assets/Skribble Characters.png" id="4_gwnis"]
 [ext_resource type="Script" uid="uid://dc1vqfeqpwv8e" path="res://Player/hands.gd" id="5_fhl08"]
 [ext_resource type="PackedScene" uid="uid://bjesokgs5hi8v" path="res://Player/Hand/hand.tscn" id="5_k53q1"]
+[ext_resource type="Script" uid="uid://d2ocsa6tnl1h1" path="res://Player/name_label.gd" id="7_vtle1"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m6ryd"]
 radius = 30.0
@@ -78,6 +79,19 @@ shape = SubResource("CircleShape2D_m6ryd")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_emixd")
+
+[node name="Label" type="Label" parent="."]
+top_level = true
+offset_left = -49.0
+offset_top = -104.0
+offset_right = 50.0
+offset_bottom = -81.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.581033, 0.581033, 0.581033, 1)
+theme_override_constants/outline_size = 2
+text = "Player Name"
+horizontal_alignment = 1
+script = ExtResource("7_vtle1")
 
 [editable path="Hands/Left Hand"]
 [editable path="Hands/Right Hand"]

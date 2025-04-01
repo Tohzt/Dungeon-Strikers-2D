@@ -12,7 +12,6 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
 			input_confirmed = true
-			print("Input Confirmed")
 		if event.is_released():
 			input_confirmed = false
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:

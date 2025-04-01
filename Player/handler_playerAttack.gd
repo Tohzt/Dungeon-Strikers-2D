@@ -20,4 +20,3 @@ func _handle_attack() -> void:
 		Input_Handler.input_confirmed = false
 		attack_cooldown = attack_cooldown_max
 		attack_confirmed = true
-		print("Attack Confirmed")

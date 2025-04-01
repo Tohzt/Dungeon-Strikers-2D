@@ -17,8 +17,9 @@ var iframes_duration: float = 0.5
 
 func _enter_tree() -> void:
 	if multiplayer.has_multiplayer_peer():
-		has_authority = true
-		set_multiplayer_authority(int(str(name)))
+		var peer_id := int(str(name))
+		set_multiplayer_authority(peer_id)
+		has_authority = multiplayer.get_unique_id() == peer_id
 
 func _ready() -> void:
 	hide()
@@ -31,7 +32,7 @@ func _process(delta: float) -> void:
 		rotation = lerp_angle(rotation, velocity.angle() + PI/2, delta * 10)
 
 	if Attack_Handler.attack_confirmed:
-		attack.rpc(Input_Handler.input_direction)
+		attack.rpc(Input_Handler.input_direction, Input_Handler.is_aiming)
 		Attack_Handler.attack_confirmed = false
 	
 func _physics_process(_delta: float) -> void:
@@ -40,30 +41,33 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 var atk_side: int = 0
-@rpc("call_local", "authority")
-func attack(atk_dir: Vector2) -> void:
+@rpc("any_peer", "call_local")
+func attack(atk_dir: Vector2, is_aiming: bool) -> void:
+	# Always do the hand animation regardless of peer
+	atk_side = _throw_punch(atk_side)
+	
+	# Only spawn the attack on the host
+	if multiplayer.get_unique_id() != 1: return
+	
 	var _atk: AttackClass = Global.ATTACK.instantiate()
 	_atk.Attacker = self
 	
 	# Find the proper parent node
 	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
 	if entities_node:
-		print("%s: Adding attack %s to Entities node" % [name, _atk.name])
 		entities_node.add_child(_atk, true)
-	
-	# Configure attack properties
-	if Input_Handler.is_aiming:
-		# Ranged attack from attack origin
-		_atk.global_position = Attack_Origin.global_position
-		_atk.modulate = Color.GREEN
-		_atk.set_props.rpc("ranged", 50, atk_dir)
-	else:
-		# Melee attack from player position
-		_atk.global_position = Attack_Origin.global_position
-		_atk.modulate = Color.RED
-		_atk.set_props.rpc("melee", 100, atk_dir, 0.5)
-	
-	atk_side = _throw_punch(atk_side)
+		
+		# Configure attack properties using the client's aiming state
+		if is_aiming:
+			# Ranged attack
+			_atk.global_position = Attack_Origin.global_position
+			_atk.modulate = Color.GREEN
+			_atk.set_props("ranged", 50, atk_dir)
+		else:
+			# Melee attack
+			_atk.global_position = Attack_Origin.global_position
+			_atk.modulate = Color.RED
+			_atk.set_props("melee", 100, atk_dir, 0.5)
 
 func _throw_punch(side: int = 1) -> int:
 	Hands.get_child(side).is_attacking = true

@@ -8,7 +8,6 @@ var attack_power: int = 300
 var attack_direction: Vector2 = Vector2.ZERO
 var attack_distance: float = INF
 var attack_duration: float = INF
-var should_destroy: bool = false
 
 var velocity := Vector2.ZERO
 
@@ -20,11 +19,7 @@ func _ready() -> void:
 		body_entered.connect(_on_body_entered)
 
 func _process(delta: float) -> void:
-	if should_destroy:
-		return
-		
-	if !multiplayer.is_server(): 
-		return
+	if !multiplayer.is_server(): return
 	
 	attack_duration -= delta
 	if attack_duration <= 0:
@@ -37,11 +32,12 @@ func _process(delta: float) -> void:
 		trigger_destroy()
 
 func _physics_process(_delta: float) -> void:
-	if attack_type == "ranged" and !should_destroy: 
+	if !multiplayer.is_server(): return
+	if attack_type == "ranged": 
 		velocity = attack_direction * attack_power
 		position += velocity
 
-@rpc("any_peer", "call_local", "reliable")
+# Since we're only running on host, no need for RPC
 func set_props(atk_type: String, atk_pow: int, atk_dir: Vector2, atk_dur: float = INF, atk_dist: float = INF) -> void:
 	attack_type = atk_type
 	attack_power = atk_pow
@@ -51,8 +47,6 @@ func set_props(atk_type: String, atk_pow: int, atk_dir: Vector2, atk_dur: float 
 	_activate_TorF(true)
 
 func _activate_TorF(TorF: bool) -> void:
-	visible = TorF
-	
 	if multiplayer.is_server():
 		set_collision_layer_value(2, TorF)
 		set_collision_mask_value(1, TorF)
@@ -66,28 +60,4 @@ func _on_body_entered(body: Node2D) -> void:
 		trigger_destroy()
 
 func trigger_destroy() -> void:
-	if should_destroy:
-		return
-	should_destroy = true
-	
-	# Let all peers know to destroy this node
-	destroy.rpc()
-
-@rpc("authority", "call_local")
-func destroy() -> void:
-	# Mark as being destroyed
-	should_destroy = true
-	
-	# For debugging purposes, print some info
-	if OS.is_debug_build():
-		print("Destroying attack: ", name, " on peer: ", multiplayer.get_unique_id())
-	
-	# Immediately set visible to false and disable processing
-	visible = false
-	set_physics_process(false)
-	set_process(false)
-	set_collision_layer_value(2, false)
-	set_collision_mask_value(1, false)
-	
-	# Directly queue_free without delay to ensure immediate removal
 	queue_free()
