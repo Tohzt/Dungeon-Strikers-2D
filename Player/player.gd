@@ -23,7 +23,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	hide()
-	
+
 func _process(delta: float) -> void:
 	if !is_multiplayer_authority(): return
 	if Input_Handler.is_aiming:
@@ -49,23 +49,23 @@ func attack(atk_dir: Vector2, is_aiming: bool) -> void:
 	# Only spawn the attack on the host
 	if multiplayer.get_unique_id() != 1: return
 	
+	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
+	if !entities_node: return
+		
 	var _atk: AttackClass = Global.ATTACK.instantiate()
 	_atk.Attacker = self
-	_atk.global_position = Attack_Origin.global_position
+	_atk.global_position = global_position
+	_atk.spawn_position = global_position
+	entities_node.add_child(_atk, true)
 	
-	# Find the proper parent node
-	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
-	if entities_node:
-		entities_node.add_child(_atk, true)
-		
-		if is_aiming:
-			# Ranged attack
-			_atk.modulate = Color.GREEN
-			_atk.set_props("ranged", 50, atk_dir)
-		else:
-			# Melee attack
-			_atk.modulate = Color.RED
-			_atk.set_props("melee", 100, atk_dir, 0.5)
+	if is_aiming:
+		# Ranged attack
+		_atk.modulate = Color.GREEN
+		_atk.set_props("ranged", 50, atk_dir)
+	else:
+		# Melee attack
+		_atk.modulate = Color.RED
+		_atk.set_props("melee", 100, atk_dir, 0.5)
 
 func _throw_punch(side: int = 1) -> int:
 	Hands.get_child(side).is_attacking = true
@@ -78,6 +78,9 @@ func set_pos_and_sprite(pos: Vector2, rot: float, index: int) -> void:
 	var hands: Array = Hands.get_children()
 	for hand: PlayerHandClass in hands:
 		hand.hand.frame = index
+		match index:
+			0: hand.particle.modulate = Color.MEDIUM_SEA_GREEN
+			1: hand.particle.modulate = Color.GOLDENROD
 	spawn_pos = pos
 	rotation = rot
 	reset()

@@ -1,5 +1,6 @@
 class_name AttackClass extends Area2D
-@export var mesh_instance: MeshInstance2D
+@export var mesh: MeshInstance2D
+@export var attack: CollisionShape2D
 
 var Attacker: PlayerClass
 var spawn_position: Vector2
@@ -12,9 +13,7 @@ var attack_duration: float = INF
 var velocity := Vector2.ZERO
 
 func _ready() -> void:
-	spawn_position = global_position
 	_activate_TorF(false)
-	
 	if multiplayer.is_server():
 		body_entered.connect(_on_body_entered)
 
@@ -26,8 +25,9 @@ func _process(delta: float) -> void:
 		trigger_destroy()
 		return
 	
-	if attack_type == "melee" and is_instance_valid(Attacker) and Attacker.has_node("Attack Origin"):
+	if attack_type == "melee":
 		global_position = Attacker.Attack_Origin.global_position
+	
 	if abs((global_position-spawn_position).length()) > attack_distance:
 		trigger_destroy()
 
@@ -37,9 +37,11 @@ func _physics_process(_delta: float) -> void:
 		velocity = attack_direction * attack_power
 		position += velocity
 
-# Since we're only running on host, no need for RPC
 func set_props(atk_type: String, atk_pow: int, atk_dir: Vector2, atk_dur: float = INF, atk_dist: float = INF) -> void:
 	attack_type = atk_type
+	if atk_type == "melee":
+		mesh.hide()
+		attack.scale = Vector2(2,2)
 	attack_power = atk_pow
 	attack_direction = atk_dir
 	attack_duration = atk_dur
@@ -54,15 +56,14 @@ func _activate_TorF(TorF: bool) -> void:
 		set_physics_process(TorF)
 
 func _on_body_entered(body: Node2D) -> void:
-	if !multiplayer.is_server(): return
 	if body == Attacker: return
-
+	
 	if body is BallClass:
 		body.apply_central_force(attack_direction * attack_power * 100)
-
+	
 	if body is DoorClass:
 		body.under_attack = true
-
+	
 	trigger_destroy()
 
 func trigger_destroy() -> void:

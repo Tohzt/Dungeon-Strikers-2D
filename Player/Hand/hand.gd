@@ -6,6 +6,7 @@ class_name PlayerHandClass extends Node2D
 @export_enum("left", "right") var handedness: String
 @export var hand_offset: Vector2 = Vector2(0,-16)
 var default_hand_distance: float
+@export var particle: GPUParticles2D
 
 var is_attacking: bool = false
 var attack_dur := 0.1

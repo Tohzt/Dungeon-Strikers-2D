@@ -16,12 +16,22 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:modulate")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath("Attack:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("MeshInstance2D:scale")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("MeshInstance2D:visible")
+properties/4/spawn = true
+properties/4/replication_mode = 1
 
-[node name="Attack" type="Area2D" node_paths=PackedStringArray("mesh_instance")]
+[node name="Attack" type="Area2D" node_paths=PackedStringArray("mesh", "attack")]
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_fa5ys")
-mesh_instance = NodePath("MeshInstance2D")
+mesh = NodePath("MeshInstance2D")
+attack = NodePath("Attack")
 
 [node name="Attack" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_5d0fw")

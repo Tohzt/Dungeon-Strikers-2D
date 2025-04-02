@@ -45,7 +45,7 @@ script = ExtResource("3_btcbx")
 Input_Handler = NodePath("../Input Handler")
 
 [node name="Attack Origin" type="Marker2D" parent="."]
-position = Vector2(0, -40)
+position = Vector2(0, -20)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.75, 0.75)

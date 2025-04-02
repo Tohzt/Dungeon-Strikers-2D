@@ -7,10 +7,13 @@
 properties/0/path = NodePath("Arm/Hand:frame")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("Arm/Hand/GPUParticles2D:modulate")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [sub_resource type="Gradient" id="Gradient_wcw2t"]
-offsets = PackedFloat32Array(0.224638, 0.275362, 0.311594)
-colors = PackedColorArray(0, 0.631373, 0.54902, 1, 0, 0, 0, 1, 0, 0, 0, 0)
+offsets = PackedFloat32Array(0.2, 0.478261)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_er2ng"]
 gradient = SubResource("Gradient_wcw2t")
@@ -30,8 +33,9 @@ particle_flag_disable_z = true
 gravity = Vector3(0, 98, 0)
 scale_curve = SubResource("CurveTexture_oukdn")
 
-[node name="Player Hand" type="Node2D"]
+[node name="Player Hand" type="Node2D" node_paths=PackedStringArray("particle")]
 script = ExtResource("1_wcw2t")
+particle = NodePath("Arm/Hand/GPUParticles2D")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_wcw2t")
@@ -45,9 +49,8 @@ texture = ExtResource("2_er2ng")
 hframes = 4
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Arm/Hand"]
-emitting = false
+z_index = -1
 amount = 10
 texture = SubResource("GradientTexture2D_er2ng")
 lifetime = 0.19
-one_shot = true
 process_material = SubResource("ParticleProcessMaterial_or0a8")

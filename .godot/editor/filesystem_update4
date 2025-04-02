@@ -10,3 +10,5 @@ res://Ball/ball.tscn
 res://Ball/ball.gd
 res://Game/host_ui.gd
 res://Player/player.gd
+res://Player/Hand/hand.tscn
+res://Player/Hand/hand.gd
