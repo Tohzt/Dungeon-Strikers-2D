@@ -19,4 +19,4 @@ func _spawn_ball() -> void:
 	if multiplayer.get_unique_id() != 1: return
 	var _ball: BallClass = Global.BALL.instantiate()
 	_ball.global_position = get_parent().get_node("Spawn Points/Ball Spawn").global_position
-	get_parent().get_node("Entities").add_child(_ball)
+	get_parent().get_node("Entities").add_child(_ball, true)

@@ -19,6 +19,7 @@ properties/1/replication_mode = 1
 
 [node name="Attack" type="Area2D" node_paths=PackedStringArray("mesh_instance")]
 collision_layer = 2
+collision_mask = 7
 script = ExtResource("1_fa5ys")
 mesh_instance = NodePath("MeshInstance2D")
 

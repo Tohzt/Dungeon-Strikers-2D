@@ -62,6 +62,3 @@ func _on_body_entered(body: Node) -> void:
 		
 	elif body is DoorClass:
 		body.under_attack = true
-		
-	elif body is AttackClass:
-		body.under_attack = true

@@ -54,10 +54,16 @@ func _activate_TorF(TorF: bool) -> void:
 		set_physics_process(TorF)
 
 func _on_body_entered(body: Node2D) -> void:
+	if !multiplayer.is_server(): return
+	if body == Attacker: return
+
+	if body is BallClass:
+		body.apply_central_force(attack_direction * attack_power * 100)
+
 	if body is DoorClass:
 		body.under_attack = true
-	if multiplayer.is_server():
-		trigger_destroy()
+
+	trigger_destroy()
 
 func trigger_destroy() -> void:
 	queue_free()

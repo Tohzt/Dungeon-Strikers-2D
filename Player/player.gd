@@ -51,21 +51,19 @@ func attack(atk_dir: Vector2, is_aiming: bool) -> void:
 	
 	var _atk: AttackClass = Global.ATTACK.instantiate()
 	_atk.Attacker = self
+	_atk.global_position = Attack_Origin.global_position
 	
 	# Find the proper parent node
 	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
 	if entities_node:
 		entities_node.add_child(_atk, true)
 		
-		# Configure attack properties using the client's aiming state
 		if is_aiming:
 			# Ranged attack
-			_atk.global_position = Attack_Origin.global_position
 			_atk.modulate = Color.GREEN
 			_atk.set_props("ranged", 50, atk_dir)
 		else:
 			# Melee attack
-			_atk.global_position = Attack_Origin.global_position
 			_atk.modulate = Color.RED
 			_atk.set_props("melee", 100, atk_dir, 0.5)
 
