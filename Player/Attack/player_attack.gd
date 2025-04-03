@@ -62,7 +62,9 @@ func _on_body_entered(body: Node2D) -> void:
 		body.take_damage.rpc(attack_power,attack_direction)
 	
 	if body is BallClass:
-		body.apply_central_force(attack_direction * attack_power * 100)
+		body.color_cur = Attacker.Sprite.modulate
+		var _dir = (body.global_position - global_position).normalized()
+		body.apply_central_force(_dir * attack_power * 100)
 	
 	if body is DoorClass:
 		body.under_attack = true

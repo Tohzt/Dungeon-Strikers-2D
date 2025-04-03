@@ -9,6 +9,7 @@ var color_slow: Color = Color.GREEN
 var color_medium: Color = Color.YELLOW
 var color_fast: Color = Color.ORANGE
 var color_max: Color = Color.RED
+var color_cur: Color = Color.RED
 var speed_medium_threshold: float = max_ball_speed * 0.3
 var speed_fast_threshold: float = max_ball_speed * 0.6
 
@@ -25,7 +26,8 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	_update_ball_color(linear_velocity.length())
+	$Sprite2D.modulate = color_cur
+	#_update_ball_color(linear_velocity.length())
 
 func _physics_process(_delta: float) -> void:
 	if linear_velocity.length() > max_ball_speed:

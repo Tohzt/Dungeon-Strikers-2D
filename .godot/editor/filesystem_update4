@@ -12,3 +12,4 @@ res://Player/name_label.gd
 res://Player/handler_playerAttack.gd
 res://Player/Attack/player_attack.gd
 res://_Multiplayer/Server.gd
+res://Ball/ball.gd
