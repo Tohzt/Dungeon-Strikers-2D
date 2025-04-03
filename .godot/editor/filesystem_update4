@@ -1,14 +1,14 @@
-res://Player/Attack/player_attack.gd
+res://Player/Hand/hand.tscn
 res://Main Menu/Main Menu.tscn
 res://Player/player.tscn
 res://Player/Attack/player_attack.tscn
 res://Game/game.tscn
-res://_Multiplayer/Server.tscn
-res://Game/Room/room.tscn
-res://door.tscn
 res://Ball/ball.tscn
-res://Ball/ball.gd
-res://Game/host_ui.gd
-res://Player/player.gd
-res://Player/Hand/hand.tscn
 res://Player/Hand/hand.gd
+res://Game/game.gd
+res://Player/handler_playerInput.gd
+res://Player/player.gd
+res://Player/name_label.gd
+res://Player/handler_playerAttack.gd
+res://Player/Attack/player_attack.gd
+res://_Multiplayer/Server.gd

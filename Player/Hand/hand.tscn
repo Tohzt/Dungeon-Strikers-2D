@@ -1,15 +1,12 @@
 [gd_scene load_steps=9 format=3 uid="uid://bjesokgs5hi8v"]
 
 [ext_resource type="Script" uid="uid://d1tpr63urbdo2" path="res://Player/Hand/hand.gd" id="1_wcw2t"]
-[ext_resource type="Texture2D" uid="uid://om2kg2wult28" path="res://Player/Assets/Skribble hands.png" id="2_er2ng"]
+[ext_resource type="Texture2D" uid="uid://3b2eg8m6jibc" path="res://Player/Assets/Skribble hands_blank.png" id="2_wcw2t"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wcw2t"]
-properties/0/path = NodePath("Arm/Hand:frame")
+properties/0/path = NodePath("Arm/Hand:modulate")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("Arm/Hand/GPUParticles2D:modulate")
-properties/1/spawn = true
-properties/1/replication_mode = 1
 
 [sub_resource type="Gradient" id="Gradient_wcw2t"]
 offsets = PackedFloat32Array(0.2, 0.478261)
@@ -20,18 +17,17 @@ gradient = SubResource("Gradient_wcw2t")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
-[sub_resource type="Curve" id="Curve_drlnh"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.0337079), 0.0, 0.0, 0, 0]
-point_count = 2
+[sub_resource type="Gradient" id="Gradient_er2ng"]
+offsets = PackedFloat32Array(0.00537634, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="CurveTexture" id="CurveTexture_oukdn"]
-curve = SubResource("Curve_drlnh")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_drlnh"]
+gradient = SubResource("Gradient_er2ng")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_or0a8"]
-lifetime_randomness = 0.16
 particle_flag_disable_z = true
 gravity = Vector3(0, 98, 0)
-scale_curve = SubResource("CurveTexture_oukdn")
+color_ramp = SubResource("GradientTexture1D_drlnh")
 
 [node name="Player Hand" type="Node2D" node_paths=PackedStringArray("particle")]
 script = ExtResource("1_wcw2t")
@@ -45,12 +41,10 @@ target_position = Vector2(0, 60)
 
 [node name="Hand" type="Sprite2D" parent="Arm"]
 position = Vector2(0, 44)
-texture = ExtResource("2_er2ng")
-hframes = 4
+texture = ExtResource("2_wcw2t")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Arm/Hand"]
 z_index = -1
-amount = 10
 texture = SubResource("GradientTexture2D_er2ng")
-lifetime = 0.19
+lifetime = 0.25
 process_material = SubResource("ParticleProcessMaterial_or0a8")

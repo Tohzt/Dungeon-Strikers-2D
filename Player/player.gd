@@ -1,34 +1,45 @@
 class_name PlayerClass extends CharacterBody2D
-@export var Input_Handler: PlayerInputHandler
-@export var Attack_Handler: PlayerAttackHandler
-@export var Attack_Origin: Marker2D
+
 @export var Sprite: Sprite2D
 @export var Hands: Node2D
+@export var Attack_Origin: Marker2D
+
+@export_category("Handlers")
+@export var Input_Handler: PlayerInputHandler
+@export var Attack_Handler: PlayerAttackHandler
+
+@export_category("Health")
+var hp_max: float = 1000.0
+var hp: float = hp_max
+@export var healthbar: ProgressBar
 
 const SPEED: float = 300.0  
-const ATTACK_POWER: float = 400.0  
+var ATTACK: float = 400.0  
+var DEFENSE: float = 100.0
 
 var spawn_pos: Vector2 = Vector2.ZERO
 var spawn_rot: float = 0.0
-var has_authority: bool = false
 
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
+
 
 func _enter_tree() -> void:
 	if multiplayer.has_multiplayer_peer():
 		var peer_id := int(str(name))
 		set_multiplayer_authority(peer_id)
-		has_authority = multiplayer.get_unique_id() == peer_id
 
 func _ready() -> void:
+	healthbar.max_value = hp_max
+	healthbar.value = hp_max
 	hide()
 
 func _process(delta: float) -> void:
+	_update_hp(delta)
 	if !is_multiplayer_authority(): return
 	if Input_Handler.is_aiming:
 		rotation = lerp_angle(rotation, Input_Handler.input_direction.angle() + PI/2, delta * 10)
-	elif velocity:
+	elif velocity and !is_in_iframes:
 		rotation = lerp_angle(rotation, velocity.angle() + PI/2, delta * 10)
 
 	if Attack_Handler.attack_confirmed:
@@ -39,6 +50,10 @@ func _physics_process(_delta: float) -> void:
 	if !is_multiplayer_authority(): return
 	velocity = Input_Handler.velocity
 	move_and_slide()
+
+func _update_hp(delta: float) -> void:
+	healthbar.global_position = global_position - Vector2(70,80)
+	healthbar.value = lerp(healthbar.value, float(hp/hp_max)*hp_max, delta*10)
 
 var atk_side: int = 0
 @rpc("any_peer", "call_local")
@@ -54,6 +69,7 @@ func attack(atk_dir: Vector2, is_aiming: bool) -> void:
 		
 	var _atk: AttackClass = Global.ATTACK.instantiate()
 	_atk.Attacker = self
+	_atk.attack_power = ATTACK
 	_atk.global_position = global_position
 	_atk.spawn_position = global_position
 	entities_node.add_child(_atk, true)
@@ -72,15 +88,13 @@ func _throw_punch(side: int = 1) -> int:
 	return (side+1)%2
 
 @rpc("any_peer", "call_remote", "reliable")
-func set_pos_and_sprite(pos: Vector2, rot: float, index: int) -> void:
+func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:
 	if multiplayer.get_remote_sender_id() != 1: return
-	Sprite.frame = index
+	Sprite.modulate = color
 	var hands: Array = Hands.get_children()
 	for hand: PlayerHandClass in hands:
-		hand.hand.frame = index
-		match index:
-			0: hand.particle.modulate = Color.MEDIUM_SEA_GREEN
-			1: hand.particle.modulate = Color.GOLDENROD
+		hand.hand.modulate = color
+		hand.particle.modulate = color
 	spawn_pos = pos
 	rotation = rot
 	reset()
@@ -90,9 +104,16 @@ func reset() -> void:
 	global_position = spawn_pos
 	show()
 
+@rpc("any_peer", "call_local")
+func take_damage(dmg: float, dir: Vector2) -> void:
+	if is_in_iframes: return
+	if hp > 0:
+		hp -= int(dmg)
+	apply_knockback(dir, dmg*10)
+
 @rpc("any_peer")
 func apply_knockback(direction: Vector2, force: float) -> void:
-	if !is_multiplayer_authority() or is_in_iframes: return
+	if is_in_iframes: return
 	is_in_iframes = true
 	Input_Handler.velocity += direction * force
 	

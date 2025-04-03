@@ -6,7 +6,6 @@ var input_confirmed: bool = false
 var is_aiming: bool = false
 
 func _input(event: InputEvent) -> void:
-	if !is_multiplayer_authority(): return
 	var mouse_position: Vector2 = Master.get_global_mouse_position()
 	input_direction = (mouse_position - Master.global_position).normalized()
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -21,7 +20,6 @@ func _input(event: InputEvent) -> void:
 			is_aiming = false
 
 func _process(delta: float) -> void:
-	if !Master.has_authority: return
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if direction:
 		var prev_dir: Vector2 = velocity.normalized()

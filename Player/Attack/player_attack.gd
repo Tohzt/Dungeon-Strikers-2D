@@ -5,7 +5,7 @@ class_name AttackClass extends Area2D
 var Attacker: PlayerClass
 var spawn_position: Vector2
 var attack_type: String
-var attack_power: int = 300
+var attack_power: float
 var attack_direction: Vector2 = Vector2.ZERO
 var attack_distance: float = INF
 var attack_duration: float = INF
@@ -57,6 +57,9 @@ func _activate_TorF(TorF: bool) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body == Attacker: return
+	
+	if body is PlayerClass:
+		body.take_damage.rpc(attack_power,attack_direction)
 	
 	if body is BallClass:
 		body.apply_central_force(attack_direction * attack_power * 100)

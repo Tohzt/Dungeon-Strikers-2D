@@ -6,7 +6,6 @@ var attack_cooldown_max: float= 0.25
 var attack_confirmed: bool = false
 
 func _process(delta: float) -> void:
-	if !Master.has_authority: return
 	_handle_attack_cooldown(delta)
 
 func _handle_attack_cooldown(delta: float) -> void:
