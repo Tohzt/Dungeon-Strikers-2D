@@ -11,8 +11,9 @@ class_name PlayerClass extends CharacterBody2D
 @export_category("Health")
 var hp_max: float = 1000.0
 var hp: float = hp_max
-@export var healthbar: ProgressBar
+@export var healthbar: TextureProgressBar
 
+var name_display: String
 const SPEED: float = 300.0  
 var ATTACK: float = 400.0  
 var DEFENSE: float = 100.0
@@ -27,6 +28,8 @@ var iframes_duration: float = 0.5
 func _enter_tree() -> void:
 	if multiplayer.has_multiplayer_peer():
 		var peer_id := int(str(name))
+		name_display = Global.player_diplay
+		if name_display.is_empty(): name_display = name
 		set_multiplayer_authority(peer_id)
 
 func _ready() -> void:
@@ -89,12 +92,15 @@ func _throw_punch(side: int = 1) -> int:
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:
-	if multiplayer.get_remote_sender_id() != 1: return
+	printt("Called from: ", multiplayer.get_unique_id())
 	Sprite.modulate = color
+	healthbar.tint_progress = color
+	healthbar.tint_under = color.darkened(0.5)
 	var hands: Array = Hands.get_children()
 	for hand: PlayerHandClass in hands:
 		hand.hand.modulate = color
 		hand.particle.modulate = color
+	
 	spawn_pos = pos
 	rotation = rot
 	reset()

@@ -8,6 +8,7 @@ const PLAYER: PackedScene = preload("res://Player/player.tscn")
 const ATTACK: PackedScene = preload("res://Player/Attack/player_attack.tscn")
 const BALL:   PackedScene = preload("res://Ball/ball.tscn")
 
+var player_diplay: String
 
 var rooms: Array[RoomClass]
 var current_room: int = -1

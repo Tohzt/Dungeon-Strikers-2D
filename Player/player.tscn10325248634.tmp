@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://btf8e0wnlbd82"]
+[gd_scene load_steps=13 format=3 uid="uid://btf8e0wnlbd82"]
 
 [ext_resource type="Script" uid="uid://b1wxwtmfhlg00" path="res://Player/player.gd" id="1_iyeam"]
 [ext_resource type="Script" uid="uid://q3o4p2j5hpsk" path="res://Player/handler_playerInput.gd" id="2_4ntmi"]
@@ -25,39 +25,34 @@ properties/2/replication_mode = 1
 properties/3/path = NodePath(".:rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 1
-properties/4/path = NodePath("Sprite Inner:modulate")
+properties/4/path = NodePath("ProgressBar:value")
 properties/4/spawn = true
 properties/4/replication_mode = 1
-properties/5/path = NodePath("Healthbar:tint_progress")
+properties/5/path = NodePath("ProgressBar:max_value")
 properties/5/spawn = true
 properties/5/replication_mode = 1
-properties/6/path = NodePath("Healthbar:tint_under")
+properties/6/path = NodePath("Sprite Inner:modulate")
 properties/6/spawn = true
 properties/6/replication_mode = 1
-properties/7/path = NodePath(".:name_display")
-properties/7/spawn = true
-properties/7/replication_mode = 1
 
-[sub_resource type="Gradient" id="Gradient_x3vf3"]
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtle1"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_apopc"]
-gradient = SubResource("Gradient_x3vf3")
-
-[sub_resource type="Gradient" id="Gradient_p5o4e"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0.552995)
-colors = PackedColorArray(1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_gu6f8"]
-gradient = SubResource("Gradient_p5o4e")
-
-[sub_resource type="Gradient" id="Gradient_00tjw"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_x3vf3"]
-gradient = SubResource("Gradient_00tjw")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_od3ui"]
+bg_color = Color(0.6, 1, 0.564706, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("Sprite", "Hands", "Attack_Origin", "Input_Handler", "Attack_Handler", "healthbar") groups=["Player"]]
 collision_layer = 2
@@ -68,7 +63,7 @@ Hands = NodePath("Hands")
 Attack_Origin = NodePath("Attack Origin")
 Input_Handler = NodePath("Input Handler")
 Attack_Handler = NodePath("Attack Handler")
-healthbar = NodePath("Healthbar")
+healthbar = NodePath("ProgressBar")
 
 [node name="Input Handler" type="Node" parent="."]
 script = ExtResource("2_4ntmi")
@@ -117,27 +112,19 @@ shape = SubResource("CircleShape2D_m6ryd")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_emixd")
 
-[node name="TextureRect" type="TextureRect" parent="."]
-visible = false
-modulate = Color(0.556953, 0.556953, 0.556953, 1)
-offset_left = -222.0
-offset_top = -229.0
-offset_right = 280.0
-offset_bottom = 172.0
-texture = SubResource("GradientTexture1D_apopc")
-
-[node name="Healthbar" type="TextureProgressBar" parent="."]
+[node name="ProgressBar" type="ProgressBar" parent="."]
 top_level = true
-offset_left = -69.0
-offset_top = -101.0
-offset_right = 71.0
-offset_bottom = -85.0
+offset_left = -66.0
+offset_top = -99.0
+offset_right = 74.0
+offset_bottom = -83.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_vtle1")
+theme_override_styles/fill = SubResource("StyleBoxFlat_od3ui")
 max_value = 1000.0
-value = 500.0
-nine_patch_stretch = true
-texture_under = SubResource("GradientTexture1D_gu6f8")
-texture_progress = SubResource("GradientTexture1D_x3vf3")
-tint_progress = Color(0, 1, 1, 1)
+value = 950.0
+show_percentage = false
 
 [node name="Label" type="Label" parent="."]
 top_level = true

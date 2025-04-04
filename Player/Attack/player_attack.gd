@@ -63,7 +63,7 @@ func _on_body_entered(body: Node2D) -> void:
 	
 	if body is BallClass:
 		body.color_cur = Attacker.Sprite.modulate
-		var _dir = (body.global_position - global_position).normalized()
+		var _dir := (body.global_position - global_position).normalized()
 		body.apply_central_force(_dir * attack_power * 100)
 	
 	if body is DoorClass:

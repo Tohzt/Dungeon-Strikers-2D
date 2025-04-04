@@ -38,6 +38,17 @@ text = "Dungeon Strikers"
 layout_mode = 2
 text = "Host"
 
+[node name="DisplayName" type="TextEdit" parent="CanvasLayer/Multiplayer/VBoxContainer" groups=["DisplayName"]]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+placeholder_text = "Enter Name"
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+scroll_fit_content_height = true
+
 [node name="Join" type="Button" parent="CanvasLayer/Multiplayer/VBoxContainer"]
 layout_mode = 2
 text = "Join"
@@ -53,6 +64,7 @@ text = "Quick Play"
 [node name="Players" type="Node2D" parent="." groups=["PlayerSpawn"]]
 
 [connection signal="pressed" from="CanvasLayer/Multiplayer/VBoxContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="text_changed" from="CanvasLayer/Multiplayer/VBoxContainer/DisplayName" to="." method="_on_display_name_text_changed"]
 [connection signal="pressed" from="CanvasLayer/Multiplayer/VBoxContainer/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="CanvasLayer/Multiplayer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CanvasLayer/Multiplayer/VBoxContainer/Quick Play" to="." method="_on_quick_play_pressed"]

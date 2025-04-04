@@ -1,3 +1,6 @@
+TextEdit
+TextureRect
+TextureProgressBar
 ProgressBar
 MultiplayerSynchronizer
 Label
@@ -10,6 +13,3 @@ StaticBody2D
 ShapeCast2D
 AnimationTree
 GPUParticles2D
-RayCast2D
-DampedSpringJoint2D
-TileMapLayer
