@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cihs4nfo1pjvn"]
+[gd_scene load_steps=6 format=3 uid="uid://cihs4nfo1pjvn"]
 
 [ext_resource type="Script" uid="uid://beqdrbp46pc36" path="res://Game/game.gd" id="1_rc60p"]
+[ext_resource type="PackedScene" uid="uid://ca18bdfs01cxc" path="res://Game/HUD/HUD.tscn" id="2_fwxkx"]
 [ext_resource type="Script" uid="uid://c71ixtnhvv15y" path="res://Game/host_ui.gd" id="2_kysc5"]
 [ext_resource type="PackedScene" uid="uid://b6tqbqvxpm0pi" path="res://door.tscn" id="3_jcm6v"]
 [ext_resource type="PackedScene" uid="uid://b4226omcdcsq6" path="res://Game/Room/room.tscn" id="4_nljok"]
@@ -9,6 +10,8 @@
 script = ExtResource("1_rc60p")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Hud" parent="Camera2D" instance=ExtResource("2_fwxkx")]
 
 [node name="Entities" type="Node2D" parent="." groups=["Entities"]]
 

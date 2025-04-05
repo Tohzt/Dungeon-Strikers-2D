@@ -4,11 +4,8 @@ res://Player/Attack/player_attack.tscn
 res://Game/game.tscn
 res://Ball/ball.tscn
 res://Player/Hand/hand.tscn
-res://Player/player.gd
-res://Player/Attack/player_attack.gd
-res://Player/player.gdshader
-res://Player/name_label.gd
 res://Main Menu/main_menu.gd
-res://_Multiplayer/server_spawn.gd
-res://_Multiplayer/Server.gd
-res://global.gd
+res://Player/player.gd
+res://Game/HUD/HUD.tscn
+res://Game/HUD/hud.gd
+res://Game/game.gd

@@ -40,6 +40,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_update_hp(delta)
 	if !is_multiplayer_authority(): return
+	_update_hud()
 	if Input_Handler.is_aiming:
 		rotation = lerp_angle(rotation, Input_Handler.input_direction.angle() + PI/2, delta * 10)
 	elif velocity and !is_in_iframes:
@@ -54,17 +55,18 @@ func _physics_process(_delta: float) -> void:
 	velocity = Input_Handler.velocity
 	move_and_slide()
 
+func _update_hud() -> void:
+	get_parent().get_parent().HUD.update(rotation, hp)
+
 func _update_hp(delta: float) -> void:
 	healthbar.global_position = global_position - Vector2(70,80)
 	healthbar.value = lerp(healthbar.value, float(hp/hp_max)*hp_max, delta*10)
 
+
 var atk_side: int = 0
 @rpc("any_peer", "call_local")
 func attack(atk_dir: Vector2, is_aiming: bool) -> void:
-	# Always do the hand animation regardless of peer
 	atk_side = _throw_punch(atk_side)
-	
-	# Only spawn the attack on the host
 	if multiplayer.get_unique_id() != 1: return
 	
 	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
@@ -75,16 +77,11 @@ func attack(atk_dir: Vector2, is_aiming: bool) -> void:
 	_atk.attack_power = ATTACK
 	_atk.global_position = global_position
 	_atk.spawn_position = global_position
+	_atk.modulate = Sprite.modulate
 	entities_node.add_child(_atk, true)
 	
-	if is_aiming:
-		# Ranged attack
-		_atk.modulate = Color.GREEN
-		_atk.set_props("ranged", 50, atk_dir)
-	else:
-		# Melee attack
-		_atk.modulate = Color.RED
-		_atk.set_props("melee", 100, atk_dir, 0.5)
+	if is_aiming: _atk.set_props("ranged", 50, atk_dir)
+	else: _atk.set_props("melee", 100, atk_dir, 0.5)
 
 func _throw_punch(side: int = 1) -> int:
 	Hands.get_child(side).is_attacking = true
@@ -92,10 +89,15 @@ func _throw_punch(side: int = 1) -> int:
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:
-	printt("Called from: ", multiplayer.get_unique_id())
-	Sprite.modulate = color
+	if multiplayer.get_unique_id() == int(name):
+		get_parent().get_parent().HUD.set_hud(color, hp_max)
+		healthbar.hide()
+		$Label.hide()
+
 	healthbar.tint_progress = color
 	healthbar.tint_under = color.darkened(0.5)
+	
+	Sprite.modulate = color
 	var hands: Array = Hands.get_children()
 	for hand: PlayerHandClass in hands:
 		hand.hand.modulate = color
@@ -123,7 +125,6 @@ func apply_knockback(direction: Vector2, force: float) -> void:
 	is_in_iframes = true
 	Input_Handler.velocity += direction * force
 	
-	# Visualize Effect
 	modulate.a = 0.5
 	var timer: SceneTreeTimer = get_tree().create_timer(iframes_duration)
 	timer.timeout.connect(_end_iframes)

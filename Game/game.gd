@@ -4,6 +4,7 @@ class_name GameClass extends Node2D
 @onready var Spawn_Points: Node = $"Spawn Points"
 @onready var Loading: CanvasLayer = $Loading
 @onready var Camera: Camera2D = $Camera2D
+@onready var HUD: CanvasLayer = $Camera2D/Hud
 var camera_target: Vector2
 
 func _ready() -> void:
@@ -11,6 +12,7 @@ func _ready() -> void:
 		if !Global.rooms.has(room):
 			Global.rooms.append(room)
 	if multiplayer.is_server():
+		HUD.hide()
 		set_loading(false)
 
 func _process(delta: float) -> void:
