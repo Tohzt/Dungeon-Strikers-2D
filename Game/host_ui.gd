@@ -17,6 +17,11 @@ func _reset_player_position(peer_id: int) -> void:
 
 func _spawn_ball() -> void:
 	if multiplayer.get_unique_id() != 1: return
-	var _ball: BallClass = Global.BALL.instantiate()
-	_ball.global_position = get_parent().get_node("Spawn Points/Ball Spawn").global_position
-	get_parent().get_node("Entities").add_child(_ball, true)
+	var boss_inst: BossClass = Global.BOSS.instantiate()
+	boss_inst.global_position = get_parent().get_node("Spawn Points/Ball Spawn").global_position
+	get_parent().get_node("Entities").add_child(boss_inst, true)
+	await get_tree().process_frame  # Wait one frame to ensure the node is in the tree
+	boss_inst.set_color.rpc(Color.RED)
+	# var _ball: BallClass = Global.BALL.instantiate()
+	# _ball.global_position = get_parent().get_node("Spawn Points/Ball Spawn").global_position
+	# get_parent().get_node("Entities").add_child(_ball, true)

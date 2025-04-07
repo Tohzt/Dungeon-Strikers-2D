@@ -52,6 +52,10 @@ func _update_ball_color(speed: float) -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if !multiplayer.is_server(): return
+	
+	if body is BossClass:
+		body.under_attack(multiplayer.get_unique_id())
+	
 	if body is PlayerClass:
 		var ball_speed: float = linear_velocity.length()
 		var ball_to_player: Vector2 = (body.global_position - global_position).normalized()

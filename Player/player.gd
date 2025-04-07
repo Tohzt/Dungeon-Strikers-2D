@@ -72,7 +72,7 @@ func attack(atk_dir: Vector2, is_aiming: bool) -> void:
 	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
 	if !entities_node: return
 		
-	var _atk: AttackClass = Global.ATTACK.instantiate()
+	var _atk: PlayerAttackClass = Global.ATTACK.instantiate()
 	_atk.Attacker = self
 	_atk.attack_power = ATTACK
 	_atk.global_position = global_position

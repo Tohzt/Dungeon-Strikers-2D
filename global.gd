@@ -6,8 +6,9 @@ const ROOM: String = "res://Game/Room/room.tscn"
 
 const PLAYER: PackedScene = preload("res://Player/player.tscn")
 const ATTACK: PackedScene = preload("res://Player/Attack/player_attack.tscn")
-const BALL:   PackedScene = preload("res://Ball/ball.tscn")
-
+const BOSS_ATTACK: PackedScene = preload("res://Boss/Attack/boss_attack.tscn")
+const BALL: PackedScene = preload("res://Ball/ball.tscn")
+const BOSS: PackedScene = preload("res://Boss/boss.tscn")
 var player_diplay: String
 
 var rooms: Array[RoomClass]

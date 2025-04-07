@@ -13,6 +13,11 @@ func Join() -> void: $Connect.Client(IP_ADDRESS, PORT)
 func client_connected(peer_id: int) -> void:
 	Connected_Clients.append(peer_id)
 	spawn_player(peer_id)
+	
+	# Send boss state to new client
+	var boss: BossClass = get_tree().get_first_node_in_group("Boss")  # Make sure boss is in "Boss" group
+	if boss:
+		boss.set_color.rpc_id(peer_id, boss.color)
 
 func spawn_player(peer_id: int) -> void:
 	if $Spawn.Player(peer_id):

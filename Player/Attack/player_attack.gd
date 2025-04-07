@@ -1,4 +1,4 @@
-class_name AttackClass extends Area2D
+class_name PlayerAttackClass extends Area2D
 @export var mesh: MeshInstance2D
 @export var attack: CollisionShape2D
 
@@ -57,6 +57,9 @@ func _activate_TorF(TorF: bool) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body == Attacker: return
+	
+	if body is BossClass:
+		body.under_attack(attack_power,attack_direction)
 	
 	if body is PlayerClass:
 		body.take_damage.rpc(attack_power,attack_direction)
