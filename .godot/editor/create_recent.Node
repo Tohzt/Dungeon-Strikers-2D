@@ -1,3 +1,5 @@
+Node
+MultiplayerSynchronizer
 CanvasLayer
 TextureRect
 TextureProgressBar
@@ -7,8 +9,6 @@ MarginContainer
 LineEdit
 TextEdit
 ProgressBar
-MultiplayerSynchronizer
 Label
 Area2D
-Node
 Node2D

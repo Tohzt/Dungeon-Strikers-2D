@@ -15,7 +15,7 @@ func client_connected(peer_id: int) -> void:
 	spawn_player(peer_id)
 	
 	# Send boss state to new client
-	var boss: BossClass = get_tree().get_first_node_in_group("Boss")  # Make sure boss is in "Boss" group
+	var boss: BossClass = get_tree().get_first_node_in_group("Boss")
 	if boss:
 		boss.set_color.rpc_id(peer_id, boss.color)
 

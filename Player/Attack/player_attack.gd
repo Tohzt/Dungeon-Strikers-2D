@@ -59,7 +59,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if body == Attacker: return
 	
 	if body is BossClass:
-		body.under_attack(attack_power,attack_direction)
+		body.under_attack(attack_power*100,attack_direction)
 	
 	if body is PlayerClass:
 		body.take_damage.rpc(attack_power,attack_direction)

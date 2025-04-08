@@ -15,6 +15,7 @@ var sin_value: float = 0.0
 var cos_value: float = 0.0
 
 func _process(delta: float) -> void:
+	if !multiplayer.is_server(): return
 	_wave_calculator(delta * freq_low)
 	_update_wave(delta)
 	_update_sway()

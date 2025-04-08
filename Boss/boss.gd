@@ -27,24 +27,18 @@ var iframes_duration: float = 0.5
 
 
 func _enter_tree() -> void:
-	if multiplayer.has_multiplayer_peer():
-		var peer_id := int(str(name))
-		name_display = Global.player_diplay
-		if name_display.is_empty(): name_display = name
-		set_multiplayer_authority(peer_id)
+	if multiplayer.is_server():
+		set_multiplayer_authority(1)
 
 func _ready() -> void:
 	healthbar.max_value = hp_max
 	healthbar.value = hp_max
-	# Apply the synchronized color when the node is ready
-	if color != Color.TRANSPARENT:  # Assuming WHITE is the default/unset color
-		$"Sprite Inner".modulate = color
-		set_hand_color(color)
+
 
 func _process(delta: float) -> void:
 	_update_hp(delta)
 	if !is_multiplayer_authority(): return
-	_update_hud()
+	
 	if Input_Handler.is_aiming:
 		rotation = lerp_angle(rotation, Input_Handler.input_direction.angle() + PI/2, delta * 10)
 	elif velocity and !is_in_iframes:
@@ -55,12 +49,10 @@ func _process(delta: float) -> void:
 		Attack_Handler.attack_confirmed = false
 	
 func _physics_process(_delta: float) -> void:
-	if !is_multiplayer_authority(): return
+	if !multiplayer.is_server(): return
 	velocity = Input_Handler.velocity
 	move_and_slide()
 
-func _update_hud() -> void:
-	get_parent().get_parent().HUD.update(rotation, hp)
 
 func _update_hp(delta: float) -> void:
 	healthbar.global_position = global_position - Vector2(70,80)
@@ -106,7 +98,7 @@ func set_hand_color(col: Color) -> void:
 		hand.particle.modulate = col
 
 func under_attack(atk: float, dir: Vector2) -> void:
-	apply_knockback.rpc(dir, atk)
+	apply_knockback.rpc(dir, atk*100)
 
 @rpc("any_peer", "call_local")
 func take_damage(dmg: float, dir: Vector2) -> void:

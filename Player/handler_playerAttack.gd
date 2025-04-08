@@ -1,5 +1,6 @@
-class_name PlayerAttackHandler extends HandlerClass
-@export var Input_Handler: HandlerClass
+class_name PlayerAttackHandler extends Node
+@onready var Master: PlayerClass = get_parent()
+@export var Input_Handler: PlayerInputHandler
 
 var attack_cooldown: float = 0.0
 var attack_cooldown_max: float= 0.25

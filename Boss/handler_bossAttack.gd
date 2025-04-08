@@ -1,5 +1,6 @@
 class_name BossAttackHandler extends HandlerClass
-@export var Input_Handler: HandlerClass
+
+@export var Input_Handler: BossInputHandler
 
 var attack_cooldown: float = 0.0
 var attack_cooldown_max: float= 0.25

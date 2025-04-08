@@ -1,4 +1,5 @@
-class_name PlayerInputHandler extends HandlerClass
+class_name PlayerInputHandler extends Node
+@onready var Master: PlayerClass = get_parent()
 
 var velocity: Vector2 = Vector2.ZERO
 var input_direction: Vector2

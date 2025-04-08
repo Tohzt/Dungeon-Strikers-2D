@@ -9,9 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://mbtuhu6wiogu" path="res://Player/Assets/Skribble Character_Outer.png" id="5_od3ui"]
 [ext_resource type="Script" uid="uid://d2ocsa6tnl1h1" path="res://Player/name_label.gd" id="7_vtle1"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_m6ryd"]
-radius = 30.0
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_emixd"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -40,6 +37,9 @@ properties/7/replication_mode = 1
 properties/8/path = NodePath("Healthbar:position")
 properties/8/spawn = true
 properties/8/replication_mode = 1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_m6ryd"]
+radius = 30.0
 
 [sub_resource type="Gradient" id="Gradient_x3vf3"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
@@ -72,6 +72,9 @@ Attack_Origin = NodePath("Attack Origin")
 Input_Handler = NodePath("Input Handler")
 Attack_Handler = NodePath("Attack Handler")
 healthbar = NodePath("Healthbar")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_emixd")
 
 [node name="Input Handler" type="Node" parent="."]
 script = ExtResource("2_4ntmi")
@@ -116,9 +119,6 @@ position = Vector2(0, 60)
 [node name="Body" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("CircleShape2D_m6ryd")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_emixd")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 visible = false
