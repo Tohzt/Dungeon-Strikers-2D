@@ -9,7 +9,7 @@ const ATTACK: PackedScene = preload("res://Player/Attack/player_attack.tscn")
 const BOSS_ATTACK: PackedScene = preload("res://Boss/Attack/boss_attack.tscn")
 const BALL: PackedScene = preload("res://Ball/ball.tscn")
 const BOSS: PackedScene = preload("res://Boss/boss.tscn")
-var player_diplay: String
+var player_display_name: String
 
 var rooms: Array[RoomClass]
 var current_room: int = -1

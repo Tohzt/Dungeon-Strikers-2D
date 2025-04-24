@@ -1,17 +1,18 @@
-res://Boss/boss.tscn
-res://Boss/State Machine/state_state_handler.gd
-res://Boss/State Machine/state_base.gd
-res://Boss/State Machine/boss_state_idle.gd
-res://Boss/State Machine/boss_state_wander.gd
-res://Boss/State Machine/boss_state_ball.gd
-res://Boss/State Machine/boss_state_dead.gd
-res://Boss/State Machine/boss_state_target.gd
-res://Boss/State Machine/state_handler.gd
 res://Main Menu/Main Menu.tscn
 res://Game/game.tscn
 res://Player/player.tscn
 res://Ball/ball.tscn
-res://Boss/boss.gd
-res://Boss/handler_base.gd
-res://Boss/handler_bossAttack.gd
-res://Boss/handler_bossInput.gd
+res://Boss/boss.tscn
+res://_Multiplayer/Server.tscn
+res://Main Menu/main_menu.gd
+res://_Multiplayer/offline.gd
+res://_Multiplayer/Server.gd
+res://_Multiplayer/server_offline.gd
+res://global.gd
+res://Player/player.gd
+res://Game/spawn_points.gd
+res://Game/game.gd
+res://_Multiplayer/server_connect.gd
+res://_Multiplayer/server_spawn.gd
+res://Game/host_ui.gd
+res://Player/hands.gd

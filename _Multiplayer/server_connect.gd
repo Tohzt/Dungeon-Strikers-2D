@@ -15,8 +15,20 @@ func _establish_host(PORT: int, MAX_CLIENTS: int) -> void:
 		return 
 	
 	multiplayer.multiplayer_peer = peer
-	multiplayer.peer_connected.connect(Server.client_connected)
-	multiplayer.peer_disconnected.connect(Server.client_disconnected)
+	multiplayer.peer_connected.connect(client_connected)
+	multiplayer.peer_disconnected.connect(client_disconnected)
+
+func client_connected(peer_id: int) -> void:
+	Server.Connected_Clients.append(peer_id)
+	Server.Spawn.spawn_player(peer_id)
+	
+	# Send boss state to new client
+	var boss: BossClass = get_tree().get_first_node_in_group("Boss")
+	if boss:
+		boss.set_color.rpc_id(peer_id, boss.color)
+
+func client_disconnected(peer_id: int) -> void:
+	print("Peer " + str(peer_id) + " Disonnected!")
 
 
 # Client Code

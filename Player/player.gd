@@ -28,7 +28,7 @@ var iframes_duration: float = 0.5
 func _enter_tree() -> void:
 	if multiplayer.has_multiplayer_peer():
 		var peer_id := int(str(name))
-		name_display = Global.player_diplay
+		name_display = Global.player_display_name
 		if name_display.is_empty(): name_display = name
 		set_multiplayer_authority(peer_id)
 
@@ -39,7 +39,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_update_hp(delta)
-	if !is_multiplayer_authority(): return
+	if !Server.OFFLINE and !is_multiplayer_authority(): return
 	_update_hud()
 	if Input_Handler.is_aiming:
 		rotation = lerp_angle(rotation, Input_Handler.input_direction.angle() + PI/2, delta * 10)
@@ -51,7 +51,7 @@ func _process(delta: float) -> void:
 		Attack_Handler.attack_confirmed = false
 	
 func _physics_process(_delta: float) -> void:
-	if !is_multiplayer_authority(): return
+	if !Server.OFFLINE and !is_multiplayer_authority(): return
 	velocity = Input_Handler.velocity
 	move_and_slide()
 
@@ -89,7 +89,7 @@ func _throw_punch(side: int = 1) -> int:
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:
-	if multiplayer.get_unique_id() == int(name):
+	if Server.OFFLINE or multiplayer.get_unique_id() == int(name):
 		get_parent().get_parent().HUD.set_hud(color, hp_max)
 		healthbar.hide()
 		$Label.hide()

@@ -1,9 +1,11 @@
 class_name GameClass extends Node2D
 
+@onready var Entities: Node2D = $Entities
 @onready var Player: PlayerClass
 @onready var Spawn_Points: Node = $"Spawn Points"
 @onready var Loading: CanvasLayer = $Loading
 @onready var Camera: Camera2D = $Camera2D
+@onready var HOST_UI = $"Host UI"
 @onready var HUD: CanvasLayer = $Camera2D/Hud
 var camera_target: Vector2
 
@@ -14,6 +16,10 @@ func _ready() -> void:
 	if multiplayer.is_server():
 		HUD.hide()
 		set_loading(false)
+	if Server.OFFLINE: 
+		HUD.show()
+		HOST_UI.hide()
+
 
 func _process(delta: float) -> void:
 	# Overwrite Camera Movement

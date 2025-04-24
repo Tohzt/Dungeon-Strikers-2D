@@ -20,12 +20,9 @@ func _process(delta: float) -> void:
 	_update_sway()
 
 func _update_wave(delta: float) -> void:
-	if Master.velocity.length() > 200:
-		freq = lerp(freq, freq_high, delta)
-		angle = lerp(angle, angle_high, delta)
-	else:
-		freq = lerp(freq, freq_low, delta*10)
-		angle = lerp(angle, angle_low, delta)
+	var speed_factor = Master.velocity.length()/10
+	freq = lerp(freq_low, freq_high, speed_factor*delta)
+	angle = lerp(angle_low, angle_high, speed_factor*delta)
 
 func _update_sway() -> void:
 	if !Left.is_attacking:
