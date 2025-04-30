@@ -20,7 +20,7 @@ func _process(delta: float) -> void:
 	_update_sway()
 
 func _update_wave(delta: float) -> void:
-	var speed_factor = Master.velocity.length()/10
+	var speed_factor: float = Master.velocity.length()/10
 	freq = lerp(freq_low, freq_high, speed_factor*delta)
 	angle = lerp(angle_low, angle_high, speed_factor*delta)
 

@@ -12,4 +12,4 @@ func _ready() -> void:
 
 func enter() -> void:
 	super.enter()
-	state_handler.change_state(handle_transition("start_wander"))
+	state_handler.change_state(super.handle_transition("start_wander"))

@@ -21,6 +21,7 @@ config/icon="uid://b7k3wfvekym8w"
 
 Global="*res://global.gd"
 Server="*res://_Multiplayer/Server.tscn"
+Settings="*res://settings.gd"
 
 [debug]
 

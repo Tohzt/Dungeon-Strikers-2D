@@ -1,30 +1,32 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1745461884
+::res://::1745984226
 door.gd::GDScript/GDScript::5907015721699820270::1741861419::0::1::::DoorClass<>StaticBody2D<><>0<>0<><>::
 door.tscn::PackedScene/PackedScene::4602472145357464922::1743569942::0::1::::<><><>0<>0<><>::uid://cqfnxk6ba4jpe::::res://door.gd<>uid://dd5j74bg2syef::::res://Game/Room/Doors/wall_damaged.png<>uid://d1dvtvpbks3jj::::res://Game/Room/Doors/wall_demolished.png
 export_presets.cfg::TextFile/TextFile::-1::1741150353::0::1::::<><><>0<>0<><>::
-global.gd::GDScript/GDScript::4155521254453947641::1743906867::0::1::::<>Node<><>0<>0<><>::
+global.gd::GDScript/GDScript::4155521254453947641::1745464701::0::1::::<>Node<><>0<>0<><>::
 icon.svg::CompressedTexture2D/CompressedTexture2D::8693956798959770676::1740377408::1741144827::1::::<><><>0<>0<>74e6e8c69236e82ae7905fab03878fd3<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md::TextFile/TextFile::-1::1740963401::0::1::::<><><>0<>0<><>::
-::res://_Multiplayer/::1745463653
-offline.gd::GDScript::3809900608333979910::1745463653::0::1::::<>Node<><>0<>0<><>::
-Server.gd::GDScript::982721623943347232::1745463094::0::1::::<>Node<><>0<>0<><>::
-Server.tscn::PackedScene::7434801913367811180::1745463794::0::1::::<><><>0<>0<><>::uid://oabjtq1xki1m::::res://_Multiplayer/Server.gd<>uid://bujsrhm8uh8sg::::res://_Multiplayer/offline.gd<>uid://b260chdnllf5n::::res://_Multiplayer/server_spawn.gd<>uid://tju6u6m1urlr::::res://_Multiplayer/server_connect.gd
-server_connect.gd::GDScript/GDScript::1353438227312250059::1741674126::0::1::::<>Node<><>0<>0<><>::
-server_spawn.gd::GDScript/GDScript::4347037041606463493::1743747332::0::1::::<>Node<><>0<>0<><>::
+settings.gd::GDScript::5119034518661995803::1745984226::0::1::::<>Node<><>0<>0<><>::
+::res://_Multiplayer/::1745984323
+Server.gd::GDScript/GDScript::982721623943347232::1745476123::0::1::::<>Node<><>0<>0<><>::
+Server.tscn::PackedScene::7434801913367811180::1745984323::0::1::::<><><>0<>0<><>::uid://oabjtq1xki1m::::res://_Multiplayer/Server.gd<>uid://bujsrhm8uh8sg::::res://_Multiplayer/server_offline.gd<>uid://b260chdnllf5n::::res://_Multiplayer/server_spawn.gd<>uid://tju6u6m1urlr::::res://_Multiplayer/server_connect.gd
+server_connect.gd::GDScript/GDScript::1353438227312250059::1745465381::0::1::::<>Node<><>0<>0<><>::
+server_offline.gd::GDScript::3809900608333979910::1745981691::0::1::::<>Node<><>0<>0<><>::
+server_spawn.gd::GDScript/GDScript::4347037041606463493::1745465382::0::1::::<>Node<><>0<>0<><>::
 ::res://Assets/::1743835971
 default_theme.tres::Theme/Theme::6472499466043019641::1743748613::0::1::::<><><>0<>0<><>::
 DungeonStrikers_Icon.png::CompressedTexture2D/CompressedTexture2D::4654847116167810632::1743227543::1743227557::1::::<><><>0<>0<>3fabb1f1e251ecf08acfbbc4c8b8b22e<>res://.godot/imported/DungeonStrikers_Icon.png-8607c2596b76d8925c02a1742770e845.ctex::
-::res://Ball/::1745462729
+::res://Ball/::1745984323
 ball.gd::GDScript/GDScript::7615055812239269268::1743999536::0::1::::BallClass<>RigidBody2D<><>0<>0<><>::
-ball.tscn::PackedScene::5208233326649649106::1745462729::0::1::::<><><>0<>0<><>::uid://dgq14ej6t3n21::::res://Ball/ball.gd
-::res://Boss/::1745462729
-boss.gd::GDScript/GDScript::2521809959086673429::1744095020::0::1::::BossClass<>CharacterBody2D<><>0<>0<><>::
-boss.tscn::PackedScene::8623861598812354316::1745462729::0::1::::<><><>0<>0<><>::uid://bb6t3u4wqmusb::::res://Boss/boss.gd<>uid://dfovb1vdgm2ku::::res://Boss/handler_bossInput.gd<>uid://c4yrsl0f08bft::::res://Boss/State Machine/state_handler.gd<>uid://bb7hrvv8mlsp::::res://Boss/State Machine/boss_state_idle.gd<>uid://cc1mfyngmfuaq::::res://Boss/handler_bossAttack.gd<>uid://mbtuhu6wiogu::::res://Player/Assets/Skribble Character_Outer.png<>uid://dntj7hpwj3qp0::::res://Boss/State Machine/boss_state_wander.gd<>uid://muywlnahu6te::::res://Boss/State Machine/boss_state_target.gd<>uid://bt3cn2bx00oq1::::res://Player/Assets/Skribble Character_Inner.png<>uid://d2h7u4cdp7nso::::res://Boss/State Machine/boss_state_ball.gd<>uid://pe0ipy56yl1r::::res://Boss/Hand/boss_hands.gd<>uid://c0myelnu23082::::res://Boss/State Machine/boss_state_dead.gd<>uid://bjesokgs5hi8v::::res://Player/Hand/hand.tscn<>uid://dqe5ql2h1lftm::::res://Boss/Hand/boss_hand.gd<>uid://d2ocsa6tnl1h1::::res://Player/name_label.gd
+ball.tscn::PackedScene::5208233326649649106::1745984323::0::1::::<><><>0<>0<><>::uid://dgq14ej6t3n21::::res://Ball/ball.gd
+::res://Boss/::1745984323
+boss.gd::GDScript::2521809959086673429::1745982334::0::1::::BossClass<>CharacterBody2D<><>0<>0<><>::
+boss.tscn::PackedScene::8623861598812354316::1745984446::0::1::::<><><>0<>0<><>::uid://bb6t3u4wqmusb::::res://Boss/boss.gd<>uid://dfovb1vdgm2ku::::res://Boss/handler_bossInput.gd<>uid://c4yrsl0f08bft::::res://Boss/State Machine/state_handler.gd<>uid://bb7hrvv8mlsp::::res://Boss/State Machine/boss_state_idle.gd<>uid://cc1mfyngmfuaq::::res://Boss/handler_bossAttack.gd<>uid://mbtuhu6wiogu::::res://Player/Assets/Skribble Character_Outer.png<>uid://dntj7hpwj3qp0::::res://Boss/State Machine/boss_state_wander.gd<>uid://muywlnahu6te::::res://Boss/State Machine/boss_state_target.gd<>uid://bt3cn2bx00oq1::::res://Player/Assets/Skribble Character_Inner.png<>uid://d2h7u4cdp7nso::::res://Boss/State Machine/boss_state_ball.gd<>uid://pe0ipy56yl1r::::res://Boss/Hand/boss_hands.gd<>uid://c0myelnu23082::::res://Boss/State Machine/boss_state_dead.gd<>uid://bjesokgs5hi8v::::res://Player/Hand/hand.tscn<>uid://dqe5ql2h1lftm::::res://Boss/Hand/boss_hand.gd<>uid://d2ocsa6tnl1h1::::res://Player/name_label.gd<>uid://ce3aqskaur0ue::::res://Boss/label_2.gd
 handler_base.gd::GDScript/GDScript::2106087565013104484::1744095287::0::1::::HandlerClass<>Node<><>0<>0<><>::
 handler_bossAttack.gd::GDScript/GDScript::4967631690082272200::1744095311::0::1::::BossAttackHandler<>HandlerClass<><>0<>0<><>::
 handler_bossInput.gd::GDScript/GDScript::7540385798661126580::1744096995::0::1::::BossInputHandler<>HandlerClass<><>0<>0<><>::
 name_label.gd::GDScript/GDScript::3252204367408266303::1743892074::0::1::::<>Label<><>0<>0<><>::
+label_2.gd::GDScript::5111428852650254936::1745983701::0::1::::<>Label<><>0<>0<><>::
 ::res://Boss/Assets/::1743892074
 Skribble Characters.png::CompressedTexture2D/CompressedTexture2D::2431576415534055662::1743892073::1743892074::1::::<><><>0<>0<>497a4a6a2e3551d40f8ec4e1a90d9b6b<>res://.godot/imported/Skribble Characters.png-45a320a489f9a4a109dd04519dc99a7c.ctex::
 Skribble Character_Inner.png::CompressedTexture2D/CompressedTexture2D::998814396689805971::1743892073::1743892074::1::::<><><>0<>0<>4345a3f449ccca7c50b76d260354548d<>res://.godot/imported/Skribble Character_Inner.png-f909efbf84cc34ba642a2c8631d61fae.ctex::
@@ -38,18 +40,19 @@ boss_attack.tscn::PackedScene/PackedScene::2557387527332944607::1743926527::0::1
 boss_hand.gd::GDScript/GDScript::8292391762609334974::1743892623::0::1::::BossHandClass<>Node2D<><>0<>0<><>::
 boss_hand.tscn::PackedScene/PackedScene::511734909631248610::1743926527::0::1::::<><><>0<>0<><>::uid://dqe5ql2h1lftm::::res://Boss/Hand/boss_hand.gd<>uid://3b2eg8m6jibc::::res://Player/Assets/Skribble hands_blank.png
 boss_hands.gd::GDScript/GDScript::1062623203088129825::1744002637::0::1::::<>Node2D<><>0<>0<><>::
-::res://Boss/State Machine/::1744097032
+::res://Boss/State Machine/::1745984291
 boss_state_ball.gd::GDScript/GDScript::9070791659655608438::1744094983::0::1::::<>StateClass<><>0<>0<><>::
 boss_state_dead.gd::GDScript/GDScript::6553799941172972849::1744094997::0::1::::<>StateClass<><>0<>0<><>::
 boss_state_idle.gd::GDScript/GDScript::74209592054526447::1744096538::0::1::::<>StateClass<><>0<>0<><>::
 boss_state_target.gd::GDScript/GDScript::885050771879372886::1744094993::0::1::::<>StateClass<><>0<>0<><>::
-boss_state_wander.gd::GDScript/GDScript::8111544185888957895::1744097032::0::1::::<>StateClass<><>0<>0<><>::
-state_base.gd::GDScript/GDScript::8676001411835343703::1744096795::0::1::::StateClass<>Node<><>0<>0<><>::
-state_handler.gd::GDScript/GDScript::6858927848792739769::1744096452::0::1::::<>Node<><>0<>0<><>::
-::res://Game/::1745462729
-game.gd::GDScript/GDScript::2700418688839932583::1743837396::0::1::::GameClass<>Node2D<><>0<>0<><>::
-game.tscn::PackedScene::5349948145860933267::1745462729::0::1::::<><><>0<>0<><>::uid://beqdrbp46pc36::::res://Game/game.gd<>uid://ca18bdfs01cxc::::res://Game/HUD/HUD.tscn<>uid://c71ixtnhvv15y::::res://Game/host_ui.gd<>uid://b6tqbqvxpm0pi::::res://door.tscn<>uid://b4226omcdcsq6::::res://Game/Room/room.tscn
-host_ui.gd::GDScript/GDScript::7073086012983814548::1743999976::0::1::::<>CanvasLayer<><>0<>0<><>::
+boss_state_wander.gd::GDScript::8111544185888957895::1745984291::0::1::::<>StateClass<><>0<>0<><>::
+state_base.gd::GDScript::8676001411835343703::1745983747::0::1::::StateClass<>Node<><>0<>0<><>::
+state_handler.gd::GDScript::6858927848792739769::1745981826::0::1::::<>Node<><>0<>0<><>::
+::res://Game/::1745984323
+game.gd::GDScript::2700418688839932583::1745651260::0::1::::GameClass<>Node2D<><>0<>0<><>::
+game.tscn::PackedScene::5349948145860933267::1745984323::0::1::::<><><>0<>0<><>::uid://beqdrbp46pc36::::res://Game/game.gd<>uid://ca18bdfs01cxc::::res://Game/HUD/HUD.tscn<>uid://c71ixtnhvv15y::::res://Game/host_ui.gd<>uid://b6tqbqvxpm0pi::::res://door.tscn<>uid://b4226omcdcsq6::::res://Game/Room/room.tscn<>uid://b3axt5bvfo8o7::::res://Game/spawn_points.gd
+host_ui.gd::GDScript/GDScript::7073086012983814548::1745476865::0::1::::<>CanvasLayer<><>0<>0<><>::
+spawn_points.gd::GDScript/GDScript::4353140304682552736::1745465515::0::1::::<>Node<><>0<>0<><>::
 ::res://Game/HUD/::1743926527
 hud.gd::GDScript/GDScript::7589855859899550966::1743840262::0::1::::<>CanvasLayer<><>0<>0<><>::
 HUD.tscn::PackedScene/PackedScene::4828520801693298040::1743926527::0::1::::<><><>0<>0<><>::uid://dget21ud3w8xu::::res://Game/HUD/hud.gd<>uid://d1vg5ddc2gv5a::::res://Game/HUD/Assets/HUD.png<>uid://ttbsp48vq7eb::::res://Game/HUD/Assets/HUD_Red.png<>uid://c8h0u6un7ryrw::::res://Game/HUD/Assets/HUD_Green.png<>uid://bt3cn2bx00oq1::::res://Player/Assets/Skribble Character_Inner.png<>uid://83ys3ad7isxp::::res://Game/HUD/Assets/HUD_Blue.png
@@ -61,25 +64,25 @@ HUD_Red.png::CompressedTexture2D/CompressedTexture2D::1372904901910483897::17438
 HUD_Value.png::CompressedTexture2D/CompressedTexture2D::8321815023065166183::1743836599::1743836648::1::::<><><>0<>0<>a7d1b793cc18c037563e6c28d8b4c35c<>res://.godot/imported/HUD_Value.png-d27050e23e2d7f8ac0225783beb6380f.ctex::
 HUD_Values.png::CompressedTexture2D/CompressedTexture2D::1825016195873017042::1743835694::1743835965::1::::<><><>0<>0<>0843f2aa5a664609334643e31c3a3c7b<>res://.godot/imported/HUD_Values.png-0de659cd68da9b31cb7bb5fec4b294cc.ctex::
 Item_Slots.png::CompressedTexture2D/CompressedTexture2D::1156500640343738239::1743835637::1743835954::1::::<><><>0<>0<>208da86b6f3619482e263df545b07074<>res://.godot/imported/Item_Slots.png-338dec62b9b86c98d98ae7812b39c33c.ctex::
-::res://Game/Room/::1743926527
-room.gd::GDScript/GDScript::3268351045343558601::1741860473::0::1::::RoomClass<>Node2D<><>0<>0<><>::
-room.tscn::PackedScene/PackedScene::4479330820930935303::1743926527::0::1::::<><><>0<>0<><>::uid://bmthi8okkuhmv::::res://Game/Room/room.gd<>uid://bg6nbtxgkar7c::::res://Game/Room/TileMap/scribbleDungeons_tiles.svg
+::res://Game/Room/::1745984323
+room.gd::GDScript::3268351045343558601::1745651393::0::1::::RoomClass<>Node2D<><>0<>0<><>::
+room.tscn::PackedScene::4479330820930935303::1745984323::0::1::::<><><>0<>0<><>::uid://bmthi8okkuhmv::::res://Game/Room/room.gd<>uid://bg6nbtxgkar7c::::res://Game/Room/TileMap/scribbleDungeons_tiles.svg
 ::res://Game/Room/Doors/::1741756719
 wall.png::CompressedTexture2D/CompressedTexture2D::8526432818036438881::1741756693::1741756719::1::::<><><>0<>0<>cd6512ca6a3391a398a9a21d9914292c<>res://.godot/imported/wall.png-bae29b580388fd33588852d293513ce7.ctex::
 wall_damaged.png::CompressedTexture2D/CompressedTexture2D::7432365037986436013::1741756693::1741756719::1::::<><><>0<>0<>94ae75446dcf40ba8bb78fe4f0e4ad79<>res://.godot/imported/wall_damaged.png-f66c0a875d0ecd5a074787d62f375859.ctex::
 wall_demolished.png::CompressedTexture2D/CompressedTexture2D::8991675232084571451::1741756693::1741756719::1::::<><><>0<>0<>36a6adf4b66e87c43781d61caa2a7f66<>res://.godot/imported/wall_demolished.png-96959bd4a0cd6df4728744ba40877643.ctex::
 ::res://Game/Room/TileMap/::1741586287
 scribbleDungeons_tiles.svg::CompressedTexture2D/CompressedTexture2D::2872341596357168294::1741586287::1741586287::1::::<><><>0<>0<>ea68da1462c5622c1f98c9ead3b7dcbd<>res://.godot/imported/scribbleDungeons_tiles.svg-bf87b92e2835c13f69d301ac2faaa709.ctex::
-::res://Main Menu/::1745463094
-Main Menu.tscn::PackedScene::7398492640270228479::1745462729::0::1::::<><><>0<>0<><>::uid://c6v4td75pemi0::::res://Main Menu/main_menu.gd
-main_menu.gd::GDScript::6993842384261952681::1745463094::0::1::::<>Node<><>0<>0<><>::
-::res://Player/::1745462729
+::res://Main Menu/::1745984323
+Main Menu.tscn::PackedScene::7398492640270228479::1745984323::0::1::::<><><>0<>0<><>::uid://c6v4td75pemi0::::res://Main Menu/main_menu.gd
+main_menu.gd::GDScript/GDScript::6993842384261952681::1745464686::0::1::::<>Node<><>0<>0<><>::
+::res://Player/::1745984323
 handler_playerAttack.gd::GDScript/GDScript::10775275976193541::1743999123::0::1::::PlayerAttackHandler<>Node<><>0<>0<><>::
 handler_playerInput.gd::GDScript/GDScript::1181726731253437730::1743999115::0::1::::PlayerInputHandler<>Node<><>0<>0<><>::
-hands.gd::GDScript/GDScript::7354617459055366490::1743893351::0::1::::<>Node2D<><>0<>0<><>::
+hands.gd::GDScript::7354617459055366490::1745651047::0::1::::<>Node2D<><>0<>0<><>::
 name_label.gd::GDScript/GDScript::9083415744908880440::1743981049::0::1::::<>Label<><>0<>0<><>::
-player.gd::GDScript/GDScript::4258183723889071851::1743893324::0::1::::PlayerClass<>CharacterBody2D<><>0<>0<><>::
-player.tscn::PackedScene::3732342753197783009::1745462729::0::1::::<><><>0<>0<><>::uid://b1wxwtmfhlg00::::res://Player/player.gd<>uid://q3o4p2j5hpsk::::res://Player/handler_playerInput.gd<>uid://fhp5dwkco2h::::res://Player/handler_playerAttack.gd<>uid://bt3cn2bx00oq1::::res://Player/Assets/Skribble Character_Inner.png<>uid://dc1vqfeqpwv8e::::res://Player/hands.gd<>uid://bjesokgs5hi8v::::res://Player/Hand/hand.tscn<>uid://mbtuhu6wiogu::::res://Player/Assets/Skribble Character_Outer.png<>uid://d2ocsa6tnl1h1::::res://Player/name_label.gd
+player.gd::GDScript::4258183723889071851::1745981691::0::1::::PlayerClass<>CharacterBody2D<><>0<>0<><>::
+player.tscn::PackedScene::3732342753197783009::1745984323::0::1::::<><><>0<>0<><>::uid://b1wxwtmfhlg00::::res://Player/player.gd<>uid://q3o4p2j5hpsk::::res://Player/handler_playerInput.gd<>uid://fhp5dwkco2h::::res://Player/handler_playerAttack.gd<>uid://bt3cn2bx00oq1::::res://Player/Assets/Skribble Character_Inner.png<>uid://dc1vqfeqpwv8e::::res://Player/hands.gd<>uid://bjesokgs5hi8v::::res://Player/Hand/hand.tscn<>uid://mbtuhu6wiogu::::res://Player/Assets/Skribble Character_Outer.png<>uid://d2ocsa6tnl1h1::::res://Player/name_label.gd
 ::res://Player/Assets/::1743659451
 Skribble Characters.png::CompressedTexture2D/CompressedTexture2D::1990029993889381900::1741586287::1741586287::1::::<><><>0<>0<>bc3c105d55edbeb01695d811ea0ec14e<>res://.godot/imported/Skribble Characters.png-e405219e687a118d5a4e16f51574fd9a.ctex::
 Skribble Character_Inner.png::CompressedTexture2D/CompressedTexture2D::3777957359990367466::1743658415::1743658420::1::::<><><>0<>0<>1b11baa4a7e32ae9a66a027fe480444f<>res://.godot/imported/Skribble Character_Inner.png-7fc547bafa42148bbb72ddfe2552cc2c.ctex::

@@ -5,7 +5,7 @@ class_name GameClass extends Node2D
 @onready var Spawn_Points: Node = $"Spawn Points"
 @onready var Loading: CanvasLayer = $Loading
 @onready var Camera: Camera2D = $Camera2D
-@onready var HOST_UI = $"Host UI"
+@onready var HOST_UI: CanvasLayer = $"Host UI"
 @onready var HUD: CanvasLayer = $Camera2D/Hud
 var camera_target: Vector2
 
@@ -29,7 +29,13 @@ func _process(delta: float) -> void:
 	else:
 		if !Camera.global_position.is_equal_approx(camera_target):
 			Camera.global_position = lerp(Camera.global_position, camera_target, delta*10)
-			
+	if Server.OFFLINE:
+		if !Camera.global_position.is_equal_approx(camera_target):
+			Camera.global_position = lerp(Camera.global_position, camera_target, delta*10)
+		var direction: Vector2 = Input.get_vector("look_left", "look_right", "look_up", "look_down")
+		Camera.position += direction * delta * 100
+	
+	
 	if Input.is_action_just_pressed("ui_cancel"):
 		#TODO: Disconnect Client
 		get_tree().change_scene_to_file(Global.MAIN)

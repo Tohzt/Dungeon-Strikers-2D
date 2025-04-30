@@ -4,15 +4,15 @@ res://Player/player.tscn
 res://Ball/ball.tscn
 res://Boss/boss.tscn
 res://_Multiplayer/Server.tscn
-res://Main Menu/main_menu.gd
-res://_Multiplayer/offline.gd
-res://_Multiplayer/Server.gd
+res://Game/Room/room.tscn
 res://_Multiplayer/server_offline.gd
-res://global.gd
+res://Boss/boss.gd
 res://Player/player.gd
-res://Game/spawn_points.gd
-res://Game/game.gd
-res://_Multiplayer/server_connect.gd
-res://_Multiplayer/server_spawn.gd
-res://Game/host_ui.gd
-res://Player/hands.gd
+res://Boss/State Machine/state_base.gd
+res://Boss/State Machine/state_handler.gd
+res://Boss/State Machine/boss_state_wander.gd
+res://Boss/label_2.gd
+res://settings.gd
+res://Game/Room/room.gd
+res://Boss/target_marker.gd
+res://Boss/State Machine/boss_state_idle.gd

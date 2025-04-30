@@ -14,10 +14,6 @@ func _process(_delta: float) -> void:
 	if state_current:
 		_handle_state_transition()
 
-func _unhandled_input(event: InputEvent) -> void:
-	if state_current:
-		state_current.handle_input(event)
-
 func change_state(new_state: StateClass) -> void:
 	if state_current == new_state: return
 		

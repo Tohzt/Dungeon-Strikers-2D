@@ -128,8 +128,9 @@ sources/0 = SubResource("TileSetAtlasSource_xabx2")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7wb2k"]
 size = Vector2(1140, 660)
 
-[node name="Room" type="Node2D" groups=["Room"]]
+[node name="Room" type="Node2D" node_paths=PackedStringArray("area") groups=["Room"]]
 script = ExtResource("1_ij6fq")
+area = NodePath("Area2D")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 z_index = -10

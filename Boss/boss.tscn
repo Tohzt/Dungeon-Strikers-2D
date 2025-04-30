@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://du4p0gdnajtii"]
+[gd_scene load_steps=25 format=3 uid="uid://du4p0gdnajtii"]
 
 [ext_resource type="Script" uid="uid://bb6t3u4wqmusb" path="res://Boss/boss.gd" id="1_ju3tf"]
 [ext_resource type="Script" uid="uid://dfovb1vdgm2ku" path="res://Boss/handler_bossInput.gd" id="2_ntee4"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://bjesokgs5hi8v" path="res://Player/Hand/hand.tscn" id="7_klplh"]
 [ext_resource type="Script" uid="uid://dqe5ql2h1lftm" path="res://Boss/Hand/boss_hand.gd" id="8_ntee4"]
 [ext_resource type="Script" uid="uid://d2ocsa6tnl1h1" path="res://Player/name_label.gd" id="8_r5hgr"]
+[ext_resource type="Script" uid="uid://ce3aqskaur0ue" path="res://Boss/target_marker.gd" id="16_fdnl6"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ntee4"]
 properties/0/path = NodePath(".:position")
@@ -51,14 +52,12 @@ colors = PackedColorArray(1, 1, 1, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_x3vf3"]
 gradient = SubResource("Gradient_00tjw")
 
-[node name="Boss" type="CharacterBody2D" node_paths=PackedStringArray("Hands", "Attack_Origin", "Input_Handler", "Attack_Handler", "healthbar") groups=["Boss"]]
+[node name="Boss" type="CharacterBody2D" node_paths=PackedStringArray("Hands", "Attack_Origin", "healthbar") groups=["Boss"]]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_ju3tf")
 Hands = NodePath("Hands")
 Attack_Origin = NodePath("Attack Origin")
-Input_Handler = NodePath("Input Handler")
-Attack_Handler = NodePath("Attack Handler")
 healthbar = NodePath("Healthbar")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -166,6 +165,27 @@ theme_override_font_sizes/font_size = 14
 text = "Player Name"
 horizontal_alignment = 1
 script = ExtResource("8_r5hgr")
+
+[node name="Target Marker" type="Label" parent="."]
+top_level = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -11.5
+offset_right = 10.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 0
+text = "(+)"
+script = ExtResource("16_fdnl6")
 
 [editable path="Hands/Left Hand"]
 [editable path="Hands/Right Hand"]
