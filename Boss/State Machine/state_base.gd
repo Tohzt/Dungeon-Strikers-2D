@@ -1,4 +1,6 @@
 class_name StateClass extends Node
+@onready var state_wander: StateClass = get_parent().get_node("Boss_Wander")
+@onready var state_target: StateClass = get_parent().get_node("Boss_Target")
 
 var state_handler: Node
 var Master: CharacterBody2D
@@ -12,9 +14,14 @@ func _ready() -> void:
 	Master = state_handler.Master
 	set_process(false)
 	set_physics_process(false)
+	
+	valid_transitions = {
+		"wander_state": state_wander,
+		"target_state": state_target
+	}
 
 
-func enter() -> void:
+func enter_state() -> void:
 	set_process(true)
 
 
@@ -31,6 +38,7 @@ func handle_transition(condition: String) -> StateClass:
 	return null
 
 
-func exit() -> void:
+func exit_to(next_state: String) -> void:
+	state_handler.change_state(handle_transition(next_state))
 	set_process(false)
 	set_physics_process(false)

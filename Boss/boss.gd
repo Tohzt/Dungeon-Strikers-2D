@@ -4,11 +4,7 @@ var color: Color = Color.TRANSPARENT
 @onready var Sprite: Sprite2D = $"Sprite Inner"
 @export var Hands: Node2D
 @export var Attack_Origin: Marker2D
-
-#NOTE: Enemy should run on state alone
-#@export_category("Handlers")
-#@export var Input_Handler: BossInputHandler
-#@export var Attack_Handler: BossAttackHandler
+@onready var ray_target := $RayCast2D
 
 var hp_max: float = 1000.0
 var hp: float = hp_max
@@ -25,6 +21,8 @@ var spawn_rot: float = 0.0
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
 
+var target: PlayerClass
+var target_locked: bool = false
 
 func _enter_tree() -> void:
 	if multiplayer.is_server():
@@ -37,22 +35,21 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_update_hp(delta)
+	##TODO: Get nearest target.. or whatever should take the agro
+	target = get_tree().get_first_node_in_group("Player")
+	var target_angle := position.direction_to(target.global_position).angle()
+	var _offset := deg_to_rad(90)
+	ray_target.global_rotation = target_angle + _offset
+	var ray_collider: Node2D = ray_target.get_collider()
+	if ray_collider:
+		target_locked = ray_collider.is_in_group("Player")
+	else:
+		target_locked = false
+
 	if !is_multiplayer_authority(): return
-	
-	#NOTE: Removing Handlers 
-	#if Input_Handler.is_aiming:
-		#rotation = lerp_angle(rotation, Input_Handler.input_direction.angle() + PI/2, delta * 10)
-	#elif velocity and !is_in_iframes:
-		#rotation = lerp_angle(rotation, velocity.angle() + PI/2, delta * 10)
-#
-	#if Attack_Handler.attack_confirmed:
-		##attack.rpc(Input_Handler.input_direction, Input_Handler.is_aiming)
-		#Attack_Handler.attack_confirmed = false
 	
 func _physics_process(_delta: float) -> void:
 	if !Server.OFFLINE and !multiplayer.is_server(): return
-	#NOTE: Removing Handlers 
-	#velocity = Input_Handler.velocity
 	move_and_slide()
 
 
@@ -63,31 +60,6 @@ func _update_hp(delta: float) -> void:
 func reset_position(pos: Vector2) -> void:
 	spawn_pos = pos
 	global_position = spawn_pos
-
-#NOTE: Removing Handlers 
-#var atk_side: int = 0
-#@rpc("any_peer", "call_local")
-#func attack(atk_dir: Vector2, is_aiming: bool) -> void:
-	#atk_side = _throw_punch(atk_side)
-	#if multiplayer.get_unique_id() != 1: return
-	#
-	#var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
-	#if !entities_node: return
-		#
-	#var _atk: BossAttackClass = Global.BOSS_ATTACK.instantiate()
-	#_atk.Attacker = self
-	#_atk.attack_power = ATTACK
-	#_atk.global_position = global_position
-	#_atk.spawn_position = global_position
-	#_atk.modulate = Sprite.modulate
-	#entities_node.add_child(_atk, true)
-	#
-	#if is_aiming: _atk.set_props("ranged", 50, atk_dir)
-	#else: _atk.set_props("melee", 100, atk_dir, 0.5)
-#
-#func _throw_punch(side: int = 1) -> int:
-	#Hands.get_child(side).is_attacking = true
-	#return (side+1)%2
 
 @rpc("any_peer", "call_local")
 func set_color(col: Color) -> void:

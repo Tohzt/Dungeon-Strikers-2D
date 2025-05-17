@@ -8,22 +8,16 @@ var state_next: StateClass
 func _ready() -> void:
 	if state_init:
 		state_current = state_init
-		state_current.enter()
-
-func _process(_delta: float) -> void:
-	if state_current:
-		_handle_state_transition()
+		state_current.enter_state()
 
 func change_state(new_state: StateClass) -> void:
 	if state_current == new_state: return
 		
 	state_next = new_state
+	_handle_state_transition()
 
 func _handle_state_transition() -> void:
 	if state_next and state_next != state_current:
-		if state_current:
-			state_current.exit()
-		
 		state_current = state_next
-		state_current.enter()
+		state_current.enter_state()
 		state_next = null

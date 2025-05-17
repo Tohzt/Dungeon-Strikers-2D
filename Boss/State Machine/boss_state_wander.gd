@@ -1,3 +1,5 @@
+##TODO: Consider base class moving t ogiven target. Bool if movement is continuous
+##TODO: Tartget State will break
 extends StateClass
 
 ##HACK: Temp display crosshair
@@ -9,25 +11,28 @@ const DIRECTION_CHANGE_TIME: float = 2.0
 const WANDER_RADIUS: float = 200.0
 const SPEED_MULTIPLIER: float = 10000.0
 
-func enter() -> void:
-	super.enter()
+func enter_state() -> void:
+	super.enter_state()
 	_pick_new_target()
+
 
 func update(delta: float) -> void:
 	_is_on_target()
+	_update_direction(delta)
+	_apply_new_direction(delta)
 	
-	direction_timer += delta
-	if direction_timer >= DIRECTION_CHANGE_TIME:
-		_pick_new_target()
-		direction_timer = 0
-	
-	var direction: Vector2 = (target_position - Master.global_position).normalized()
-	##TODO: Don't set velocity directly. Update Master's target_position
-	Master.velocity = direction * SPEED_MULTIPLIER * delta
+	if Master.target_locked:
+		exit_to("target_state")
 
 func _is_on_target() -> void:
 	if Master.global_position.distance_to(target_position) < 10:
 		direction_timer = DIRECTION_CHANGE_TIME
+
+func _update_direction(delta: float) -> void:
+	direction_timer += delta
+	if direction_timer >= DIRECTION_CHANGE_TIME:
+		_pick_new_target()
+		direction_timer = 0
 
 func _pick_new_target() -> void:
 	var random_angle: float = randf_range(0, TAU)
@@ -60,3 +65,8 @@ func _pick_new_target() -> void:
 	
 	##HACK: Temp display crosshair
 	emit_signal("target_position_changed", target_position)
+
+func _apply_new_direction(delta: float) -> void:
+	var direction: Vector2 = (target_position - Master.global_position).normalized()
+	##TODO: Don't set velocity directly. Update Master's target_position
+	Master.velocity = direction * SPEED_MULTIPLIER * delta
