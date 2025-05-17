@@ -11,7 +11,8 @@ var hp: float = hp_max
 @export var healthbar: TextureProgressBar
 
 var name_display: String
-const SPEED: float = 300.0  
+const SPEED: float = 5000.0  
+const SPEED_MULTIPLIER: float = 1.0
 var ATTACK: float = 400.0  
 var DEFENSE: float = 100.0
 
@@ -35,6 +36,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_update_hp(delta)
+	_update_position(delta)
 	##TODO: Get nearest target.. or whatever should take the agro
 	target = get_tree().get_first_node_in_group("Player")
 	var target_angle := position.direction_to(target.global_position).angle()
@@ -56,6 +58,11 @@ func _physics_process(_delta: float) -> void:
 func _update_hp(delta: float) -> void:
 	healthbar.global_position = global_position - Vector2(70,80)
 	healthbar.value = lerp(healthbar.value, float(hp/hp_max)*hp_max, delta*10)
+
+func _update_position(delta: float) -> void:
+	if !target: return
+	var direction: Vector2 = (target.global_position - global_position).normalized()
+	velocity = direction * SPEED * SPEED_MULTIPLIER * delta
 
 func reset_position(pos: Vector2) -> void:
 	spawn_pos = pos

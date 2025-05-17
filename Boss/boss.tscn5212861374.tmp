@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://du4p0gdnajtii"]
+[gd_scene load_steps=25 format=3 uid="uid://du4p0gdnajtii"]
 
 [ext_resource type="Script" uid="uid://bb6t3u4wqmusb" path="res://Boss/boss.gd" id="1_ju3tf"]
 [ext_resource type="Script" uid="uid://c4yrsl0f08bft" path="res://Boss/State Machine/state_handler.gd" id="2_r5hgr"]
@@ -25,6 +25,47 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath("Sprite Inner:modulate")
 properties/2/spawn = true
 properties/2/replication_mode = 1
+
+[sub_resource type="GDScript" id="GDScript_klplh"]
+script/source = "class_name BossInputHandler extends HandlerClass
+
+var velocity: Vector2 = Vector2.ZERO
+var input_direction: Vector2
+var input_confirmed: bool = false
+var is_aiming: bool = false
+
+func move_in_direction(dir: Vector2, spd_mod: float, delta: float) -> void:
+	if dir:
+		var prev_dir: Vector2 = velocity.normalized()
+		velocity.x = lerp(prev_dir.x, dir.x, delta*10) * Master.SPEED * spd_mod
+		velocity.y = lerp(prev_dir.y, dir.y, delta*10) * Master.SPEED * spd_mod
+	else:
+		velocity.x = move_toward(velocity.x, 0, Master.SPEED)
+		velocity.y = move_toward(velocity.y, 0, Master.SPEED)
+"
+
+[sub_resource type="GDScript" id="GDScript_r5hgr"]
+script/source = "class_name BossAttackHandler extends HandlerClass
+
+var attack_cooldown: float = 0.0
+var attack_cooldown_max: float= 0.25
+var attack_confirmed: bool = false
+
+func _process(delta: float) -> void:
+	_handle_attack_cooldown(delta)
+
+func _handle_attack_cooldown(delta: float) -> void:
+	if attack_cooldown > 0.0:
+		attack_cooldown -= delta
+	else:
+		_handle_attack()
+
+func _handle_attack() -> void:
+	if Input_Handler.input_confirmed:
+		Input_Handler.input_confirmed = false
+		attack_cooldown = attack_cooldown_max
+		attack_confirmed = true
+"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m6ryd"]
 radius = 30.0
@@ -81,6 +122,13 @@ script = ExtResource("6_iht7o")
 
 [node name="Boss_Dead" type="Node" parent="State Handler"]
 script = ExtResource("7_d6ame")
+
+[node name="Input Handler" type="Node" parent="."]
+script = SubResource("GDScript_klplh")
+
+[node name="Attack Handler" type="Node" parent="." node_paths=PackedStringArray("Input_Handler")]
+script = SubResource("GDScript_r5hgr")
+Input_Handler = NodePath("../Input Handler")
 
 [node name="Attack Origin" type="Marker2D" parent="."]
 position = Vector2(0, -20)

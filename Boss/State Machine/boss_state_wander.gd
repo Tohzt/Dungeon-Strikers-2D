@@ -9,7 +9,6 @@ var target_position: Vector2
 var direction_timer: float = 0.0
 const DIRECTION_CHANGE_TIME: float = 2.0
 const WANDER_RADIUS: float = 200.0
-const SPEED_MULTIPLIER: float = 10000.0
 
 func enter_state() -> void:
 	super.enter_state()
@@ -19,7 +18,6 @@ func enter_state() -> void:
 func update(delta: float) -> void:
 	_is_on_target()
 	_update_direction(delta)
-	_apply_new_direction(delta)
 	
 	if Master.target_locked:
 		exit_to("target_state")
@@ -65,8 +63,3 @@ func _pick_new_target() -> void:
 	
 	##HACK: Temp display crosshair
 	emit_signal("target_position_changed", target_position)
-
-func _apply_new_direction(delta: float) -> void:
-	var direction: Vector2 = (target_position - Master.global_position).normalized()
-	##TODO: Don't set velocity directly. Update Master's target_position
-	Master.velocity = direction * SPEED_MULTIPLIER * delta
