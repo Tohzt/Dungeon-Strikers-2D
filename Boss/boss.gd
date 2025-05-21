@@ -4,7 +4,6 @@ var color: Color = Color.TRANSPARENT
 @onready var Sprite: Sprite2D = $"Sprite Inner"
 @export var Hands: Node2D
 @export var Attack_Origin: Marker2D
-@onready var ray_target := $RayCast2D
 
 var hp_max: float = 1000.0
 var hp: float = hp_max
@@ -22,14 +21,18 @@ var spawn_rot: float = 0.0
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
 
-var target: PlayerClass
+@export var _Target: Node2D
+@onready var ray_target := $RayCast2D
+var target: Node2D
 var target_locked: bool = false
+var enemy: Node2D
 
 func _enter_tree() -> void:
 	if multiplayer.is_server():
 		set_multiplayer_authority(1)
 
 func _ready() -> void:
+	target = _Target
 	healthbar.max_value = hp_max
 	healthbar.value = hp_max
 
@@ -37,16 +40,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_update_hp(delta)
 	_update_position(delta)
-	##TODO: Get nearest target.. or whatever should take the agro
-	target = get_tree().get_first_node_in_group("Player")
-	var target_angle := position.direction_to(target.global_position).angle()
-	var _offset := deg_to_rad(90)
-	ray_target.global_rotation = target_angle + _offset
-	var ray_collider: Node2D = ray_target.get_collider()
-	if ray_collider:
-		target_locked = ray_collider.is_in_group("Player")
-	else:
-		target_locked = false
 
 	if !is_multiplayer_authority(): return
 	
@@ -61,8 +54,14 @@ func _update_hp(delta: float) -> void:
 
 func _update_position(delta: float) -> void:
 	if !target: return
+	var target_angle := position.direction_to(target.global_position).angle()
+	var _offset := deg_to_rad(90)
+	ray_target.global_rotation = target_angle + _offset
+	var ray_collider: Node2D = ray_target.get_collider()
+	target_locked = ray_collider == target
 	var direction: Vector2 = (target.global_position - global_position).normalized()
 	velocity = direction * SPEED * SPEED_MULTIPLIER * delta
+	rotation = lerp_angle(rotation, direction.angle() + PI/2, delta*5)
 
 func reset_position(pos: Vector2) -> void:
 	spawn_pos = pos

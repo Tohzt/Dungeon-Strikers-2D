@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://du4p0gdnajtii"]
+[gd_scene load_steps=24 format=3 uid="uid://du4p0gdnajtii"]
 
 [ext_resource type="Script" uid="uid://bb6t3u4wqmusb" path="res://Boss/boss.gd" id="1_ju3tf"]
 [ext_resource type="Script" uid="uid://c4yrsl0f08bft" path="res://Boss/State Machine/state_handler.gd" id="2_r5hgr"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://bjesokgs5hi8v" path="res://Player/Hand/hand.tscn" id="7_klplh"]
 [ext_resource type="Script" uid="uid://dqe5ql2h1lftm" path="res://Boss/Hand/boss_hand.gd" id="8_ntee4"]
 [ext_resource type="Script" uid="uid://d2ocsa6tnl1h1" path="res://Player/name_label.gd" id="8_r5hgr"]
+[ext_resource type="Texture2D" uid="uid://dv4og0hbg14ui" path="res://icon.svg" id="15_r5hgr"]
 [ext_resource type="Script" uid="uid://ce3aqskaur0ue" path="res://Boss/target_marker.gd" id="16_fdnl6"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ntee4"]
@@ -50,13 +51,14 @@ colors = PackedColorArray(1, 1, 1, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_x3vf3"]
 gradient = SubResource("Gradient_00tjw")
 
-[node name="Boss" type="CharacterBody2D" node_paths=PackedStringArray("Hands", "Attack_Origin", "healthbar") groups=["Boss"]]
+[node name="Boss" type="CharacterBody2D" node_paths=PackedStringArray("Hands", "Attack_Origin", "healthbar", "_Target") groups=["Boss", "Entity"]]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_ju3tf")
 Hands = NodePath("Hands")
 Attack_Origin = NodePath("Attack Origin")
 healthbar = NodePath("Healthbar")
+_Target = NodePath("_Target")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_ntee4")
@@ -181,6 +183,13 @@ script = ExtResource("16_fdnl6")
 [node name="RayCast2D" type="RayCast2D" parent="."]
 target_position = Vector2(0, -200)
 collision_mask = 3
+
+[node name="_Target" type="Node2D" parent="."]
+top_level = true
+
+[node name="Sprite2D" type="Sprite2D" parent="_Target"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("15_r5hgr")
 
 [editable path="Hands/Left Hand"]
 [editable path="Hands/Right Hand"]

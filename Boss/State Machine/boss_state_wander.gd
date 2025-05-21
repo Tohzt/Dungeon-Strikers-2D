@@ -9,6 +9,7 @@ var target_position: Vector2
 var direction_timer: float = 0.0
 const DIRECTION_CHANGE_TIME: float = 2.0
 const WANDER_RADIUS: float = 200.0
+const DETECT_RANGE: int = 200
 
 func enter_state() -> void:
 	super.enter_state()
@@ -18,9 +19,16 @@ func enter_state() -> void:
 func update(delta: float) -> void:
 	_is_on_target()
 	_update_direction(delta)
+	_detect_enemy()
 	
 	if Master.target_locked:
 		exit_to("target_state")
+
+func _detect_enemy() -> void:
+	var entity: Dictionary = Global.get_nearest(Master.global_position, "Entity")
+	if entity:
+		if entity["dist"] <= DETECT_RANGE:
+			Master.target = entity["inst"]
 
 func _is_on_target() -> void:
 	if Master.global_position.distance_to(target_position) < 10:
@@ -60,6 +68,8 @@ func _pick_new_target() -> void:
 			_pick_new_target()
 			return
 	target_position = tar_pos
+	Master.target = Master._Target
+	Master.target.global_position = target_position
 	
 	##HACK: Temp display crosshair
 	emit_signal("target_position_changed", target_position)

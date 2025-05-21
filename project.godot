@@ -33,6 +33,10 @@ window/size/viewport_width=1140
 window/size/viewport_height=660
 window/stretch/mode="viewport"
 
+[global_group]
+
+Entity="Anything that can be interacted with in some way"
+
 [input]
 
 ui_left={

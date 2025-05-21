@@ -25,3 +25,16 @@ func set_current_room(room: RoomClass) -> void:
 	var game: GameClass = get_tree().current_scene
 	if game:
 		game.camera_target = room.global_position
+
+func get_nearest(from: Vector2, type: String) -> Dictionary:
+	var entities: Array[Node] = get_tree().get_nodes_in_group(type)
+	var entity_dist := INF
+	for entity: Node2D in entities:
+		entity_dist = min(entity_dist, from.distance_to(entity.global_position))
+		var obj: Dictionary = {
+			"inst": entity,
+			"dist": entity_dist
+		}
+		return obj
+	##TODO: Do somethnig with failed state
+	return {"found": false}

@@ -1,3 +1,5 @@
+Sprite2D
+Node2D
 RayCast2D
 Label
 Node
@@ -11,5 +13,3 @@ MarginContainer
 LineEdit
 TextEdit
 ProgressBar
-Area2D
-Node2D
