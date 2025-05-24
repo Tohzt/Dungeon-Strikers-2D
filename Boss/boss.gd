@@ -12,7 +12,9 @@ var hp: float = hp_max
 var name_display: String
 const SPEED: float = 5000.0  
 const SPEED_MULTIPLIER: float = 1.0
-var ATTACK: float = 400.0  
+var ATTACK: float = 400.0 
+var ATTACK_RANGE: float = 0.0
+@onready var ATTACK_COOLDOWN: float = 0.0
 var DEFENSE: float = 100.0
 
 var spawn_pos: Vector2 = Vector2.ZERO
@@ -32,6 +34,7 @@ func _enter_tree() -> void:
 		set_multiplayer_authority(1)
 
 func _ready() -> void:
+	z_index = Global.Layers.ENEMIES
 	target = _Target
 	healthbar.max_value = hp_max
 	healthbar.value = hp_max
@@ -40,8 +43,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_update_hp(delta)
 	_update_position(delta)
-
-	if !is_multiplayer_authority(): return
+	_update_cooldowns(delta)
+	#if !is_multiplayer_authority(): return
 	
 func _physics_process(_delta: float) -> void:
 	if !Server.OFFLINE and !multiplayer.is_server(): return
@@ -62,6 +65,14 @@ func _update_position(delta: float) -> void:
 	var direction: Vector2 = (target.global_position - global_position).normalized()
 	velocity = direction * SPEED * SPEED_MULTIPLIER * delta
 	rotation = lerp_angle(rotation, direction.angle() + PI/2, delta*5)
+
+func _update_cooldowns(delta: float) -> void:
+	if ATTACK_COOLDOWN > 0.0:
+		ATTACK_COOLDOWN -= delta
+		print("Attack Cooldown: ", ATTACK_COOLDOWN)
+		if ATTACK_COOLDOWN <= 0.0:
+			print("Attack Cooldown finished!")
+			ATTACK_COOLDOWN = 0.0
 
 func reset_position(pos: Vector2) -> void:
 	spawn_pos = pos

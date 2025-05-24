@@ -14,6 +14,32 @@ var player_display_name: String
 var rooms: Array[RoomClass]
 var current_room: int = -1
 
+# Layer system for rendering order
+enum Layers {
+	# Environment (0-9)
+	FLOOR = 0,
+	WALLS = 1,
+	BG_DECOR = 2,
+	FG_DECOR = 3,
+	
+	# Characters/Entities (10-19)
+	PLAYER = 10,
+	ENEMIES = 11,
+	NPCS = 12,
+	
+	# Effects/Attacks (20-29)
+	GROUND_EFFECTS = 20,
+	PROJECTILES = 21,
+	TELEGRAPHS = 22,
+	ATTACK_VISUALS = 23,
+	
+	# UI/Overlay (30-39)
+	GAME_UI = 30,
+	MENUS = 31,
+	HUD = 32
+}
+
+
 func is_current_room(room: RoomClass, make_current: bool = false) -> bool:
 	if current_room == rooms.find(room):
 		return true

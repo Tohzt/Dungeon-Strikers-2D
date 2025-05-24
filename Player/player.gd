@@ -33,6 +33,7 @@ func _enter_tree() -> void:
 		set_multiplayer_authority(peer_id)
 
 func _ready() -> void:
+	z_index = Global.Layers.PLAYER
 	healthbar.max_value = hp_max
 	healthbar.value = hp_max
 	hide()
