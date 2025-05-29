@@ -1,5 +1,3 @@
-##TODO: Consider base class moving t ogiven target. Bool if movement is continuous
-##TODO: Tartget State will break
 extends StateClass
 
 ##HACK: Temp display crosshair
@@ -47,17 +45,9 @@ func _pick_new_target() -> void:
 		sin(random_angle) * WANDER_RADIUS
 	)
 	
-	## TODO: Consider getting room from Master
-	# Master can track room on enter/exit
-	var current_room: RoomClass
-	for room in get_tree().get_nodes_in_group("Room"):
-		if room.current_room:
-			current_room = room
-			break
-	
-	if current_room:
+	if Master.current_room:
 		var padding := 10.0
-		var room_area: Area2D = current_room.area
+		var room_area: Area2D = Master.current_room.area
 		var room_shape: CollisionShape2D = room_area.get_node("CollisionShape2D")
 		var room_rect := Rect2(
 			room_area.global_position,

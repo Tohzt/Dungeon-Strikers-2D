@@ -53,12 +53,13 @@ colors = PackedColorArray(1, 1, 1, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_x3vf3"]
 gradient = SubResource("Gradient_00tjw")
 
-[node name="Boss" type="CharacterBody2D" node_paths=PackedStringArray("Hands", "Attack_Origin", "healthbar", "_Target") groups=["Boss", "Entity"]]
+[node name="Boss" type="CharacterBody2D" node_paths=PackedStringArray("Hands", "Attack_Origin", "State_Handler", "healthbar", "_Target") groups=["Boss", "Entity"]]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_ju3tf")
 Hands = NodePath("Hands")
 Attack_Origin = NodePath("Attack Origin")
+State_Handler = NodePath("State Handler")
 healthbar = NodePath("Healthbar")
 _Target = NodePath("_Target")
 

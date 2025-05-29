@@ -19,7 +19,6 @@ func start_cast() -> void:
 	if !can_attack: return
 	is_casting = true
 	can_attack = false
-	print("Starting cast for attack: ", attack_data.attack_name)
 	
 	# Spawn telegraph
 	if attack_data.telegraph_scene:
@@ -41,7 +40,6 @@ func _on_cast_complete() -> void:
 	
 	# Spawn actual attack
 	if attack_data.attack_scene:
-		print("Cast complete, spawning attack: ", attack_data.attack_name)
 		attack_instance = attack_data.attack_scene.instantiate()
 		add_child(attack_instance)
 		attack_instance.global_position = attack_position
@@ -55,9 +53,7 @@ func _on_cast_complete() -> void:
 	cooldown_timer.timeout.connect(_on_cooldown_complete)
 
 func _on_attack_destroyed() -> void:
-	print("Attack destroyed: ", attack_data.attack_name)
 	queue_free()  # Destroy this node when the attack is destroyed
 
 func _on_cooldown_complete() -> void:
-	print("Cooldown complete for attack: ", attack_data.attack_name)
 	can_attack = true 

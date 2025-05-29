@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=3 format=3 uid="uid://cn5v2okkp2ios"]
+
+[ext_resource type="Script" uid="uid://dgec0wqpw5rdf" path="res://Items/Weapons/weapon_resource.gd" id="1_bcd83"]
+[ext_resource type="Texture2D" uid="uid://bgm781nxifme8" path="res://Items/src/Weapons/weapon_sword.png" id="2_usg6p"]
+
+[resource]
+script = ExtResource("1_bcd83")
+weapon_hand = 1
+weapon_sprite = Array[CompressedTexture2D]([ExtResource("2_usg6p")])
+weapon_name = "Sword"
+weapon_damage = 10.0
+weapon_angle = 0.0
+weapon_offset = Vector2(0, 0)
+weapon_cooldown = 0.5
+weapon_duration = 0.25
+weapon_mana_cost = 0.0
+weapon_cast_duration = 0.0
+metadata/_custom_type_script = "uid://dgec0wqpw5rdf"

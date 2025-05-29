@@ -4,6 +4,7 @@ var color: Color = Color.TRANSPARENT
 @onready var Sprite: Sprite2D = $"Sprite Inner"
 @export var Hands: Node2D
 @export var Attack_Origin: Marker2D
+@export var State_Handler: StateHandlerClass
 
 var hp_max: float = 1000.0
 var hp: float = hp_max
@@ -19,6 +20,7 @@ var DEFENSE: float = 100.0
 
 var spawn_pos: Vector2 = Vector2.ZERO
 var spawn_rot: float = 0.0
+var current_room: RoomClass
 
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
@@ -44,6 +46,7 @@ func _process(delta: float) -> void:
 	_update_hp(delta)
 	_update_position(delta)
 	_update_cooldowns(delta)
+	_update_current_room()
 	#if !is_multiplayer_authority(): return
 	
 func _physics_process(_delta: float) -> void:
@@ -69,14 +72,18 @@ func _update_position(delta: float) -> void:
 func _update_cooldowns(delta: float) -> void:
 	if ATTACK_COOLDOWN > 0.0:
 		ATTACK_COOLDOWN -= delta
-		print("Attack Cooldown: ", ATTACK_COOLDOWN)
 		if ATTACK_COOLDOWN <= 0.0:
-			print("Attack Cooldown finished!")
 			ATTACK_COOLDOWN = 0.0
 
 func reset_position(pos: Vector2) -> void:
 	spawn_pos = pos
 	global_position = spawn_pos
+
+func _update_current_room() -> void:
+	##NOTE: Update via enter/exit room's area2D
+	for room in get_tree().get_nodes_in_group("Room"):
+		if room.current_room:
+			current_room = room
 
 @rpc("any_peer", "call_local")
 func set_color(col: Color) -> void:

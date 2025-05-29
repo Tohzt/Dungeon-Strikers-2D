@@ -1,4 +1,4 @@
-extends Node
+class_name StateHandlerClass extends Node
 @export var Master: CharacterBody2D
 @export var state_init: StateClass
 

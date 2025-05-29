@@ -5,17 +5,15 @@ res://Ball/ball.tscn
 res://Boss/boss.tscn
 res://_Multiplayer/Server.tscn
 res://Game/Room/room.tscn
-res://Boss/State Machine/boss_state_target.gd
 res://Boss/Attack/boss_attack.tscn
-res://Boss/Attacks/boss_attack_node.gd
-res://Boss/boss.gd
-res://Boss/Attacks/attack_resource.gd
-res://Boss/Attacks/boss_attack_1.tres
 res://Boss/Attacks/Attack 01/attack_01.tscn
-res://Boss/Attacks/Attack 01/attack_01.gd
 res://Boss/Attacks/Attack 01/attack_01_telegraph.tscn
-res://Boss/Attacks/Attack 01/boss_attack_1.tres
-res://global.gd
-res://Player/player.gd
-res://Game/Room/room.gd
-res://Boss/Attacks/Attack 01/attack_01_telegraph.gd
+res://Items/Weapons/weapon.gd
+res://Items/Weapons/weapon.tscn
+res://Boss/boss.gd
+res://Boss/Attacks/boss_attack_node.gd
+res://Boss/State Machine/boss_state_target.gd
+res://Player/hands.gd
+res://Items/Weapons/weapon_resource.gd
+res://Items/Weapons/sword.tres
+res://Items/Weapons/Shield.tres
