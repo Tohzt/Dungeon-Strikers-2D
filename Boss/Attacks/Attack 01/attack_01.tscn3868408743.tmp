@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://bbx2q6512o2aa"]
+[gd_scene load_steps=5 format=3 uid="uid://bbx2q6512o2aa"]
 
 [ext_resource type="Script" uid="uid://dp8q6v0w8tjbl" path="res://Boss/Attacks/Attack 01/attack_01.gd" id="1_bwwxv"]
-[ext_resource type="Resource" uid="uid://dvkg8b8640wyy" path="res://Attacks/attack_resource.tres" id="2_jngrg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jngrg"]
 radius = 56.1427
@@ -20,7 +19,6 @@ fill_from = Vector2(0.5, 0.5)
 [node name="Attack01" type="Area2D"]
 top_level = true
 script = ExtResource("1_bwwxv")
-attack_data = ExtResource("2_jngrg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_jngrg")

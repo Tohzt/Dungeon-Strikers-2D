@@ -1,16 +1,16 @@
-[gd_scene load_steps=26 format=3 uid="uid://du4p0gdnajtii"]
+[gd_scene load_steps=27 format=3 uid="uid://du4p0gdnajtii"]
 
 [ext_resource type="Script" uid="uid://bb6t3u4wqmusb" path="res://Boss/boss.gd" id="1_ju3tf"]
+[ext_resource type="PackedScene" uid="uid://bbx2q6512o2aa" path="res://Boss/Attacks/Attack 01/attack_01.tscn" id="2_71440"]
 [ext_resource type="Script" uid="uid://c4yrsl0f08bft" path="res://Boss/State Machine/state_handler.gd" id="2_r5hgr"]
 [ext_resource type="Script" uid="uid://bb7hrvv8mlsp" path="res://Boss/State Machine/boss_state_idle.gd" id="3_fdnl6"]
 [ext_resource type="Texture2D" uid="uid://mbtuhu6wiogu" path="res://Player/Assets/Skribble Character_Outer.png" id="4_2j6g7"]
 [ext_resource type="Script" uid="uid://dntj7hpwj3qp0" path="res://Boss/State Machine/boss_state_wander.gd" id="4_71440"]
 [ext_resource type="Script" uid="uid://muywlnahu6te" path="res://Boss/State Machine/boss_state_target.gd" id="5_4o1ob"]
 [ext_resource type="Texture2D" uid="uid://bt3cn2bx00oq1" path="res://Player/Assets/Skribble Character_Inner.png" id="5_myhfd"]
-[ext_resource type="Script" uid="uid://fw7dprr1vi1b" path="res://Boss/Attacks/attack_resource.gd" id="6_fdnl6"]
+[ext_resource type="Script" uid="uid://fw7dprr1vi1b" path="res://Attacks/attack_resource.gd" id="6_fdnl6"]
 [ext_resource type="Script" uid="uid://d2h7u4cdp7nso" path="res://Boss/State Machine/boss_state_ball.gd" id="6_iht7o"]
 [ext_resource type="Script" uid="uid://pe0ipy56yl1r" path="res://Boss/Hand/boss_hands.gd" id="6_ju3tf"]
-[ext_resource type="Resource" uid="uid://3i8858bnyu1y" path="res://Boss/Attacks/Attack 01/boss_attack_1.tres" id="7_71440"]
 [ext_resource type="Script" uid="uid://c0myelnu23082" path="res://Boss/State Machine/boss_state_dead.gd" id="7_d6ame"]
 [ext_resource type="PackedScene" uid="uid://bjesokgs5hi8v" path="res://Player/Hand/hand.tscn" id="7_klplh"]
 [ext_resource type="Script" uid="uid://dqe5ql2h1lftm" path="res://Boss/Hand/boss_hand.gd" id="8_ntee4"]
@@ -28,6 +28,19 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath("Sprite Inner:modulate")
 properties/2/spawn = true
 properties/2/replication_mode = 1
+
+[sub_resource type="Resource" id="Resource_fdnl6"]
+script = ExtResource("6_fdnl6")
+attack_name = "attack_1"
+attack_damage = 0.0
+attack_distance = 0.0
+attack_mana_cost = 0.0
+attack_cast_time = 0.0
+attack_cooldown = 0.0
+attack_duration = 0.5
+attack_aoe_radius = 0.0
+attack_type = 1
+metadata/_custom_type_script = "uid://fw7dprr1vi1b"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m6ryd"]
 radius = 30.0
@@ -60,6 +73,7 @@ script = ExtResource("1_ju3tf")
 Hands = NodePath("Hands")
 Attack_Origin = NodePath("Attack Origin")
 State_Handler = NodePath("State Handler")
+Attack_List = Array[PackedScene]([ExtResource("2_71440")])
 healthbar = NodePath("Healthbar")
 _Target = NodePath("_Target")
 
@@ -80,7 +94,7 @@ script = ExtResource("4_71440")
 
 [node name="Boss_Target" type="Node" parent="State Handler"]
 script = ExtResource("5_4o1ob")
-attack_resources = Array[ExtResource("6_fdnl6")]([ExtResource("7_71440")])
+attack_resources = Array[ExtResource("6_fdnl6")]([SubResource("Resource_fdnl6")])
 
 [node name="Boss_Ball" type="Node" parent="State Handler"]
 script = ExtResource("6_iht7o")

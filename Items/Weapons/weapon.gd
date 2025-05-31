@@ -28,8 +28,8 @@ func _on_pickup_body_entered(body: Node2D) -> void:
 	if !body.is_in_group("Entity"): return
 	weapon_holder = body
 	if Properties.weapon_hand == Properties.Handedness.LEFT:
-		global_position = body.Hands.Left.hand.global_position
+		global_position = body.Hands.Left.hand.global_position - Properties.weapon_offset
 		call_deferred("reparent", body.Hands.Left.hand)
 	else:
-		global_position = body.Hands.Right.hand.global_position
+		global_position =body.Hands.Right.hand.global_position - Properties.weapon_offset
 		call_deferred("reparent", body.Hands.Right.hand)

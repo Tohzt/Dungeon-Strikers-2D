@@ -6,7 +6,6 @@ const ROOM: String = "res://Game/Room/room.tscn"
 
 const PLAYER: PackedScene = preload("res://Player/player.tscn")
 const ATTACK: PackedScene = preload("res://Player/Attack/player_attack.tscn")
-const BOSS_ATTACK: PackedScene = preload("res://Boss/Attack/boss_attack.tscn")
 const BALL: PackedScene = preload("res://Ball/ball.tscn")
 const BOSS: PackedScene = preload("res://Boss/boss.tscn")
 var player_display_name: String
@@ -21,6 +20,7 @@ enum Layers {
 	WALLS = 1,
 	BG_DECOR = 2,
 	FG_DECOR = 3,
+	GROUND_EFFECTS = 4,
 	
 	# Characters/Entities (10-19)
 	PLAYER = 10,
@@ -28,9 +28,7 @@ enum Layers {
 	NPCS = 12,
 	
 	# Effects/Attacks (20-29)
-	GROUND_EFFECTS = 20,
 	PROJECTILES = 21,
-	TELEGRAPHS = 22,
 	ATTACK_VISUALS = 23,
 	
 	# UI/Overlay (30-39)

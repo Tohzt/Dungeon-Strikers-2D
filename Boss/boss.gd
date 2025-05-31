@@ -5,6 +5,7 @@ var color: Color = Color.TRANSPARENT
 @export var Hands: Node2D
 @export var Attack_Origin: Marker2D
 @export var State_Handler: StateHandlerClass
+@export var Attack_List: Array[PackedScene]
 
 var hp_max: float = 1000.0
 var hp: float = hp_max

@@ -20,7 +20,7 @@ func _input(event: InputEvent) -> void:
 		if event.is_released():
 			is_aiming = false
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if direction:
 		var prev_dir: Vector2 = velocity.normalized()

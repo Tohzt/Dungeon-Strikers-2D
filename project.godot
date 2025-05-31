@@ -33,6 +33,20 @@ window/size/viewport_width=1140
 window/size/viewport_height=660
 window/stretch/mode="viewport"
 
+[file_customization]
+
+folder_colors={
+"res://Assets/": "teal",
+"res://Attacks/": "red",
+"res://Boss/": "pink",
+"res://Game/": "green",
+"res://Items/": "yellow",
+"res://Main Menu/": "gray",
+"res://Player/": "purple",
+"res://_DEP/": "gray",
+"res://_Multiplayer/": "orange"
+}
+
 [global_group]
 
 Entity="Anything that can be interacted with in some way"

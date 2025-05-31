@@ -1,3 +1,4 @@
+##NOTE: Keeping for networking references
 class_name BossAttackClass extends Area2D
 @export var mesh: MeshInstance2D
 @export var attack: CollisionShape2D

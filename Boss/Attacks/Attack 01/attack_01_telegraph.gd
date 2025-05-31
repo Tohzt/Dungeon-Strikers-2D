@@ -8,7 +8,7 @@ func initialize(duration: float) -> void:
 	cast_duration = duration
 	current_time = 0.0
 	indicator.scale = Vector2.ZERO
-	z_index = Global.Layers.TELEGRAPHS
+	z_index = Global.Layers.GROUND_EFFECTS
 	
 func _process(delta: float) -> void:
 	if current_time < cast_duration:

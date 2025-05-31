@@ -1,3 +1,3 @@
-WeaponResource
 AttackResource
+WeaponResource
 Theme
