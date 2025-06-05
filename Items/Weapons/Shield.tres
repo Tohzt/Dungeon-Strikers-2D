@@ -5,12 +5,12 @@
 
 [resource]
 script = ExtResource("1_r3rmw")
-weapon_hand = 0
+weapon_hand = 1
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("2_texse")])
 weapon_name = ""
 weapon_damage = 0.0
-weapon_angle = 141.507
-weapon_offset = Vector2(16, 0)
+weapon_angle = 62.0
+weapon_offset = Vector2(30.975, 0)
 weapon_cooldown = 1.0
 weapon_duration = 0.5
 weapon_mana_cost = 0.0

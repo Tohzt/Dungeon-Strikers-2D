@@ -42,13 +42,10 @@ func _process(delta: float) -> void:
 	_update_hp(delta)
 	if !Server.OFFLINE and !is_multiplayer_authority(): return
 	_update_hud()
-	if Input_Handler.is_aiming:
-		rotation = lerp_angle(rotation, Input_Handler.input_direction.angle() + PI/2, delta * 10)
-	elif velocity and !is_in_iframes:
-		rotation = lerp_angle(rotation, velocity.angle() + PI/2, delta * 10)
-
+	rotation = lerp_angle(rotation, Input_Handler.look_dir, delta * 10)
+	
 	if Attack_Handler.attack_confirmed:
-		attack.rpc(Input_Handler.input_direction, Input_Handler.is_aiming)
+		attack.rpc(Input_Handler.look_dir, Attack_Handler.attack_side)
 		Attack_Handler.attack_confirmed = false
 	
 func _physics_process(_delta: float) -> void:
@@ -66,8 +63,10 @@ func _update_hp(delta: float) -> void:
 
 var atk_side: int = 0
 @rpc("any_peer", "call_local")
-func attack(atk_dir: Vector2, is_aiming: bool) -> void:
-	atk_side = _throw_punch(atk_side)
+func attack(atk_dir: float, atk_side: String) -> void:
+	var hand: int = 0 if atk_side == "left" else 1
+	Hands.get_child(hand).is_attacking = true
+	
 	if multiplayer.get_unique_id() != 1: return
 	
 	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
@@ -81,12 +80,8 @@ func attack(atk_dir: Vector2, is_aiming: bool) -> void:
 	_atk.modulate = Sprite.modulate
 	entities_node.add_child(_atk, true)
 	
-	if is_aiming: _atk.set_props("ranged", 50, atk_dir)
-	else: _atk.set_props("melee", 100, atk_dir, 0.5)
-
-func _throw_punch(side: int = 1) -> int:
-	Hands.get_child(side).is_attacking = true
-	return (side+1)%2
+	##TODO: Update to new Attack Type
+	_atk.set_props("melee", 100, atk_dir, 0.5)
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:

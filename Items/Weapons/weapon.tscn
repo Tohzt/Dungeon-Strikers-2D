@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c8ke7sv8ukd5y" path="res://Items/Weapons/weapon.gd" id="1_6fu2l"]
 [ext_resource type="Resource" uid="uid://cn5v2okkp2ios" path="res://Items/Weapons/sword.tres" id="2_yml6f"]
-[ext_resource type="Texture2D" uid="uid://c288swmvfqdd" path="res://Items/src/Weapons/shield_curved.png" id="3_637un"]
+[ext_resource type="Texture2D" uid="uid://bgm781nxifme8" path="res://Items/src/Weapons/weapon_sword.png" id="3_637un"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6fu2l"]
 radius = 53.3333

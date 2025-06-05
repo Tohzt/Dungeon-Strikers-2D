@@ -13,6 +13,8 @@ var player_display_name: String
 var rooms: Array[RoomClass]
 var current_room: int = -1
 
+var input_type: String = "Keyboard"
+
 # Layer system for rendering order
 enum Layers {
 	# Environment (0-9)
@@ -62,3 +64,10 @@ func get_nearest(from: Vector2, type: String) -> Dictionary:
 		return obj
 	##TODO: Do somethnig with failed state
 	return {"found": false}
+
+func _input(event: InputEvent) -> void:
+	##TODO: Update for Multiplayer/Server
+	if event is InputEventFromWindow:
+		input_type = "Keyboard"
+	elif event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		input_type = "Controller"

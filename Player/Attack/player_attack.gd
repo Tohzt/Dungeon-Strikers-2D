@@ -6,7 +6,7 @@ var Attacker: PlayerClass
 var spawn_position: Vector2
 var attack_type: String
 var attack_power: float
-var attack_direction: Vector2 = Vector2.ZERO
+var attack_direction: float = 0.0
 var attack_distance: float = INF
 var attack_duration: float = INF
 
@@ -34,10 +34,10 @@ func _process(delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	if !multiplayer.is_server(): return
 	if attack_type == "ranged": 
-		velocity = attack_direction * attack_power
+		velocity = Vector2.from_angle(attack_direction) * attack_power
 		position += velocity
 
-func set_props(atk_type: String, atk_pow: int, atk_dir: Vector2, atk_dur: float = INF, atk_dist: float = INF) -> void:
+func set_props(atk_type: String, atk_pow: int, atk_dir: float, atk_dur: float = INF, atk_dist: float = INF) -> void:
 	attack_type = atk_type
 	if atk_type == "melee":
 		mesh.hide()
