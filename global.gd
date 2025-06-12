@@ -56,12 +56,13 @@ func get_nearest(from: Vector2, type: String) -> Dictionary:
 	var entities: Array[Node] = get_tree().get_nodes_in_group(type)
 	var entity_dist := INF
 	for entity: Node2D in entities:
-		entity_dist = min(entity_dist, from.distance_to(entity.global_position))
-		var obj: Dictionary = {
-			"inst": entity,
-			"dist": entity_dist
-		}
-		return obj
+		if !entity.global_position.is_equal_approx(from):
+			entity_dist = min(entity_dist, from.distance_to(entity.global_position))
+			var obj: Dictionary = {
+				"inst": entity,
+				"dist": entity_dist
+			}
+			return obj
 	##TODO: Do somethnig with failed state
 	return {"found": false}
 

@@ -15,15 +15,16 @@ var hp: float = hp_max
 
 var name_display: String
 const SPEED: float = 300.0  
-var ATTACK: float = 400.0  
-var DEFENSE: float = 100.0
+var atk_pwr: float = 400.0  
+var def_base: float = 100.0
+var tar_pos: Vector2
+var target: Node2D = null
 
 var spawn_pos: Vector2 = Vector2.ZERO
 var spawn_rot: float = 0.0
 
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
-
 
 func _enter_tree() -> void:
 	if multiplayer.has_multiplayer_peer():
@@ -42,12 +43,35 @@ func _process(delta: float) -> void:
 	_update_hp(delta)
 	if !Server.OFFLINE and !is_multiplayer_authority(): return
 	_update_hud()
-	rotation = lerp_angle(rotation, Input_Handler.look_dir, delta * 10)
+	
+	# Handle target cycling
+	if Input_Handler.toggle_target:
+		if target:
+			target = null
+		else:
+			var nearest := Global.get_nearest(global_position, "Entity")
+			if nearest.has("inst"):
+				target = nearest["inst"]
+		Input_Handler.toggle_target = false
+	
+	# Update tar_pos based on target state
+	if target and is_instance_valid(target):
+		tar_pos = target.global_position - global_position
+	else:
+		tar_pos = Vector2.ZERO
+	
+	# Handle rotation based on tar_pos, look_dir, or movement
+	if tar_pos and !tar_pos.is_zero_approx():
+		rotation = lerp_angle(rotation, tar_pos.angle() + PI/2, delta * Input_Handler.MOUSE_LOOK_STRENGTH)
+	elif !Input_Handler.look_dir.is_zero_approx():
+		rotation = lerp_angle(rotation, Input_Handler.look_dir.angle() + PI/2, delta * Input_Handler.MOUSE_LOOK_STRENGTH)
+	elif !velocity.is_zero_approx():
+		rotation = lerp_angle(rotation, velocity.angle() + PI/2, delta * 10)
 	
 	if Attack_Handler.attack_confirmed:
-		attack.rpc(Input_Handler.look_dir, Attack_Handler.attack_side)
+		attack.rpc(Input_Handler.look_dir.angle(), Attack_Handler.attack_side)
 		Attack_Handler.attack_confirmed = false
-	
+
 func _physics_process(_delta: float) -> void:
 	if !Server.OFFLINE and !is_multiplayer_authority(): return
 	velocity = Input_Handler.velocity
@@ -61,7 +85,6 @@ func _update_hp(delta: float) -> void:
 	healthbar.value = lerp(healthbar.value, float(hp/hp_max)*hp_max, delta*10)
 
 
-var atk_side: int = 0
 @rpc("any_peer", "call_local")
 func attack(atk_dir: float, atk_side: String) -> void:
 	var hand: int = 0 if atk_side == "left" else 1
@@ -74,7 +97,7 @@ func attack(atk_dir: float, atk_side: String) -> void:
 		
 	var _atk: PlayerAttackClass = Global.ATTACK.instantiate()
 	_atk.Attacker = self
-	_atk.attack_power = ATTACK
+	_atk.attack_power = atk_pwr
 	_atk.global_position = global_position
 	_atk.spawn_position = global_position
 	_atk.modulate = Sprite.modulate

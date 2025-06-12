@@ -1,15 +1,10 @@
-res://Game/game.tscn
 res://Player/player.tscn
+res://Game/game.tscn
 res://Items/Weapons/weapon.tscn
 res://Boss/boss.tscn
 res://Boss/Attacks/Attack 01/attack_01.tscn
 res://Boss/Attacks/Attack 01/attack_01_telegraph.tscn
 res://_DEP/DEP_boss_attack.tscn
-res://Items/Weapons/weapon.gd
-res://Items/Weapons/sword.tres
-res://Items/Weapons/Shield.tres
-res://Player/handler_playerInput.gd
+res://Player/target.gd
+res://Boss/boss.gd
 res://Player/player.gd
-res://Player/handler_playerAttack.gd
-res://global.gd
-res://Player/Attack/player_attack.gd
