@@ -16,7 +16,7 @@ script = ExtResource("1_rc60p")
 
 [node name="Hud" parent="Camera2D" instance=ExtResource("2_fwxkx")]
 
-[node name="Entities" type="Node2D" parent="."]
+[node name="Entities" type="Node2D" parent="." groups=["Entities"]]
 
 [node name="Items" type="Node2D" parent="."]
 

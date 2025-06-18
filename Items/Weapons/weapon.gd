@@ -25,6 +25,7 @@ func _process(delta: float) -> void:
 
 
 func _on_pickup_body_entered(body: Node2D) -> void:
+	if weapon_holder: return
 	if !body.is_in_group("Entity"): return
 	weapon_holder = body
 	Sprite.position = Properties.weapon_offset
