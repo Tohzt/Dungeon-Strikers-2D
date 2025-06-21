@@ -36,7 +36,8 @@ func update_points(amt: int) -> void:
 	var _int := intelligence.stat_value.value/STAT_POINTS_MAX
 	var display: Label = $"Menu UI/Multiplayer/MarginContainer/VBoxContainer/Character Select/VBoxContainer/Points Remaining"
 	
-	player.reset(Color(_str, _end, _int))
+	#player.reset(Color(_str, _end, _int))
+	player.reset(Color(1-_end-_int, 1-_str-_int, 1-_str-_end))
 	STAT_POINTS += amt
 	display.text = "(%d) points remaining" % STAT_POINTS
 
