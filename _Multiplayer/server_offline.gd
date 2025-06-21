@@ -3,9 +3,18 @@ extends Node
 
 func Play() -> void:
 	Server.OFFLINE = true
-	get_tree().change_scene_to_file(Global.GAME)
-	await get_tree().tree_changed
-	Spawn_Player()
+	_enter_weapon_select()
+	#get_tree().change_scene_to_file(Global.GAME)
+	#await get_tree().tree_changed
+	#Spawn_Player()
+
+
+func _enter_weapon_select() -> void:
+	var player = get_tree().get_first_node_in_group("Player")
+	player.is_active(true)
+	player.has_control = true
+	pass
+
 
 func Spawn_Player() -> void:
 	var Game: GameClass = get_tree().current_scene

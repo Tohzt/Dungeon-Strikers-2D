@@ -21,10 +21,10 @@ script = ExtResource("1_rc60p")
 [node name="Items" type="Node2D" parent="."]
 
 [node name="Sword" parent="Items" instance=ExtResource("3_oomkl")]
-position = Vector2(-228, 144)
+position = Vector2(-212, 424)
 
 [node name="Shield" parent="Items" instance=ExtResource("3_oomkl")]
-position = Vector2(-356, -132)
+position = Vector2(-332, 456)
 Properties = ExtResource("4_buohc")
 
 [node name="Rooms" type="Node" parent="."]
@@ -67,11 +67,11 @@ rotation = 1.5708
 script = ExtResource("5_qmv3x")
 
 [node name="P1 Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(-320, 10)
+position = Vector2(0, 660)
 rotation = 1.5708
 
 [node name="P2 Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(320, 10)
+position = Vector2(0, -660)
 rotation = -1.5708
 
 [node name="Ball Spawn" type="Marker2D" parent="Spawn Points"]

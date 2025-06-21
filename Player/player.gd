@@ -1,3 +1,4 @@
+##TODO: Set up an isActive to overwrite multiplayer status
 class_name PlayerClass extends CharacterBody2D
 
 @export var Sprite: Sprite2D
@@ -20,11 +21,18 @@ var def_base: float = 100.0
 var tar_pos: Vector2
 var target: Node2D = null
 
-var spawn_pos: Vector2 = Vector2.ZERO
+@export var spawn_pos: Vector2
 var spawn_rot: float = 0.0
 
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
+
+@export var is_actice: bool = false
+var has_control: bool = false
+
+##TODO: All Multiplayer/Offline authentication should alter this. 
+func is_active(TorF: bool) -> void:
+	is_actice = TorF
 
 func _enter_tree() -> void:
 	if multiplayer.has_multiplayer_peer():
@@ -41,7 +49,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_update_hp(delta)
-	if !Server.OFFLINE and !is_multiplayer_authority(): return
+	##HACK: Waiting for update to multiplayer/offline
+	#if !Server.OFFLINE and !is_multiplayer_authority(): return
+	if !is_active: return
 	_update_hud()
 	
 	# Handle target cycling
@@ -73,12 +83,15 @@ func _process(delta: float) -> void:
 		Attack_Handler.attack_confirmed = false
 
 func _physics_process(_delta: float) -> void:
-	if !Server.OFFLINE and !is_multiplayer_authority(): return
-	velocity = Input_Handler.velocity
-	move_and_slide()
+	##HACK: Waiting for update to multiplayer/offline
+	#if !Server.OFFLINE and !is_multiplayer_authority(): return
+	if is_actice and has_control:
+		velocity = Input_Handler.velocity
+		move_and_slide()
 
 func _update_hud() -> void:
-	get_parent().get_parent().HUD.update(rotation, hp)
+	##HACK: Parent Trap
+	pass#get_parent().get_parent().HUD.update(rotation, hp)
 
 func _update_hp(delta: float) -> void:
 	healthbar.global_position = global_position - Vector2(70,80)
@@ -115,7 +128,6 @@ func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:
 	healthbar.tint_progress = color
 	healthbar.tint_under = color.darkened(0.5)
 	
-	Sprite.modulate = color
 	var hands: Array = Hands.get_children()
 	for hand: PlayerHandClass in hands:
 		hand.hand.modulate = color
@@ -123,10 +135,11 @@ func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:
 	
 	spawn_pos = pos
 	rotation = rot
-	reset()
+	reset(color)
 
 @rpc("any_peer")
-func reset() -> void:
+func reset(color: Color = Color.WHITE) -> void:
+	Sprite.modulate = color
 	global_position = spawn_pos
 	show()
 

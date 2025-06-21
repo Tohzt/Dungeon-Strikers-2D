@@ -1,6 +1,4 @@
 res://Main Menu/Main Menu.tscn
-res://Main Menu/main_menu.gd
-res://Main Menu/stat_option.gd
 res://Main Menu/Stat Option.tscn
 res://Game/game.tscn
 res://Player/player.tscn
@@ -8,4 +6,7 @@ res://Items/Weapons/weapon.tscn
 res://Boss/boss.tscn
 res://Boss/Attacks/Attack 01/attack_01.tscn
 res://Boss/Attacks/Attack 01/attack_01_telegraph.tscn
-res://_DEP/DEP_boss_attack.tscn
+res://Main Menu/main_menu.gd
+res://Player/player.gd
+res://_Multiplayer/server_offline.gd
+res://_Multiplayer/Server.tscn
