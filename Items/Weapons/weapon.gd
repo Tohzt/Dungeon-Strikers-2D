@@ -1,8 +1,9 @@
-extends Node2D
+class_name WeaponClass extends Node2D
 @onready var Sprite: Sprite2D = $Sprite2D
 @export var Properties: WeaponResource
 
 var weapon_holder: Node2D
+var is_attacking: bool = false
 
 func _ready() -> void:
 	if Properties:

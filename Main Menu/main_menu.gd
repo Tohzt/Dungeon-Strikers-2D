@@ -14,6 +14,7 @@ func _on_join_pressed() -> void: Server.Join()
 func _on_quit_pressed() -> void: get_tree().quit()
 
 func _ready() -> void:
+	player.spawn_pos = player.global_position
 	player.reset()
 	update_points(0)
 

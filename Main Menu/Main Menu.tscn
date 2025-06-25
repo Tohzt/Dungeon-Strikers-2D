@@ -1,17 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://ddn5dflpnvmfn"]
+[gd_scene load_steps=7 format=3 uid="uid://ddn5dflpnvmfn"]
 
 [ext_resource type="Script" uid="uid://c6v4td75pemi0" path="res://Main Menu/main_menu.gd" id="1_col8w"]
 [ext_resource type="PackedScene" uid="uid://btf8e0wnlbd82" path="res://Player/player.tscn" id="2_5ms5j"]
 [ext_resource type="PackedScene" uid="uid://b31r5kemx5nnp" path="res://Main Menu/Stat Option.tscn" id="2_i0jnm"]
 [ext_resource type="PackedScene" uid="uid://b4226omcdcsq6" path="res://Game/Room/room.tscn" id="4_wlfof"]
+[ext_resource type="PackedScene" uid="uid://b4041ff5ewhd3" path="res://Items/Chest/chest.tscn" id="5_4wqtw"]
+[ext_resource type="PackedScene" uid="uid://cx5wpjnrw20ng" path="res://Items/Dummy/dummy.tscn" id="6_4wqtw"]
 
 [node name="Main Menu" type="Node2D" groups=["Main Menu"]]
 script = ExtResource("1_col8w")
 
 [node name="Player" parent="." instance=ExtResource("2_5ms5j")]
 position = Vector2(570, 330)
-spawn_pos = Vector2(570, 330)
-is_actice = true
 
 [node name="Rooms" type="Node" parent="."]
 
@@ -116,6 +116,12 @@ Stat_Color = Color(0, 1, 0, 1)
 layout_mode = 2
 Stat_Type = 2
 Stat_Color = Color(0, 0, 1, 1)
+
+[node name="Chest" parent="." instance=ExtResource("5_4wqtw")]
+position = Vector2(120, 119)
+
+[node name="Dummy" parent="." instance=ExtResource("6_4wqtw")]
+position = Vector2(1081, 60)
 
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Join" to="." method="_on_join_pressed"]
