@@ -18,7 +18,7 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	wiggle_direction = 1 if randf() > 0.5 else -1  # Random direction
 	
 	wiggle = true
-	var timer = Timer.new()
+	var timer := Timer.new()
 	add_child(timer)
 	timer.connect("timeout", _stop_wiggle)
 	timer.start(0.5)  # Shorter duration for more explosive feel

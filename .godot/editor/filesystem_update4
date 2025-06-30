@@ -1,18 +1,23 @@
-res://_Multiplayer/Server.tscn
-res://Main Menu/Main Menu.tscn
-res://Main Menu/Stat Option.tscn
-res://Game/game.tscn
 res://Player/player.tscn
+res://Player/player.gd
+res://Items/Weapons/weapon_resource.gd
+res://Main Menu/Main Menu.tscn
+res://Main Menu/main_menu.gd
+res://_Multiplayer/Server.gd
+res://global.gd
+res://Game/game.tscn
+res://Game/game.gd
+res://_Multiplayer/Server.tscn
+res://Main Menu/Stat Option.tscn
 res://Items/Weapons/weapon.tscn
 res://Boss/Attacks/Attack 01/attack_01.tscn
 res://Boss/Attacks/Attack 01/attack_01_telegraph.tscn
-res://Items/Chest/chest.gd
 res://Items/Chest/chest.tscn
-res://global.gd
-res://Items/Weapons/weapon.gd
-res://Items/Dummy/dummy.gd
 res://Items/Dummy/dummy.tscn
-res://Items/Weapons/Shield.tres
-res://Items/Weapons/sword.tres
-res://Player/player.gd
-res://Main Menu/main_menu.gd
+res://Items/Chest/chest.gd
+res://Player/player_resource.gd
+res://Items/Dummy/dummy.gd
+res://_Multiplayer/server_offline.gd
+res://Player/player_resource.tres
+res://Game/Room/room.tscn
+res://Game/Room/room.gd

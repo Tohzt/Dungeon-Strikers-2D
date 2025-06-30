@@ -1,6 +1,7 @@
 ##TODO: Set up an isActive to overwrite multiplayer status
 class_name PlayerClass extends CharacterBody2D
 
+@export var Properties: PlayerResource
 @export var Sprite: Sprite2D
 @export var Hands: Node2D
 @export var Attack_Origin: Marker2D
@@ -128,20 +129,29 @@ func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:
 	healthbar.tint_progress = color
 	healthbar.tint_under = color.darkened(0.5)
 	
-	var hands: Array = Hands.get_children()
-	for hand: PlayerHandClass in hands:
-		hand.hand.modulate = color
-		hand.particle.modulate = color
+	
 	
 	spawn_pos = pos
 	rotation = rot
-	reset(color)
+	reset()
+
+func set_color(color: Color = Color.WHITE) -> void:
+	show()
+	var new_color: Color = color
+	Sprite.modulate = new_color
+	var hands: Array = Hands.get_children()
+	for hand: PlayerHandClass in hands:
+		hand.hand.modulate = new_color
+		hand.particle.modulate = new_color
+
 
 @rpc("any_peer")
-func reset(color: Color = Color.WHITE) -> void:
-	Sprite.modulate = color
+func reset(active_status: bool = true) -> void:
+	is_actice = active_status
+	has_control = active_status
+	set_color(Properties.player_color)
+	
 	global_position = spawn_pos
-	show()
 
 @rpc("any_peer", "call_local")
 func take_damage(dmg: float, dir: Vector2) -> void:

@@ -10,7 +10,7 @@ func Play() -> void:
 
 
 func _enter_weapon_select() -> void:
-	var player = get_tree().get_first_node_in_group("Player")
+	var player: PlayerClass = get_tree().get_first_node_in_group("Player")
 	player.is_active(true)
 	player.has_control = true
 	pass

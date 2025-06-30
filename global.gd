@@ -24,22 +24,20 @@ enum Layers {
 	BG_DECOR = 2,
 	FG_DECOR = 3,
 	GROUND_EFFECTS = 4,
-	
 	# Characters/Entities (10-19)
 	PLAYER = 10,
 	ENEMIES = 11,
 	NPCS = 12,
-	
 	# Effects/Attacks (20-29)
 	PROJECTILES = 21,
 	ATTACK_VISUALS = 23,
-	
 	# UI/Overlay (30-39)
 	GAME_UI = 30,
 	MENUS = 31,
 	HUD = 32
 }
 
+var resources_to_load: Array[Resource]
 
 func is_current_room(room: RoomClass, make_current: bool = false) -> bool:
 	if current_room == rooms.find(room):

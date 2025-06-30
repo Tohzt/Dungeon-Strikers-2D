@@ -1,3 +1,4 @@
+PlayerResource
 AttackResource
 WeaponResource
 Theme
