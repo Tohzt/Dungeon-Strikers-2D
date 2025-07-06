@@ -21,3 +21,6 @@ res://Ball/ball.tscn
 res://Items/Weapons/weapon_resource.gd
 res://Items/Weapons/Shield.tres
 res://Items/Weapons/Sword.tres
+res://global.gd
+res://Game/game.gd
+res://Main Menu/main_menu.gd

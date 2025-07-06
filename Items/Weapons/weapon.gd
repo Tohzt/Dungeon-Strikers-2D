@@ -89,7 +89,7 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 	weapon_holder = player
 	target_hand.held_weapon = self
 	
-	# Set up the weapon on the hand
+	# Set up the weapon on the hand with offset
 	Sprite.position = Properties.weapon_offset
 	global_position = target_hand.hand.global_position
 	call_deferred("reparent", target_hand.hand)
@@ -111,10 +111,10 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 	set_collision_mask_value(3, true)   # Enemy
 	set_collision_mask_value(4, false)   # Item
 	set_collision_mask_value(5, true)   # Weapon
-	
-	modulate = Color.BLUE
 
 func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
+	weapon.modulate = Color.WHITE
+	
 	# Find which hand holds this weapon
 	var hand_holding_weapon: PlayerHandClass = null
 	if player.Hands.Left.held_weapon == weapon:
@@ -131,6 +131,8 @@ func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
 	weapon.call_deferred("reparent", player.get_parent())
 	weapon.global_position = player.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20))
 	
+	# Reset sprite position (no offset when on ground)
+	weapon.Sprite.position = Vector2.ZERO
 	
 	# Set collision mask for ground weapons (World and Item only)
 	weapon.set_collision_layer_value(4, true)   # Item
@@ -140,8 +142,6 @@ func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
 	weapon.set_collision_mask_value(3, false)   # Enemy
 	weapon.set_collision_mask_value(4, true)   # Item
 	weapon.set_collision_mask_value(5, false)   # Weapon
-	
-	weapon.modulate = Color.YELLOW
 
 func throw_weapon(throw_direction: Vector2, player: Node2D) -> void:
 	if !weapon_holder: return
@@ -163,6 +163,9 @@ func throw_weapon(throw_direction: Vector2, player: Node2D) -> void:
 	call_deferred("reparent", player.get_parent())
 	global_position = player.global_position
 	
+	# Reset sprite position (no offset when thrown)
+	Sprite.position = Vector2.ZERO
+	
 	# Apply throwing force
 	linear_velocity = throw_direction.normalized() * throw_force
 	
@@ -181,12 +184,8 @@ func throw_weapon(throw_direction: Vector2, player: Node2D) -> void:
 			global_rotation = throw_direction.angle()
 			angular_velocity = throw_torque * 0.5  # Slower tumble
 	
-	printt("Throw Dir: ", rad_to_deg(throw_direction.angle()), rad_to_deg(rotation))
 	# Mark as thrown
 	is_thrown = true
-	
-	# Reset color
-	modulate = Color.RED
 
 func reset_to_ground_state() -> void:
 	is_thrown = false
@@ -203,4 +202,8 @@ func reset_to_ground_state() -> void:
 	set_collision_mask_value(3, false)   # Enemy
 	set_collision_mask_value(4, true)   # Item
 	set_collision_mask_value(5, false)   # Weapon
-	modulate = Color.GREEN
+
+func _set_held_sprite_position() -> void:
+	# Safely set sprite position when weapon is held
+	if Sprite and Properties:
+		Sprite.position = Properties.weapon_offset

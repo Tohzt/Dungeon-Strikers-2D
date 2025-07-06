@@ -45,6 +45,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var bodies := Room.area.get_overlapping_bodies()
 	if bodies.is_empty():
+		# Save player's weapons before transitioning
+		Global.save_player_weapons(Player)
 		get_tree().change_scene_to_file(Global.GAME)
 	pass
 
