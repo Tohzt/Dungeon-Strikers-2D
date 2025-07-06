@@ -15,4 +15,5 @@ weapon_cooldown = 1.0
 weapon_duration = 0.5
 weapon_mana_cost = 0.0
 weapon_cast_duration = 0.0
+throw_style = 0
 metadata/_custom_type_script = "uid://dgec0wqpw5rdf"

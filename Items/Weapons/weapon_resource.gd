@@ -1,6 +1,7 @@
 class_name WeaponResource extends Resource
 
 enum Handedness { LEFT, RIGHT, BOTH }
+enum ThrowStyle { SPIN, STRAIGHT, TUMBLE }
 @export var weapon_hand: Handedness
 @export var weapon_sprite: Array[CompressedTexture2D]
 @export var weapon_name: String = ""
@@ -13,3 +14,4 @@ enum Handedness { LEFT, RIGHT, BOTH }
 @export var weapon_cast_duration: float = 0.0
 @export var weapon_collider: PackedScene
 @export var weapon_effect: PackedScene
+@export var throw_style: ThrowStyle

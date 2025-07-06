@@ -104,6 +104,26 @@ func attack(_7atk_dir: float, atk_side: String) -> void:
 	var hand: int = 0 if atk_side == "left" else 1
 	Hands.get_child(hand).is_attacking = true
 	
+	# Check for weapon throwing
+	if Input.is_action_pressed("interact"):
+		var target_hand: PlayerHandClass = Hands.get_child(hand)
+		if target_hand.held_weapon:
+			# Calculate throw direction with proper priority
+			var throw_direction: Vector2
+			if !Input_Handler.look_dir.is_zero_approx():
+				# Use look direction (mouse or controller aim)
+				throw_direction = Input_Handler.look_dir
+			elif !tar_pos.is_zero_approx():
+				# Use target direction if no look input
+				throw_direction = tar_pos.normalized()
+			else:
+				# Fallback to player's facing direction
+				throw_direction = Vector2(cos(rotation - PI/2), sin(rotation - PI/2))
+			
+			# Throw the weapon
+			target_hand.held_weapon.throw_weapon(throw_direction, self)
+			return
+	
 	if multiplayer.get_unique_id() != 1: return
 	
 	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")

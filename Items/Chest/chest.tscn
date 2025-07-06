@@ -1,9 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://b4041ff5ewhd3"]
+[gd_scene load_steps=10 format=3 uid="uid://b4041ff5ewhd3"]
 
 [ext_resource type="Texture2D" uid="uid://usqopts7qyy4" path="res://Items/Objects/chest.png" id="1_4nrwl"]
 [ext_resource type="Script" uid="uid://bfrgoewpv48yk" path="res://Items/Chest/chest.gd" id="1_ea7p8"]
 [ext_resource type="Resource" uid="uid://cedktruficvup" path="res://Items/Weapons/Shield.tres" id="2_avkk7"]
-[ext_resource type="Resource" uid="uid://cn5v2okkp2ios" path="res://Items/Weapons/sword.tres" id="3_hwjeg"]
+[ext_resource type="Resource" uid="uid://cn5v2okkp2ios" path="res://Items/Weapons/Sword.tres" id="3_hwjeg"]
+[ext_resource type="Resource" uid="uid://dfxnthrdfin2d" path="res://Items/Weapons/Staff.tres" id="4_avkk7"]
+[ext_resource type="Resource" uid="uid://ba6dfxynvcigw" path="res://Items/Weapons/Bow.tres" id="5_uxpd8"]
+[ext_resource type="Resource" uid="uid://5gjhgh1sidek" path="res://Items/Weapons/Arrow.tres" id="6_8roag"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_62v7d"]
 size = Vector2(95, 74)
@@ -14,7 +17,7 @@ radius = 75.5265
 [node name="Chest" type="StaticBody2D" groups=["Entity"]]
 rotation = -0.780488
 script = ExtResource("1_ea7p8")
-items = Array[Resource]([ExtResource("2_avkk7"), ExtResource("3_hwjeg")])
+items = Array[Resource]([ExtResource("2_avkk7"), ExtResource("3_hwjeg"), ExtResource("4_avkk7"), ExtResource("5_uxpd8"), ExtResource("6_8roag")])
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_4nrwl")

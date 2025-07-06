@@ -12,6 +12,7 @@ var is_attacking: bool = false
 var attack_dur := 0.1
 var attack_dur_max := 0.1
 var def_arm_rot: float
+var held_weapon: WeaponClass = null
 
 func _ready() -> void:
 	def_arm_rot = arm.rotation
