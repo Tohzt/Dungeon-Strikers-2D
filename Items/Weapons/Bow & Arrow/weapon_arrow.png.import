@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c288swmvfqdd"
-path="res://.godot/imported/shield_curved.png-ea2481731857be29d624852aae7031b0.ctex"
+uid="uid://cym8pdlsgo0c1"
+path="res://.godot/imported/weapon_arrow.png-506c23ed089ff939af596d13f47833c7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Items/src/Weapons/shield_curved.png"
-dest_files=["res://.godot/imported/shield_curved.png-ea2481731857be29d624852aae7031b0.ctex"]
+source_file="res://Items/Weapons/Bow & Arrow/weapon_arrow.png"
+dest_files=["res://.godot/imported/weapon_arrow.png-506c23ed089ff939af596d13f47833c7.ctex"]
 
 [params]
 

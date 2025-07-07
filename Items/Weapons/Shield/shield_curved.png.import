@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://y8d8albsxxca"
-path="res://.godot/imported/shield_straight.png-02777beab16939939df442936ca0ec5d.ctex"
+uid="uid://c288swmvfqdd"
+path="res://.godot/imported/shield_curved.png-815209e8758ce17c29cfbe8c53872d24.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Items/src/Weapons/shield_straight.png"
-dest_files=["res://.godot/imported/shield_straight.png-02777beab16939939df442936ca0ec5d.ctex"]
+source_file="res://Items/Weapons/Shield/shield_curved.png"
+dest_files=["res://.godot/imported/shield_curved.png-815209e8758ce17c29cfbe8c53872d24.ctex"]
 
 [params]
 

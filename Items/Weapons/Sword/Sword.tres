@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=4 format=3 uid="uid://cn5v2okkp2ios"]
+
+[ext_resource type="Script" uid="uid://dgec0wqpw5rdf" path="res://Items/Weapons/weapon_resource.gd" id="1_3t8j1"]
+[ext_resource type="PackedScene" uid="uid://2fjyv4yp3s1w" path="res://Items/Weapons/Sword/Sword_Collision.tscn" id="2_b8nsn"]
+[ext_resource type="Texture2D" uid="uid://bgm781nxifme8" path="res://Items/Weapons/Sword/weapon_sword.png" id="2_j2gx6"]
+
+[resource]
+script = ExtResource("1_3t8j1")
+weapon_hand = 0
+throw_style = 1
+weapon_name = "Sword"
+weapon_sprite = Array[CompressedTexture2D]([ExtResource("2_j2gx6")])
+weapon_collision = ExtResource("2_b8nsn")
+weapon_damage = 60.0
+weapon_angle = 130.0
+weapon_offset = Vector2(30, 0)
+weapon_cooldown = 0.5
+weapon_duration = 0.25
+weapon_mana_cost = 0.0
+weapon_cast_duration = 0.0
+metadata/_custom_type_script = "uid://dgec0wqpw5rdf"

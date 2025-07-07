@@ -1,5 +1,6 @@
 class_name WeaponClass extends RigidBody2D
 @onready var Sprite: Sprite2D = $Sprite2D
+@onready var Collision: CollisionShape2D = $CollisionShape2D
 @export var Properties: WeaponResource
 
 var weapon_holder: Node2D
@@ -18,6 +19,24 @@ func _ready() -> void:
 			var result := regex.search(Sprite.texture.load_path)
 			if result:
 				Properties.weapon_name = result.get_string(1)
+		
+		# Replace collision shape if resource provides one
+		if Properties.weapon_collision:
+			if Collision:
+				# Remove the current collision shape
+				Collision.queue_free()
+			
+			# Instance the new collision shape from the resource
+			var new_collision: CollisionShape2D = Properties.weapon_collision.instantiate()
+			add_child(new_collision)
+			new_collision.name = "CollisionShape2D"
+			
+			# Update the reference to the new collision shape
+			Collision = new_collision
+			
+			# Apply the same offset and rotation as the sprite
+			Collision.position = Sprite.position
+		
 		set_collision_layer_value(4, true)   # Item
 		set_collision_layer_value(5, false)   # Weapon
 		
@@ -91,6 +110,7 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 	
 	# Set up the weapon on the hand with offset
 	Sprite.position = Properties.weapon_offset
+	Collision.position = Properties.weapon_offset
 	global_position = target_hand.hand.global_position
 	call_deferred("reparent", target_hand.hand)
 	
@@ -131,8 +151,9 @@ func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
 	weapon.call_deferred("reparent", player.get_parent())
 	weapon.global_position = player.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20))
 	
-	# Reset sprite position (no offset when on ground)
+	# Reset sprite and collision shape position (no offset when on ground)
 	weapon.Sprite.position = Vector2.ZERO
+	weapon.Collision.position = Vector2.ZERO
 	
 	# Set collision mask for ground weapons (World and Item only)
 	weapon.set_collision_layer_value(4, true)   # Item
@@ -155,16 +176,20 @@ func throw_weapon(throw_direction: Vector2, player: Node2D) -> void:
 	
 	if !hand_holding_weapon: return
 	
+	# Capture the hand's world position before reparenting
+	var hand_world_position := hand_holding_weapon.hand.global_position
+	
 	# Remove from hand
 	weapon_holder = null
 	hand_holding_weapon.held_weapon = null
 	
 	# Move to world and apply physics
 	call_deferred("reparent", player.get_parent())
-	global_position = player.global_position
+	global_position = hand_world_position  # Use hand position instead of player position
 	
-	# Reset sprite position (no offset when thrown)
+	# Reset sprite and collision shape position (no offset when thrown)
 	Sprite.position = Vector2.ZERO
+	Collision.position = Vector2.ZERO
 	
 	# Apply throwing force
 	linear_velocity = throw_direction.normalized() * throw_force
@@ -193,6 +218,10 @@ func reset_to_ground_state() -> void:
 	# Stop all movement
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0.0
+	
+	# Reset sprite and collision shape to center when on ground
+	Sprite.position = Vector2.ZERO
+	Collision.position = Vector2.ZERO
 	
 	# Set collision mask for ground weapons (World and Item only)
 	set_collision_layer_value(4, true)   # Item
