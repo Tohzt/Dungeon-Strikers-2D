@@ -1,23 +1,26 @@
-[gd_resource type="Resource" script_class="WeaponResource" load_steps=5 format=3 uid="uid://ba6dfxynvcigw"]
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=6 format=3 uid="uid://bjltlxtu1gq0f"]
 
-[ext_resource type="Script" uid="uid://dgec0wqpw5rdf" path="res://Items/Weapons/weapon_resource.gd" id="1_e0h2y"]
-[ext_resource type="PackedScene" uid="uid://dd1kc7g4k5c3f" path="res://Items/Weapons/Bow & Arrow/bow_collision.tscn" id="2_oyqip"]
+[ext_resource type="Script" uid="uid://dgec0wqpw5rdf" path="res://Items/Weapons/weapon_resource.gd" id="1_weapon"]
+[ext_resource type="PackedScene" uid="uid://dd1kc7g4k5c3f" path="res://Items/Weapons/Bow & Arrow/bow_collision.tscn" id="2_collision"]
 [ext_resource type="Texture2D" uid="uid://d3kudbiwgf2y7" path="res://Items/Weapons/Bow & Arrow/weapon_bow.png" id="2_xlgad"]
+[ext_resource type="Resource" path="res://Items/Weapons/Bow & Arrow/bow_controller.tres" id="3_controller"]
 [ext_resource type="Texture2D" uid="uid://sorsgdrismdy" path="res://Items/Weapons/Bow & Arrow/weapon_bow_arrow.png" id="3_oyqip"]
 
 [resource]
-script = ExtResource("1_e0h2y")
+script = ExtResource("1_weapon")
+weapon_name = "Bow of Ners"
 weapon_hand = 0
 throw_style = 0
-weapon_name = "Bow of Bowington"
+input_mode = 2
+weapon_controller = ExtResource("3_controller")
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("2_xlgad"), ExtResource("3_oyqip")])
-weapon_collision = ExtResource("2_oyqip")
-weapon_damage = 5.0
-weapon_angle = 147.0
-weapon_offset = Vector2(-4, 0)
+weapon_collision = ExtResource("2_collision")
+weapon_damage = 40.0
+weapon_angle = 90.0
+weapon_offset = Vector2(15, 0)
 weapon_hand_offset = Vector2(0, 0)
-weapon_cooldown = 0.0
-weapon_duration = 1.0
+weapon_cooldown = 0.8
+weapon_duration = 0.3
 weapon_mana_cost = 0.0
 weapon_cast_duration = 0.0
 metadata/_custom_type_script = "uid://dgec0wqpw5rdf"

@@ -1,4 +1,0 @@
-WeaponResource
-PlayerResource
-AttackResource
-Theme

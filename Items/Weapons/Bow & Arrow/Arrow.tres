@@ -8,6 +8,7 @@
 script = ExtResource("1_roq2m")
 weapon_hand = 1
 throw_style = 1
+input_mode = 2
 weapon_name = ""
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("3_qt10x")])
 weapon_collision = ExtResource("2_fnbsr")

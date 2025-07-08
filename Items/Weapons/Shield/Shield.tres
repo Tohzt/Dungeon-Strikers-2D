@@ -1,21 +1,24 @@
-[gd_resource type="Resource" script_class="WeaponResource" load_steps=4 format=3 uid="uid://cedktruficvup"]
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=5 format=3 uid="uid://dblh4y0bvtb18"]
 
-[ext_resource type="Script" uid="uid://dgec0wqpw5rdf" path="res://Items/Weapons/weapon_resource.gd" id="1_70nuo"]
-[ext_resource type="PackedScene" uid="uid://bin5rkl13dpcv" path="res://Items/Weapons/Shield/shield_collision.tscn" id="2_3qmwg"]
+[ext_resource type="Script" uid="uid://dgec0wqpw5rdf" path="res://Items/Weapons/weapon_resource.gd" id="1_weapon"]
+[ext_resource type="PackedScene" uid="uid://bin5rkl13dpcv" path="res://Items/Weapons/Shield/shield_collision.tscn" id="2_collision"]
 [ext_resource type="Texture2D" uid="uid://c288swmvfqdd" path="res://Items/Weapons/Shield/shield_curved.png" id="3_70nuo"]
+[ext_resource type="Resource" path="res://Items/Weapons/Shield/shield_controller.tres" id="3_controller"]
 
 [resource]
-script = ExtResource("1_70nuo")
+script = ExtResource("1_weapon")
+weapon_name = "Shield"
 weapon_hand = 1
 throw_style = 0
-weapon_name = ""
+input_mode = 1
+weapon_controller = ExtResource("3_controller")
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("3_70nuo")])
-weapon_collision = ExtResource("2_3qmwg")
+weapon_collision = ExtResource("2_collision")
 weapon_damage = 20.0
-weapon_angle = 62.0
-weapon_offset = Vector2(16, 0)
+weapon_angle = 90.0
+weapon_offset = Vector2(20, 0)
 weapon_hand_offset = Vector2(0, 0)
-weapon_cooldown = 1.0
+weapon_cooldown = 0.3
 weapon_duration = 0.5
 weapon_mana_cost = 0.0
 weapon_cast_duration = 0.0

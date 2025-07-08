@@ -24,12 +24,13 @@ var player_held_weapons: Dictionary = {
 
 # Layer system for rendering order
 enum Layers {
-	# Environment (0-9)
+	# Environment (0-8)
 	FLOOR = 0,
 	WALLS = 1,
 	BG_DECOR = 2,
 	FG_DECOR = 3,
 	GROUND_EFFECTS = 4,
+	WEAPON_IN_HAND = 9,
 	# Characters/Entities (10-19)
 	PLAYER = 10,
 	ENEMIES = 11,

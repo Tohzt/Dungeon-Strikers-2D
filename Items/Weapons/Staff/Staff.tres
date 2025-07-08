@@ -6,9 +6,10 @@
 
 [resource]
 script = ExtResource("1_3swot")
+weapon_name = "Staff of Infections"
 weapon_hand = 0
 throw_style = 2
-weapon_name = "Staff of Infections"
+input_mode = 2
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("3_dc6dm")])
 weapon_collision = ExtResource("2_lv7qx")
 weapon_damage = 3.0
