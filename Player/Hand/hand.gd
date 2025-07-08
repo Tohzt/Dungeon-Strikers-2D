@@ -12,10 +12,12 @@ var is_attacking: bool = false
 var attack_dur := 0.1
 var attack_dur_max := 0.1
 var def_arm_rot: float
+var def_arm_length: float
 var held_weapon: WeaponClass = null
 
 func _ready() -> void:
 	def_arm_rot = arm.rotation
+	def_arm_length = arm.target_position.length()
 	hand_offset = Vector2(0,-16)
 
 func _physics_process(delta: float) -> void:

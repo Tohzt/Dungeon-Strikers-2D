@@ -24,6 +24,9 @@ func handle_hold(_weapon: WeaponClass, input_side: String, duration: float) -> v
 			is_drawn = true
 			draw_start_time = Time.get_time_dict_from_system()["unix"]
 			print("Bow drawing started!")
+			# Extend arm for bow drawing
+			var draw_length := get_default_arm_length(_weapon) * 1.3  # 130% of adjusted default length
+			set_arm_length(_weapon, draw_length, 0.016, 12.0)
 		# Update charge level
 		charge_level = min(duration, 2.0) / 2.0  # Max charge at 2 seconds
 	elif input_side == "left":
@@ -39,6 +42,8 @@ func handle_release(_weapon: WeaponClass, input_side: String, _duration: float) 
 			print("Firing arrow with charge level: ", charge_level)
 			is_drawn = false
 			charge_level = 0.0
+			# Reset arm length after firing
+			reset_arm_length(_weapon, 0.016, 15.0)
 			# TODO: Implement arrow firing
 	elif input_side == "left":
 		# Release left = release charge shot

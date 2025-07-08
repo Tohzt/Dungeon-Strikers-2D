@@ -30,8 +30,9 @@ enum Layers {
 	BG_DECOR = 2,
 	FG_DECOR = 3,
 	GROUND_EFFECTS = 4,
-	WEAPON_IN_HAND = 9,
-	# Characters/Entities (10-19)
+	WEAPON_IN_HAND = 8,
+	# Characters/Entities (9-19)
+	PLAYER_HANDS = 9,
 	PLAYER = 10,
 	ENEMIES = 11,
 	NPCS = 12,

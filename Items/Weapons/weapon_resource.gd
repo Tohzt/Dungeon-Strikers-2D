@@ -14,7 +14,7 @@ enum InputMode { CLICK_ONLY, HOLD_ACTION, BOTH }
 @export var weapon_damage: float = 0.0
 @export_range(0.0, 360.0) var weapon_angle: float
 @export var weapon_offset: Vector2
-@export var weapon_hand_offset: Vector2
+@export var weapon_arm_length: float
 @export var weapon_cooldown: float = 0.0
 @export var weapon_duration: float = 1.0 
 @export var weapon_mana_cost: float = 0.0
