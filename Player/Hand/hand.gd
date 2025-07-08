@@ -19,13 +19,19 @@ func _ready() -> void:
 	hand_offset = Vector2(0,-16)
 
 func _physics_process(delta: float) -> void:
-	if is_attacking: 
-		particles.emitting = true
-		attack(delta)
-	else: 
-		particles.emitting = false
-		arm.rotation = lerp_angle(arm.rotation, def_arm_rot, delta*10)
+	# If a weapon is equipped, let the weapon controller handle arm movement
+	if held_weapon:
+		# Only handle hand positioning, not arm rotation
 		sprint_arm(delta)
+	else:
+		# Original attack system when no weapon is equipped
+		if is_attacking: 
+			particles.emitting = true
+			attack(delta)
+		else: 
+			particles.emitting = false
+			arm.rotation = lerp_angle(arm.rotation, def_arm_rot, delta*10)
+			sprint_arm(delta)
 
 func attack(delta: float) -> void:
 	var rot_amt := 5

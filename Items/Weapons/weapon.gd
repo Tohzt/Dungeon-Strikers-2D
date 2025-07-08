@@ -1,7 +1,9 @@
 class_name WeaponClass extends RigidBody2D
-@onready var Sprite: Sprite2D = $Sprite2D
-@onready var Collision: CollisionShape2D = $CollisionShape2D
+
 @export var Properties: WeaponResource
+@onready var Sprite := $Sprite2D
+@onready var Collision := $CollisionShape2D
+@onready var Controller := $Controller
 
 var weapon_holder: Node2D
 var is_attacking: bool = false
@@ -51,6 +53,10 @@ func _process(_delta: float) -> void:
 	if weapon_holder:
 		var dir := deg_to_rad(Properties.weapon_angle)
 		rotation = lerp_angle(rotation, get_parent().rotation + dir, _delta*10)
+		
+		# Update weapon controller if it exists
+		if Properties.weapon_controller:
+			Properties.weapon_controller.update(self, _delta)
 	else:
 		# Check for interaction when not held
 		if nearby and Input.is_action_just_pressed("interact"):
@@ -113,6 +119,7 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 	Collision.position = Properties.weapon_offset
 	global_position = target_hand.hand.global_position
 	call_deferred("reparent", target_hand.hand)
+	call_deferred("set_z_index", Global.Layers.WEAPON_IN_HAND)
 	
 	# Apply player color
 	modulate = player.Sprite.modulate
@@ -131,8 +138,16 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 	set_collision_mask_value(3, true)   # Enemy
 	set_collision_mask_value(4, false)   # Item
 	set_collision_mask_value(5, true)   # Weapon
+	
+	# Notify weapon controller that weapon was equipped
+	if Properties.weapon_controller:
+		Properties.weapon_controller.on_equip(self)
 
 func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
+	# Notify weapon controller that weapon was unequipped
+	if weapon.Properties.weapon_controller:
+		weapon.Properties.weapon_controller.on_unequip(weapon)
+	
 	weapon.modulate = Color.WHITE
 	
 	# Find which hand holds this weapon
@@ -236,3 +251,23 @@ func _set_held_sprite_position() -> void:
 	# Safely set sprite position when weapon is held
 	if Sprite and Properties:
 		Sprite.position = Properties.weapon_offset
+
+# Weapon input handling methods
+func handle_input(input_type: String, input_side: String, duration: float = 0.0) -> void:
+	if !Properties.weapon_controller:
+		return
+	
+	# Route to controller based on input_mode
+	match Properties.input_mode:
+		Properties.InputMode.CLICK_ONLY:
+			if input_type == "click":
+				Properties.weapon_controller.handle_click(self, input_side)
+		Properties.InputMode.HOLD_ACTION:
+			if input_type == "click":
+				Properties.weapon_controller.handle_click(self, input_side)
+			elif input_type == "hold":
+				Properties.weapon_controller.handle_hold(self, input_side, duration)
+			elif input_type == "release":
+				Properties.weapon_controller.handle_release(self, input_side, duration)
+		Properties.InputMode.BOTH:
+			Properties.weapon_controller.handle_input(self, input_type, input_side, duration)

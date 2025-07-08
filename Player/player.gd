@@ -102,11 +102,10 @@ func _update_hp(delta: float) -> void:
 @rpc("any_peer", "call_local")
 func attack(_7atk_dir: float, atk_side: String) -> void:
 	var hand: int = 0 if atk_side == "left" else 1
-	Hands.get_child(hand).is_attacking = true
+	var target_hand: PlayerHandClass = Hands.get_child(hand)
 	
 	# Check for weapon throwing
 	if Input.is_action_pressed("interact"):
-		var target_hand: PlayerHandClass = Hands.get_child(hand)
 		if target_hand.held_weapon:
 			# Calculate throw direction with proper priority
 			var throw_direction: Vector2
@@ -123,6 +122,10 @@ func attack(_7atk_dir: float, atk_side: String) -> void:
 			# Throw the weapon
 			target_hand.held_weapon.throw_weapon(throw_direction, self)
 			return
+	
+	# Only set is_attacking if no weapon is equipped (legacy attack system)
+	if !target_hand.held_weapon:
+		target_hand.is_attacking = true
 	
 	if multiplayer.get_unique_id() != 1: return
 	
