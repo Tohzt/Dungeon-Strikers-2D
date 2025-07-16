@@ -5,9 +5,17 @@ var is_bashing: bool = false
 var bash_duration: float = 0.0
 const BASH_DURATION_MAX: float = 0.3
 
+func handle_input(_weapon: WeaponClass, input_type: String, input_side: String, duration: float) -> void:
+	match input_type:
+		"click":
+			handle_click(_weapon, input_side)
+		"hold":
+			handle_hold(_weapon, input_side, duration)
+		"release":
+			handle_release(_weapon, input_side, duration)
+
 func handle_click(_weapon: WeaponClass, input_side: String) -> void:
 	# Quick shield bash
-	print("Shield bash from ", input_side, " hand!")
 	is_bashing = true
 	bash_duration = BASH_DURATION_MAX
 
@@ -15,7 +23,6 @@ func handle_hold(weapon: WeaponClass, input_side: String, _duration: float) -> v
 	# Start blocking
 	if !is_blocking:
 		is_blocking = true
-		print("Shield block started from ", input_side, " hand!")
 		# Move shield to blocking position (in front of player)
 		var block_rotation := rad_to_deg(-90)  # Point forward
 		set_arm_rotation(weapon, block_rotation, 0.016, 15.0)  # Fast movement to block position
@@ -27,7 +34,6 @@ func handle_release(weapon: WeaponClass, input_side: String, _duration: float) -
 	# Stop blocking
 	if is_blocking:
 		is_blocking = false
-		print("Shield block ended from ", input_side, " hand!")
 		# Reset arm to default position
 		reset_arm_rotation(weapon, 0.016, 10.0)
 		# Reset arm length to default
@@ -36,9 +42,7 @@ func handle_release(weapon: WeaponClass, input_side: String, _duration: float) -
 func update(weapon: WeaponClass, delta: float) -> void:
 	# Debug: Check if we can access the hand
 	var hand := get_hand(weapon)
-	if !hand:
-		print("ERROR: Could not get hand reference for weapon!")
-		return
+	if !hand: return
 	
 	# Handle shield bash animation
 	if is_bashing:
@@ -46,13 +50,11 @@ func update(weapon: WeaponClass, delta: float) -> void:
 		# Swing the arm for bash animation
 		var swing_direction := -1.0
 		swing_arm(weapon, swing_direction * 5.0, delta, 8.0)  # Fast swing
-		print("Shield bashing - arm swinging (", hand.handedness, " hand)")
 		
 		if bash_duration <= 0:
 			is_bashing = false
 			# Reset arm after bash
 			reset_arm_rotation(weapon, delta, 12.0)
-			print("Shield bash finished - resetting arm")
 	
 	# Handle blocking - keep shield in front
 	elif is_blocking:
@@ -61,7 +63,6 @@ func update(weapon: WeaponClass, delta: float) -> void:
 		# Maintain shortened arm length while blocking
 		var block_length := get_default_arm_length(weapon) * 0.6
 		set_arm_length(weapon, block_length, delta, 8.0)
-		print("Shield blocking - arm in front")
 	
 	# Default behavior - reset to idle position
 	else:

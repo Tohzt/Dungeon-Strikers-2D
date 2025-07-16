@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://6q4nkh2kftvh"]
+[gd_scene load_steps=5 format=3 uid="uid://6q4nkh2kftvh"]
 
 [ext_resource type="Script" uid="uid://c8ke7sv8ukd5y" path="res://Items/Weapons/weapon.gd" id="1_6fu2l"]
-[ext_resource type="Resource" uid="uid://cn5v2okkp2ios" path="res://Items/Weapons/Sword/Sword.tres" id="2_yml6f"]
 [ext_resource type="Texture2D" uid="uid://d3kudbiwgf2y7" path="res://Items/Weapons/Bow & Arrow/weapon_bow.png" id="3_637un"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_637un"]
@@ -16,7 +15,6 @@ collision_mask = 9
 contact_monitor = true
 max_contacts_reported = 3
 script = ExtResource("1_6fu2l")
-Properties = ExtResource("2_yml6f")
 
 [node name="Controller" type="Node" parent="."]
 

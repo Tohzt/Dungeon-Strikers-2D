@@ -46,17 +46,14 @@ func _handle_hold_detection(delta: float) -> void:
 	if Input_Handler.attack_left and !left_is_holding:
 		left_hold_start_time = Time.get_ticks_msec() / 1000.0
 		left_is_holding = true
-		print("Left button pressed - starting hold detection")
 	elif !Input_Handler.attack_left and left_is_holding:
 		# Button released - determine if it was a click or hold
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
 		if hold_duration < HOLD_THRESHOLD:
 			# Quick click
-			print("Left button released - detected as CLICK (duration: ", hold_duration, ")")
 			_handle_weapon_input("click", "left", 0.0)
 		else:
 			# Hold release
-			print("Left button released - detected as HOLD RELEASE (duration: ", hold_duration, ")")
 			_handle_weapon_input("release", "left", hold_duration)
 		left_is_holding = false
 	
@@ -64,17 +61,14 @@ func _handle_hold_detection(delta: float) -> void:
 	if Input_Handler.attack_right and !right_is_holding:
 		right_hold_start_time = Time.get_ticks_msec() / 1000.0
 		right_is_holding = true
-		print("Right button pressed - starting hold detection")
 	elif !Input_Handler.attack_right and right_is_holding:
 		# Button released - determine if it was a click or hold
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
 		if hold_duration < HOLD_THRESHOLD:
 			# Quick click
-			print("Right button released - detected as CLICK (duration: ", hold_duration, ")")
 			_handle_weapon_input("click", "right", 0.0)
 		else:
 			# Hold release
-			print("Right button released - detected as HOLD RELEASE (duration: ", hold_duration, ")")
 			_handle_weapon_input("release", "right", hold_duration)
 		right_is_holding = false
 	
@@ -91,8 +85,8 @@ func _handle_hold_detection(delta: float) -> void:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
 		if hold_duration >= HOLD_THRESHOLD:
 			# Only print hold updates every 0.5 seconds to avoid spam
-			if int(hold_duration * 2) != int((hold_duration - delta) * 2):
-				print("Right button HOLDING (duration: ", hold_duration, ")")
+			#if int(hold_duration * 2) != int((hold_duration - delta) * 2):
+				#print("Right button HOLDING (duration: ", hold_duration, ")")
 			_handle_weapon_input("hold", "right", hold_duration)
 
 func _handle_weapon_input(input_type: String, input_side: String, duration: float) -> void:
@@ -103,9 +97,25 @@ func _handle_weapon_input(input_type: String, input_side: String, duration: floa
 	else:
 		target_hand = Master.Hands.Right
 	
+	# Check for weapon throwing first (hold E + click)
+	if Input.is_action_pressed("interact") and input_type == "click":
+		if target_hand.held_weapon:
+			# Calculate throw direction with proper priority
+			var throw_direction: Vector2
+			if !Master.Input_Handler.look_dir.is_zero_approx():
+				# Use look direction (mouse or controller aim)
+				throw_direction = Master.Input_Handler.look_dir
+			elif !Master.tar_pos.is_zero_approx():
+				# Use target direction if no look input
+				throw_direction = Master.tar_pos.normalized()
+			else:
+				# Fallback to player's facing direction
+				throw_direction = Vector2(cos(Master.rotation - PI/2), sin(Master.rotation - PI/2))
+			
+			# Throw the weapon
+			target_hand.held_weapon.throw_weapon(throw_direction, Master)
+			return
+	
 	# Check if hand has a weapon and handle input
 	if target_hand.held_weapon:
-		print("Weapon Input: ", input_type, " from ", input_side, " hand (duration: ", duration, ")")
 		target_hand.held_weapon.handle_input(input_type, input_side, duration)
-	else:
-		print("No weapon in ", input_side, " hand for input: ", input_type)

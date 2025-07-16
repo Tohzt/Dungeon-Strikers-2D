@@ -1,5 +1,5 @@
-res://Items/Weapons/Controllers/weapon_controller_base.gd
 res://Main Menu/Main Menu.tscn
 res://Player/player.tscn
 res://Items/Weapons/weapon.tscn
-res://Items/Weapons/Bow & Arrow/Bow.tres
+res://Items/Weapons/Bow & Arrow/arrow_collision.tscn
+res://Items/Weapons/Bow & Arrow/bow_collision.tscn

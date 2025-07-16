@@ -20,3 +20,9 @@ enum InputMode { CLICK_ONLY, HOLD_ACTION, BOTH }
 @export var weapon_mana_cost: float = 0.0
 @export var weapon_cast_duration: float = 0.0
 @export var weapon_effect: PackedScene
+
+# New properties for weapon synchronization
+@export var can_synchronize: bool = false
+@export var sync_partner_weapon_name: String = ""
+@export var sync_ready_position_offset: Vector2 = Vector2.ZERO
+@export var sync_ready_rotation_offset: float = 0.0

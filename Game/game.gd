@@ -34,7 +34,7 @@ func _ready() -> void:
 			var property: Dictionary = properties[i]
 			var prop_name: String = property.name
 			var prop_value: Variant = _player.Properties.get(prop_name)
-			print(prop_name + ": " + str(prop_value))
+		
 		Player = _player
 		Player.reset()
 		

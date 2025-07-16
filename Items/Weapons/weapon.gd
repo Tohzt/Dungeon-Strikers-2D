@@ -11,6 +11,7 @@ var nearby: Array[Node2D] = []
 var is_thrown: bool = false
 var throw_force: float = 800.0
 var throw_torque: float = 10.0
+var mod_angle: float = 0.0
 
 func _ready() -> void:
 	if Properties:
@@ -24,34 +25,20 @@ func _ready() -> void:
 		
 		# Replace collision shape if resource provides one
 		if Properties.weapon_collision:
-			if Collision:
-				# Remove the current collision shape
-				Collision.queue_free()
-			
-			# Instance the new collision shape from the resource
+			if Collision: Collision.queue_free()
 			var new_collision: CollisionShape2D = Properties.weapon_collision.instantiate()
 			add_child(new_collision)
 			new_collision.name = "CollisionShape2D"
-			
-			# Update the reference to the new collision shape
 			Collision = new_collision
-			
-			# Apply the same offset and rotation as the sprite
 			Collision.position = Sprite.position
 		
-		set_collision_layer_value(4, true)   # Item
-		set_collision_layer_value(5, false)   # Weapon
-		
-		set_collision_mask_value(2, false)   # Player
-		set_collision_mask_value(3, false)   # Enemy
-		set_collision_mask_value(4, true)   # Item
-		set_collision_mask_value(5, false)   # Weapon
+		_update_collisions("on-ground")
 	else: 
 		queue_free()
 
 func _process(_delta: float) -> void:
 	if weapon_holder:
-		var dir := deg_to_rad(Properties.weapon_angle)
+		var dir := deg_to_rad(Properties.weapon_angle + mod_angle)
 		rotation = lerp_angle(rotation, get_parent().rotation + dir, _delta*10)
 		
 		# Update weapon controller if it exists
@@ -130,14 +117,7 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 	# Reset thrown state
 	is_thrown = false
 	
-	# Set collision mask for held weapons (World and Enemy only)
-	set_collision_layer_value(4, false)   # Item
-	set_collision_layer_value(5, true)   # Weapon
-	
-	set_collision_mask_value(2, false)   # Player
-	set_collision_mask_value(3, true)   # Enemy
-	set_collision_mask_value(4, false)   # Item
-	set_collision_mask_value(5, true)   # Weapon
+	_update_collisions("in-hand")
 	
 	# Notify weapon controller that weapon was equipped
 	if Properties.weapon_controller:
@@ -170,14 +150,7 @@ func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
 	weapon.Sprite.position = Vector2.ZERO
 	weapon.Collision.position = Vector2.ZERO
 	
-	# Set collision mask for ground weapons (World and Item only)
-	weapon.set_collision_layer_value(4, true)   # Item
-	weapon.set_collision_layer_value(5, false)   # Weapon
-	
-	weapon.set_collision_mask_value(2, false)   # Player
-	weapon.set_collision_mask_value(3, false)   # Enemy
-	weapon.set_collision_mask_value(4, true)   # Item
-	weapon.set_collision_mask_value(5, false)   # Weapon
+	_update_collisions("on-ground")
 
 func throw_weapon(throw_direction: Vector2, player: Node2D) -> void:
 	if !weapon_holder: return
@@ -238,14 +211,7 @@ func reset_to_ground_state() -> void:
 	Sprite.position = Vector2.ZERO
 	Collision.position = Vector2.ZERO
 	
-	# Set collision mask for ground weapons (World and Item only)
-	set_collision_layer_value(4, true)   # Item
-	set_collision_layer_value(5, false)   # Weapon
-	
-	set_collision_mask_value(2, false)   # Player
-	set_collision_mask_value(3, false)   # Enemy
-	set_collision_mask_value(4, true)   # Item
-	set_collision_mask_value(5, false)   # Weapon
+	_update_collisions("on-ground")
 
 func _set_held_sprite_position() -> void:
 	# Safely set sprite position when weapon is held
@@ -271,3 +237,23 @@ func handle_input(input_type: String, input_side: String, duration: float = 0.0)
 				Properties.weapon_controller.handle_release(self, input_side, duration)
 		Properties.InputMode.BOTH:
 			Properties.weapon_controller.handle_input(self, input_type, input_side, duration)
+
+func _update_collisions(state: String) -> void:
+	match state:
+		"on-ground":
+			set_collision_layer_value(4, true)   # Item
+			set_collision_layer_value(5, false)   # Weapon
+			
+			set_collision_mask_value(2, false)   # Player
+			set_collision_mask_value(3, false)   # Enemy
+			set_collision_mask_value(4, true)   # Item
+			set_collision_mask_value(5, false)   # Weapon
+			
+		"in-hand":
+			set_collision_layer_value(4, false)   # Item
+			set_collision_layer_value(5, true)   # Weapon
+			
+			set_collision_mask_value(2, false)   # Player
+			set_collision_mask_value(3, true)   # Enemy
+			set_collision_mask_value(4, false)   # Item
+			set_collision_mask_value(5, true)   # Weapon

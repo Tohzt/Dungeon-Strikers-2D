@@ -5,45 +5,26 @@ class_name WeaponControllerBase extends Resource
 
 # Called when weapon is equipped
 func on_equip(weapon: WeaponClass) -> void:
-	print("DEBUG: on_equip called for weapon: ", weapon.Properties.weapon_name)
-	print("DEBUG: weapon_arm_length = ", weapon.Properties.weapon_arm_length)
 	
 	# Set the initial arm length based on weapon_arm_length
 	if weapon.Properties.weapon_arm_length != 0:
 		var arm := get_arm(weapon)
 		if arm:
-			print("DEBUG: Found arm, current target_position = ", arm.target_position)
-			print("DEBUG: Current arm length = ", arm.target_position.length())
-			
 			# Modify the arm's target_position to change the maximum reach
 			var current_direction: Vector2 = arm.target_position.normalized()
 			var new_length: float = arm.target_position.length() + weapon.Properties.weapon_arm_length
 			arm.target_position = current_direction * new_length
-			
-			print("DEBUG: New target_position = ", arm.target_position)
-			print("DEBUG: New arm length = ", arm.target_position.length())
-		else:
-			print("DEBUG: Could not find arm!")
-	else:
-		print("DEBUG: weapon_arm_length is 0, no change needed")
 
 # Called when weapon is unequipped
-func on_unequip(weapon: WeaponClass) -> void:
-	print("DEBUG: on_unequip called for weapon: ", weapon.Properties.weapon_name)
-	
+func on_unequip(weapon: WeaponClass) -> void:	
 	# Reset arm length to hand's default when weapon is unequipped
 	var hand := get_hand(weapon)
 	if hand:
 		var arm := get_arm(weapon)
 		if arm:
-			print("DEBUG: Resetting arm length from ", arm.target_position.length(), " to ", hand.def_arm_length)
 			# Reset the arm's target_position to the hand's default length
 			var current_direction: Vector2 = arm.target_position.normalized()
 			arm.target_position = current_direction * hand.def_arm_length
-		else:
-			print("DEBUG: Could not find arm during unequip!")
-	else:
-		print("DEBUG: Could not find hand during unequip!")
 
 # Handle quick click input
 func handle_click(_weapon: WeaponClass, _input_side: String) -> void:
