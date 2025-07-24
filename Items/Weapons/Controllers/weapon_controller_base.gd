@@ -27,24 +27,70 @@ func on_unequip(weapon: WeaponClass) -> void:
 			arm.target_position = current_direction * hand.def_arm_length
 
 # Handle quick click input
-func handle_click(_weapon: WeaponClass, _input_side: String) -> void:
+func handle_click(_weapon: WeaponClass) -> void:
 	pass
 
 # Handle hold input with duration
-func handle_hold(_weapon: WeaponClass, _input_side: String, _duration: float) -> void:
+func handle_hold(_weapon: WeaponClass, _duration: float) -> void:
 	pass
 
 # Handle input release
-func handle_release(_weapon: WeaponClass, _input_side: String, _duration: float) -> void:
+func handle_release(_weapon: WeaponClass, _duration: float) -> void:
 	pass
 
 # Handle generic input (for BOTH mode weapons)
-func handle_input(_weapon: WeaponClass, _input_type: String, _input_side: String, _duration: float) -> void:
+func handle_input(_weapon: WeaponClass, _input_type: String, _duration: float) -> void:
 	pass
 
 # Called every frame when weapon is held
 func update(_weapon: WeaponClass, _delta: float) -> void:
 	pass
+
+# Helper methods for accessing weapon properties and handedness
+func get_weapon_properties(weapon: WeaponClass) -> WeaponResource:
+	# Get the weapon's properties resource
+	return weapon.Properties
+
+func get_weapon_handedness(weapon: WeaponClass) -> WeaponResource.Handedness:
+	# Get which hand this weapon is designed for
+	var properties := get_weapon_properties(weapon)
+	if properties:
+		return properties.weapon_hand
+	return WeaponResource.Handedness.RIGHT  # Default fallback
+
+func is_left_handed(weapon: WeaponClass) -> bool:
+	# Check if this weapon is designed for the left hand
+	return get_weapon_handedness(weapon) == WeaponResource.Handedness.LEFT
+
+func is_right_handed(weapon: WeaponClass) -> bool:
+	# Check if this weapon is designed for the right hand
+	return get_weapon_handedness(weapon) == WeaponResource.Handedness.RIGHT
+
+func is_both_handed(weapon: WeaponClass) -> bool:
+	# Check if this weapon can be used in either hand
+	return get_weapon_handedness(weapon) == WeaponResource.Handedness.BOTH
+
+func get_actual_hand(weapon: WeaponClass) -> PlayerHandClass:
+	# Get the actual hand that is currently holding this weapon
+	return get_hand(weapon)
+
+func get_other_hand(weapon: WeaponClass) -> PlayerHandClass:
+	# Get the hand that is NOT holding this weapon
+	var player := get_player(weapon)
+	if !player:
+		return null
+	
+	var current_hand := get_actual_hand(weapon)
+	if current_hand == player.Hands.Left:
+		return player.Hands.Right
+	else:
+		return player.Hands.Left
+
+func get_player(weapon: WeaponClass) -> PlayerClass:
+	# Get the player holding this weapon
+	if weapon.weapon_holder:
+		return weapon.weapon_holder as PlayerClass
+	return null
 
 ##TODO: Consider writing a Global function 'get_entitiy_holding(item_uid)
 ##      item_uid will need to be added. 

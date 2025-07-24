@@ -5,21 +5,21 @@ var is_bashing: bool = false
 var bash_duration: float = 0.0
 const BASH_DURATION_MAX: float = 0.3
 
-func handle_input(_weapon: WeaponClass, input_type: String, input_side: String, duration: float) -> void:
+func handle_input(_weapon: WeaponClass, input_type: String, duration: float) -> void:
 	match input_type:
 		"click":
-			handle_click(_weapon, input_side)
+			handle_click(_weapon)
 		"hold":
-			handle_hold(_weapon, input_side, duration)
+			handle_hold(_weapon, duration)
 		"release":
-			handle_release(_weapon, input_side, duration)
+			handle_release(_weapon, duration)
 
-func handle_click(_weapon: WeaponClass, input_side: String) -> void:
+func handle_click(_weapon: WeaponClass) -> void:
 	# Quick shield bash
 	is_bashing = true
 	bash_duration = BASH_DURATION_MAX
 
-func handle_hold(weapon: WeaponClass, input_side: String, _duration: float) -> void:
+func handle_hold(weapon: WeaponClass, _duration: float) -> void:
 	# Start blocking
 	if !is_blocking:
 		is_blocking = true
@@ -30,7 +30,7 @@ func handle_hold(weapon: WeaponClass, input_side: String, _duration: float) -> v
 		var block_length := get_default_arm_length(weapon) * 0.6  # 60% of adjusted default length
 		set_arm_length(weapon, block_length, 0.016, 15.0)
 
-func handle_release(weapon: WeaponClass, input_side: String, _duration: float) -> void:
+func handle_release(weapon: WeaponClass, _duration: float) -> void:
 	# Stop blocking
 	if is_blocking:
 		is_blocking = false

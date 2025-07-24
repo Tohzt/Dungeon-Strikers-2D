@@ -118,4 +118,4 @@ func _handle_weapon_input(input_type: String, input_side: String, duration: floa
 	
 	# Check if hand has a weapon and handle input
 	if target_hand.held_weapon:
-		target_hand.held_weapon.handle_input(input_type, input_side, duration)
+		target_hand.held_weapon.handle_input(input_type, duration)

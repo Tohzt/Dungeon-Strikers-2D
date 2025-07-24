@@ -16,24 +16,18 @@ func _ready() -> void:
 		_player.global_position = Spawn_Points.Player_One.global_position
 		var _res := Global.resources_to_load[0]
 		
-		# Create a new PlayerResource instance instead of modifying the shared one
+		# Create a new PlayerResource instance and copy all properties automatically
 		var new_properties := PlayerResource.new()
-		new_properties.player_name = _res.player_name
-		new_properties.player_id = _res.player_id
-		new_properties.player_color = _res.player_color
-		new_properties.player_strength = _res.player_strength
-		new_properties.player_endurance = _res.player_endurance
-		new_properties.player_intelligence = _res.player_intelligence
+		var properties := _res.get_property_list()
+		for property in properties:
+			# Skip built-in properties and only copy our custom ones
+			if property["usage"] & PROPERTY_USAGE_SCRIPT_VARIABLE:
+				var property_name: String = property["name"]
+				if _res.get(property_name) != null:  # Only copy if source has a value
+					new_properties.set(property_name, _res.get(property_name))
 		
 		# Assign the new resource to the player
 		_player.Properties = new_properties
-		
-		var properties := _res.get_property_list()
-		var start_index: int = max(0, properties.size() - 6)
-		for i in range(start_index, properties.size()):
-			var property: Dictionary = properties[i]
-			var prop_name: String = property.name
-			var prop_value: Variant = _player.Properties.get(prop_name)
 		
 		Player = _player
 		Player.reset()
