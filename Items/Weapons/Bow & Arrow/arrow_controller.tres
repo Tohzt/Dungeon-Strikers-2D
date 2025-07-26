@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="ArrowController" load_steps=2 format=3 uid="uid://bqx8y2k3m4n5p"]
 
-[ext_resource type="Script" uid="uid://dnl1i8s7rl1vc" path="res://Items/Weapons/Controllers/arrow_controller.gd" id="1_arrow_controller"]
+[ext_resource type="Script" uid="uid://dnl1i8s7rl1vc" path="res://Items/Weapons/Controllers/weapon_arrow_controller.gd" id="1_arrow_controller"]
 
 [resource]
 script = ExtResource("1_arrow_controller")

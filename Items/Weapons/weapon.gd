@@ -5,88 +5,66 @@ class_name WeaponClass extends RigidBody2D
 @onready var Collision := $CollisionShape2D
 @onready var Controller := $Controller
 
-var weapon_holder: Node2D
+var wielder: Node2D
 var is_attacking: bool = false
 var things_nearby: Array[Node2D] = []
 var is_thrown: bool = false
-var is_fired: bool = false  # Track if this weapon was fired (cloned) vs thrown (original)
 var throw_force: float = 800.0
 var throw_torque: float = 10.0
 var mod_angle: float = 0.0
 
-func _ready() -> void: _sest_props_or_queu()
 
+func _ready() -> void: _set_props()
 func _process(delta: float) -> void: _handle_held_or_pickup(delta)
-
-func _physics_process(_delta: float) -> void:
-	_handle_thrown()
+func _physics_process(_delta: float) -> void: _handle_thrown()
 
 
-
-func _sest_props_or_queu() -> void:
-	if Properties:
-		Sprite.texture = Properties.weapon_sprite[0]
-		if Properties.weapon_name.is_empty():
-			var regex := RegEx.new()
-			regex.compile("([^/]+)\\.png")
-			var result := regex.search(Sprite.texture.load_path)
-			if result:
-				Properties.weapon_name = result.get_string(1)
-		
-		# Replace collision shape if resource provides one
-		if Properties.weapon_collision:
-			if Collision: Collision.queue_free()
-			var new_collision: CollisionShape2D = Properties.weapon_collision.instantiate()
-			add_child(new_collision)
-			new_collision.name = "CollisionShape2D"
-			Collision = new_collision
-			Collision.position = Sprite.position
-		
-		# Check if this weapon is already being held by a player
-		if weapon_holder:
-			# Weapon is already being held, set up for in-hand state
-			_setup_held_weapon()
-		else:
-			# Weapon is on the ground
-			_update_collisions("on-ground")
-	else: 
+func _set_props() -> void:
+	if !Properties: 
 		queue_free()
-
-# Setup a weapon that's already being held by a player
-func _setup_held_weapon() -> void:
-	if !weapon_holder:
 		return
 	
-	var player: Node2D = weapon_holder
+	Sprite.texture = Properties.weapon_sprite[0]
+	if Properties.weapon_name.is_empty():
+		var regex := RegEx.new()
+		regex.compile("([^/]+)\\.png")
+		var result := regex.search(Sprite.texture.load_path)
+		if result:
+			Properties.weapon_name = result.get_string(1)
+	self.name = Properties.weapon_name
 	
-	# Set up the weapon on the hand with offset
-	Sprite.position = Properties.weapon_offset
-	Collision.position = Properties.weapon_offset
+	if Properties.weapon_collision:
+		if Collision: Collision.queue_free()
+		var new_collision: CollisionShape2D = Properties.weapon_collision.instantiate()
+		add_child(new_collision)
+		new_collision.name = "CollisionShape2D"
+		Collision = new_collision
+		Collision.position = Sprite.position
 	
-	# Set proper z-index for held weapon
-	set_z_index(Global.Layers.WEAPON_IN_HAND)
+	if wielder:
+		modulate = wielder.Sprite.modulate
+		set_z_index(Global.Layers.WEAPON_IN_HAND)
+		Sprite.position = Properties.weapon_offset
+		Collision.position = Properties.weapon_offset
+		_update_collisions("in-hand")
 	
-	# Apply player color
-	modulate = player.Sprite.modulate
-	
-	# Set collision layers for in-hand state
-	_update_collisions("in-hand")
-	
-	# Notify weapon controller that weapon was equipped
-	if Properties.weapon_controller:
-		Properties.weapon_controller.on_equip(self)
+		##TODO:
+		## Notify weapon controller that weapon was equipped
+		#if Properties.weapon_controller:
+			#Properties.weapon_controller.on_equip(self)
+	else:
+		set_z_index(Global.Layers.WEAPON_ON_GROUND)
+		_update_collisions("on-ground")
 
 
 func _handle_held_or_pickup(delta: float) -> void:
-	if weapon_holder:
+	if wielder and !is_thrown:
 		var dir := deg_to_rad(Properties.weapon_angle + mod_angle)
 		rotation = lerp_angle(rotation, get_parent().rotation + dir, delta*10)
 		
-		# Update weapon controller if it exists
 		if Properties.weapon_controller:
 			Properties.weapon_controller.update(self, delta)
 	else:
-		# Check for interaction when not held
 		if things_nearby and Input.is_action_just_pressed("interact"):
 			attempt_pickup()
 
@@ -97,27 +75,12 @@ func _handle_thrown() -> void:
 		var collisions := get_colliding_bodies()
 		for collider: Node2D in collisions:
 			if collider:
-				# Ignore collisions with the weapon holder and their weapons
-				if weapon_holder:
-					# Ignore the weapon holder (player)
-					if collider == weapon_holder:
+				if wielder:
+					if collider == wielder:
 						continue
-					
-					# Ignore weapons held by the weapon holder
-					if collider.is_in_group("Weapon") and collider.weapon_holder == weapon_holder:
+					if collider.is_in_group("Weapon") and collider.wielder == wielder:
 						continue
-					
-					# Ignore hands/arms of the weapon holder
-					if collider.get_parent() and collider.get_parent().get_parent() == weapon_holder:
-						continue
-				
-				print("Weapon collision detected!")
-				print("Weapon collision_layer: ", collision_layer)
-				print("Weapon collision_mask: ", collision_mask)
-				print("Collider: ", collider.name, " (", collider.get_class(), ")")
-				print("Collider collision_layer: ", collider.collision_layer)
-				print("Collider collision_mask: ", collider.collision_mask)
-				print("Weapon type: ", "Fired" if is_fired else "Thrown")
+				print("Resetting ", Properties.weapon_name, " to ground state")
 				reset_to_ground_state()
 
 
@@ -131,69 +94,61 @@ func _on_pickup_body_exited(body: Node2D) -> void:
 		things_nearby.remove_at(things_nearby.find(body))
 
 func attempt_pickup() -> void:
-	if weapon_holder: return
-	if things_nearby.size() == 0: return
+	if wielder or things_nearby.size() == 0: return
 	
-	var player: Node2D = things_nearby[0]  # Get the first nearby player
-	
+	## TODO: Not sure, but this could break when another entity is near an item
+	var player: Node2D = things_nearby[0]
 	var target_hand: PlayerHandClass
 	
-	# Determine which hand this weapon goes to
-	if Properties.weapon_hand == Properties.Handedness.LEFT:
-		target_hand = player.Hands.Left
-	elif Properties.weapon_hand == Properties.Handedness.RIGHT:
-		target_hand = player.Hands.Right
-	else:
-		# For BOTH handed weapons, prefer the empty hand
-		if !player.Hands.Left.held_weapon and !player.Hands.Right.held_weapon:
+	match Properties.weapon_hand:
+		Properties.Handedness.LEFT:
 			target_hand = player.Hands.Left
-		elif !player.Hands.Left.held_weapon:
-			target_hand = player.Hands.Left
-		elif !player.Hands.Right.held_weapon:
+		Properties.Handedness.RIGHT:
 			target_hand = player.Hands.Right
-		else:
-			# Both hands full, use left hand and drop current weapon
-			target_hand = player.Hands.Left
+		Properties.Handedness.BOTH:
+			if !player.Hands.Left.held_weapon:
+				target_hand = player.Hands.Left
+			elif !player.Hands.Right.held_weapon:
+				target_hand = player.Hands.Right
+			else:
+				target_hand = player.Hands.Left
 	
-	# If the target hand already has a weapon, drop it first
 	if target_hand.held_weapon:
 		drop_weapon(target_hand.held_weapon, player)
 	
-	# Pick up this weapon
 	pickup_weapon(player, target_hand)
 
 func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
-	weapon_holder = player
+	wielder = player
 	target_hand.held_weapon = self
 	
-	# Set up the weapon on the hand with offset
+	##TODO: Rip out to function (used in ready)
+	modulate = player.Sprite.modulate
 	Sprite.position = Properties.weapon_offset
 	Collision.position = Properties.weapon_offset
 	global_position = target_hand.hand.global_position
 	call_deferred("reparent", target_hand.hand)
 	call_deferred("set_z_index", Global.Layers.WEAPON_IN_HAND)
-	
-	# Apply player color
-	modulate = player.Sprite.modulate
-	
-	# Remove from nearby players list
-	things_nearby.erase(player)
-	
-	# Reset thrown state
-	is_thrown = false
-	
 	_update_collisions("in-hand")
 	
-	# Notify weapon controller that weapon was equipped
-	if Properties.weapon_controller:
-		Properties.weapon_controller.on_equip(self)
+	things_nearby.erase(player)
+	is_thrown = false
+	
+	##TODO:
+	## Notify weapon controller that weapon was equipped
+	#if Properties.weapon_controller:
+		#Properties.weapon_controller.on_equip(self)
 
 func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
-	# Notify weapon controller that weapon was unequipped
-	if weapon.Properties.weapon_controller:
-		weapon.Properties.weapon_controller.on_unequip(weapon)
+	##TODO:
+	## Notify weapon controller that weapon was unequipped
+	#if weapon.Properties.weapon_controller:
+		#weapon.Properties.weapon_controller.on_unequip(weapon)
 	
 	weapon.modulate = Color.WHITE
+	weapon.Sprite.position = Vector2.ZERO
+	weapon.Collision.position = Vector2.ZERO
+	_update_collisions("on-ground")
 	
 	# Find which hand holds this weapon
 	var hand_holding_weapon: PlayerHandClass = null
@@ -210,15 +165,9 @@ func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
 	# Move weapon back to world
 	weapon.call_deferred("reparent", player.get_parent())
 	weapon.global_position = player.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20))
-	
-	# Reset sprite and collision shape position (no offset when on ground)
-	weapon.Sprite.position = Vector2.ZERO
-	weapon.Collision.position = Vector2.ZERO
-	
-	_update_collisions("on-ground")
 
 func throw_weapon(throw_direction: Vector2, player: Node2D) -> void:
-	if weapon_holder: 
+	if wielder: 
 		# Find which hand holds this weapon
 		var hand_holding_weapon: PlayerHandClass = null
 		if player.Hands.Left.held_weapon == self:
@@ -291,12 +240,8 @@ func _set_held_sprite_position() -> void:
 
 # Weapon input handling methods
 func handle_input(input_type: String, duration: float = 0.0) -> void:
-	if !Properties.weapon_controller:
-		return
-	
-	# Only handle input if the weapon is actually held by a player
-	if !weapon_holder:
-		return
+	if !Properties.weapon_controller: return
+	if !weapon_holder: return
 	
 	# Route to controller based on input_mode
 	match Properties.input_mode:
@@ -366,7 +311,7 @@ func _update_collisions(state: String) -> void:
 			
 			set_collision_mask_value(2, false)   # Player
 			set_collision_mask_value(3, false)   # Enemy
-			set_collision_mask_value(4, true)   # Item
+			set_collision_mask_value(4, false)   # Item
 			set_collision_mask_value(5, false)   # Weapon
 			
 		"in-hand":
@@ -376,7 +321,7 @@ func _update_collisions(state: String) -> void:
 			set_collision_mask_value(2, false)   # Player
 			set_collision_mask_value(3, true)   # Enemy
 			set_collision_mask_value(4, false)   # Item
-			set_collision_mask_value(5, true)   # Weapon
+			set_collision_mask_value(5, false)   # Weapon
 			
 		"projectile":
 			set_collision_layer_value(4, false)   # Item

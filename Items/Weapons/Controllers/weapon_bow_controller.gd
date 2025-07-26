@@ -31,14 +31,15 @@ func handle_click(weapon: WeaponClass) -> void:
 func handle_hold(weapon: WeaponClass, _duration: float) -> void:
 	# Left hold = go to ready position if arrow is held
 	var player := get_player(weapon)
-	if player:
-		var other_hand := get_other_hand(weapon)
-		if other_hand.held_weapon:
-			# Check if other hand has an arrow
-			if other_hand.held_weapon.Properties.weapon_name == "Arrow":
-				is_in_ready_position = true
-				# Move bow to ready position
-				_move_to_ready_position(weapon)
+	if !player: return
+	
+	var other_hand := get_other_hand(weapon)
+	if other_hand.held_weapon:
+		# Check if other hand has an arrow
+		if other_hand.held_weapon.Properties.weapon_name == "Arrow":
+			is_in_ready_position = true
+			# Move bow to ready position
+			_move_to_ready_position(weapon)
 
 func handle_release(weapon: WeaponClass, _duration: float) -> void:
 	if is_in_ready_position:

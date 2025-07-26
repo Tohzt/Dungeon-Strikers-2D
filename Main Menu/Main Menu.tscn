@@ -118,7 +118,7 @@ Stat_Type = 2
 Stat_Color = Color(0, 0, 1, 1)
 
 [node name="Chest" parent="." instance=ExtResource("5_4wqtw")]
-position = Vector2(120, 119)
+position = Vector2(569, 203)
 
 [node name="Dummy" parent="." instance=ExtResource("6_4wqtw")]
 position = Vector2(1081, 60)

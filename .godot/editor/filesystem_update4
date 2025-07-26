@@ -1,14 +1,9 @@
 res://Main Menu/Main Menu.tscn
 res://Player/player.tscn
 res://Items/Weapons/weapon.tscn
-res://Items/Weapons/Bow & Arrow/arrow_collision.tscn
-res://Items/Weapons/Bow & Arrow/bow_collision.tscn
-res://Game/game.gd
 res://Game/game.tscn
-res://Items/Weapons/weapon.gd
 res://Items/Weapons/Controllers/arrow_controller.gd
+res://Items/Weapons/weapon.gd
 res://Items/Weapons/Controllers/bow_controller.gd
-res://Items/Weapons/Controllers/weapon_controller_base.gd
-res://Player/handler_playerAttack.gd
-res://Items/Weapons/Controllers/shield_controller.gd
-res://Items/Weapons/Controllers/sword_controller.gd
+res://Items/Weapons/Controllers/weapon_arrow_controller.gd
+res://global.gd
