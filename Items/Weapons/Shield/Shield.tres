@@ -8,9 +8,11 @@
 [resource]
 script = ExtResource("1_weapon")
 weapon_name = "Shield"
+weapon_type = 1
+weapon_sync = Array[int]([0])
 weapon_hand = 1
-throw_style = 0
-input_mode = 2
+weapon_throw_style = 0
+weapon_input_mode = 0
 weapon_controller = ExtResource("3_controller")
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("3_70nuo")])
 weapon_collision = ExtResource("2_collision")
@@ -22,8 +24,4 @@ weapon_cooldown = 0.3
 weapon_duration = 0.5
 weapon_mana_cost = 0.0
 weapon_cast_duration = 0.0
-can_synchronize = false
-sync_partner_weapon_name = ""
-sync_ready_position_offset = Vector2(0, 0)
-sync_ready_rotation_offset = 0.0
 metadata/_custom_type_script = "uid://dgec0wqpw5rdf"

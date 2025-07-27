@@ -3,11 +3,14 @@ class_name WeaponResource extends Resource
 enum Handedness { LEFT, RIGHT, BOTH }
 enum ThrowStyle { SPIN, STRAIGHT, TUMBLE }
 enum InputMode { CLICK_ONLY, HOLD_ACTION, BOTH }
+enum Types { SWORD, SHIELD, STAFF, BOW, ARROW}
 
 @export var weapon_name: String = ""
+@export var weapon_type: Types
+@export var weapon_sync: Array[Types]
 @export var weapon_hand: Handedness
-@export var throw_style: ThrowStyle
-@export var input_mode: InputMode
+@export var weapon_throw_style: ThrowStyle
+@export var weapon_input_mode: InputMode
 @export var weapon_controller: Resource
 @export var weapon_sprite: Array[CompressedTexture2D]
 @export var weapon_collision: Resource
@@ -20,9 +23,3 @@ enum InputMode { CLICK_ONLY, HOLD_ACTION, BOTH }
 @export var weapon_mana_cost: float = 0.0
 @export var weapon_cast_duration: float = 0.0
 @export var weapon_effect: PackedScene
-
-# New properties for weapon synchronization
-@export var can_synchronize: bool = false
-@export var sync_partner_weapon_name: String = ""
-@export var sync_ready_position_offset: Vector2 = Vector2.ZERO
-@export var sync_ready_rotation_offset: float = 0.0

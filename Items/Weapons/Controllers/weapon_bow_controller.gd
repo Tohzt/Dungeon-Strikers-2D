@@ -81,8 +81,7 @@ func _move_to_ready_position(bow: WeaponClass) -> void:
 # Check if the arrow should fire when bow exits ready position
 func _check_and_fire_arrow(bow: WeaponClass) -> void:
 	var player := get_player(bow)
-	if !player:
-		return
+	if !player: return
 	
 	# Check if the other hand has an arrow in ready position
 	var other_hand := get_other_hand(bow)

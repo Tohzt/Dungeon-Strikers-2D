@@ -7,15 +7,17 @@
 [resource]
 script = ExtResource("1_3swot")
 weapon_name = "Staff of Infections"
+weapon_type = 2
+weapon_sync = Array[int]([])
 weapon_hand = 0
-throw_style = 2
-input_mode = 2
+weapon_throw_style = 0
+weapon_input_mode = 0
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("3_dc6dm")])
 weapon_collision = ExtResource("2_lv7qx")
 weapon_damage = 3.0
 weapon_angle = 147.0
 weapon_offset = Vector2(16, 0)
-weapon_hand_offset = Vector2(0, 0)
+weapon_arm_length = 0.0
 weapon_cooldown = 0.0
 weapon_duration = 1.0
 weapon_mana_cost = 0.0

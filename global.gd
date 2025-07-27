@@ -99,7 +99,7 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		var left_weapon: WeaponClass = WEAPON.instantiate()
 		left_weapon.Properties = player_held_weapons["left_hand"]
 		player.Hands.Left.held_weapon = left_weapon
-		left_weapon.weapon_holder = player
+		left_weapon.wielder = player
 		# Add to scene tree first, then reparent
 		player.get_parent().add_child(left_weapon)
 		left_weapon.call_deferred("reparent", player.Hands.Left.hand)
@@ -112,7 +112,7 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		var right_weapon: WeaponClass = WEAPON.instantiate()
 		right_weapon.Properties = player_held_weapons["right_hand"]
 		player.Hands.Right.held_weapon = right_weapon
-		right_weapon.weapon_holder = player
+		right_weapon.wielder = player
 		# Add to scene tree first, then reparent
 		player.get_parent().add_child(right_weapon)
 		right_weapon.call_deferred("reparent", player.Hands.Right.hand)

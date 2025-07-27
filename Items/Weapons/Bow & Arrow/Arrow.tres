@@ -8,9 +8,11 @@
 [resource]
 script = ExtResource("1_roq2m")
 weapon_name = "Arrow"
+weapon_type = 4
+weapon_sync = Array[int]([3])
 weapon_hand = 1
-throw_style = 1
-input_mode = 2
+weapon_throw_style = 0
+weapon_input_mode = 0
 weapon_controller = ExtResource("4_arrow_controller")
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("3_qt10x")])
 weapon_collision = ExtResource("2_fnbsr")
@@ -22,8 +24,4 @@ weapon_cooldown = 0.0
 weapon_duration = 1.0
 weapon_mana_cost = 0.0
 weapon_cast_duration = 0.0
-can_synchronize = true
-sync_partner_weapon_name = "Bow of Ners"
-sync_ready_position_offset = Vector2(0, 0)
-sync_ready_rotation_offset = 0.0
 metadata/_custom_type_script = "uid://dgec0wqpw5rdf"

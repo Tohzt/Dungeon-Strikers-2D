@@ -88,8 +88,8 @@ func get_other_hand(weapon: WeaponClass) -> PlayerHandClass:
 
 func get_player(weapon: WeaponClass) -> PlayerClass:
 	# Get the player holding this weapon
-	if weapon.weapon_holder:
-		return weapon.weapon_holder as PlayerClass
+	if weapon.wielder:
+		return weapon.wielder as PlayerClass
 	return null
 
 ##TODO: Consider writing a Global function 'get_entitiy_holding(item_uid)
@@ -100,8 +100,8 @@ func get_player(weapon: WeaponClass) -> PlayerClass:
 # Helper methods for accessing hand and arm components
 func get_hand(weapon: WeaponClass) -> PlayerHandClass:
 	# Use weapon_holder to get the player, then find which hand holds this weapon
-	if weapon.weapon_holder:
-		var player: PlayerClass = weapon.weapon_holder as PlayerClass
+	if weapon.wielder:
+		var player: PlayerClass = weapon.wielder as PlayerClass
 		if player:
 			# Check which hand holds this weapon
 			if player.Hands.Left.held_weapon == weapon:

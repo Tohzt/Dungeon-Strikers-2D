@@ -8,9 +8,11 @@
 [resource]
 script = ExtResource("1_3t8j1")
 weapon_name = "Sword"
+weapon_type = 0
+weapon_sync = Array[int]([1])
 weapon_hand = 0
-throw_style = 1
-input_mode = 0
+weapon_throw_style = 0
+weapon_input_mode = 0
 weapon_controller = ExtResource("3_controller")
 weapon_sprite = Array[CompressedTexture2D]([ExtResource("2_j2gx6")])
 weapon_collision = ExtResource("2_b8nsn")

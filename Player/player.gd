@@ -107,20 +107,8 @@ func attack(_7atk_dir: float, atk_side: String) -> void:
 	# Check for weapon throwing
 	if Input.is_action_pressed("interact"):
 		if target_hand.held_weapon:
-			# Calculate throw direction with proper priority
-			var throw_direction: Vector2
-			if !Input_Handler.look_dir.is_zero_approx():
-				# Use look direction (mouse or controller aim)
-				throw_direction = Input_Handler.look_dir
-			elif !tar_pos.is_zero_approx():
-				# Use target direction if no look input
-				throw_direction = tar_pos.normalized()
-			else:
-				# Fallback to player's facing direction
-				throw_direction = Vector2(cos(rotation - PI/2), sin(rotation - PI/2))
-			
-			# Throw the weapon
-			target_hand.held_weapon.throw_weapon(throw_direction, self)
+			print("Throw from Player")
+			target_hand.held_weapon.throw_weapon(self)
 			return
 	
 	# Only set is_attacking if no weapon is equipped (legacy attack system)

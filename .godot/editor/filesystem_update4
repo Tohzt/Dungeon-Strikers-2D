@@ -1,9 +1,11 @@
 res://Main Menu/Main Menu.tscn
+res://Items/Weapons/weapon.gd
 res://Player/player.tscn
 res://Items/Weapons/weapon.tscn
 res://Game/game.tscn
-res://Items/Weapons/Controllers/arrow_controller.gd
-res://Items/Weapons/weapon.gd
-res://Items/Weapons/Controllers/bow_controller.gd
-res://Items/Weapons/Controllers/weapon_arrow_controller.gd
-res://global.gd
+res://Items/Weapons/weapon_resource.gd
+res://Items/Weapons/Shield/Shield.tres
+res://Items/Weapons/Sword/Sword.tres
+res://Items/Weapons/Staff/Staff.tres
+res://Items/Weapons/Bow & Arrow/Bow.tres
+res://Items/Weapons/Bow & Arrow/Arrow.tres

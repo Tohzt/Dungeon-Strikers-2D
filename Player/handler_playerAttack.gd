@@ -100,20 +100,8 @@ func _handle_weapon_input(input_type: String, input_side: String, duration: floa
 	# Check for weapon throwing first (hold E + click)
 	if Input.is_action_pressed("interact") and input_type == "click":
 		if target_hand.held_weapon:
-			# Calculate throw direction with proper priority
-			var throw_direction: Vector2
-			if !Master.Input_Handler.look_dir.is_zero_approx():
-				# Use look direction (mouse or controller aim)
-				throw_direction = Master.Input_Handler.look_dir
-			elif !Master.tar_pos.is_zero_approx():
-				# Use target direction if no look input
-				throw_direction = Master.tar_pos.normalized()
-			else:
-				# Fallback to player's facing direction
-				throw_direction = Vector2(cos(Master.rotation - PI/2), sin(Master.rotation - PI/2))
-			
-			# Throw the weapon
-			target_hand.held_weapon.throw_weapon(throw_direction, Master)
+			print("Throw from handler_playerAttack")
+			target_hand.held_weapon.throw_weapon(Master)
 			return
 	
 	# Check if hand has a weapon and handle input

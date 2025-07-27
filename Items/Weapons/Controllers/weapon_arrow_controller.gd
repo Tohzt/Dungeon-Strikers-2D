@@ -22,7 +22,7 @@ func handle_click(weapon: WeaponClass) -> void:
 
 func handle_hold(weapon: WeaponClass, _duration: float) -> void:
 	var player := get_player(weapon)
-	if !player or weapon.is_fired: return
+	if !player: return
 	
 	# Check if we have a bow in the other hand
 	var other_hand := get_other_hand(weapon)
@@ -62,7 +62,6 @@ func handle_release(weapon: WeaponClass, _duration: float) -> void:
 		reset_arm_length(weapon, 0.016, 10.0)
 
 func update(weapon: WeaponClass, delta: float) -> void:
-	if weapon.is_fired: return
 	# Handle ready position animation
 	if is_in_ready_position:
 		weapon.mod_angle = 90 - weapon.Properties.weapon_angle
