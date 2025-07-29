@@ -10,7 +10,6 @@ enum Types { SWORD, SHIELD, STAFF, BOW, ARROW}
 @export var weapon_sync: Array[Types]
 @export var weapon_hand: Handedness
 @export var weapon_throw_style: ThrowStyle
-@export var weapon_input_mode: InputMode
 @export var weapon_controller: Resource
 @export var weapon_sprite: Array[CompressedTexture2D]
 @export var weapon_collision: Resource

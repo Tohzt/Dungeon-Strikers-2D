@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ShieldController" load_steps=2 format=3 uid="uid://cxas7i43mmfyv"]
+
+[ext_resource type="Script" uid="uid://b3lkpkwkss7fv" path="res://Items/Weapons/_Controllers/weapon_shield_controller.gd" id="1_1w0ro"]
+
+[resource]
+script = ExtResource("1_1w0ro")
+metadata/_custom_type_script = "uid://do4hvrwj7fb5u"

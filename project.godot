@@ -50,6 +50,7 @@ folder_colors={
 [global_group]
 
 Entity="Anything that can be interacted with in some way"
+Particle=""
 
 [input]
 

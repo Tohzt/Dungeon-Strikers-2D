@@ -1,11 +1,22 @@
 res://Main Menu/Main Menu.tscn
-res://Items/Weapons/weapon.gd
-res://Player/player.tscn
-res://Items/Weapons/weapon.tscn
-res://Game/game.tscn
-res://Items/Weapons/weapon_resource.gd
 res://Items/Weapons/Shield/Shield.tres
-res://Items/Weapons/Sword/Sword.tres
+res://Items/Weapons/_Controllers/weapon_staff_controller.tres
 res://Items/Weapons/Staff/Staff.tres
 res://Items/Weapons/Bow & Arrow/Bow.tres
 res://Items/Weapons/Bow & Arrow/Arrow.tres
+res://Player/player.tscn
+res://Items/Weapons/weapon.tscn
+res://Game/game.tscn
+res://Items/Chest/chest.tscn
+res://Items/Weapons/_Controllers/weapon_staff_controller.gd
+res://Items/Weapons/_Controllers/base_weapon_controller.gd
+res://Items/Weapons/_Controllers/weapon_shield_controller.tres
+res://Items/Weapons/_Controllers/weapon_sword_controller.tres
+res://Items/Weapons/_Controllers/weapon_bow_controller.tres
+res://Items/Weapons/_Controllers/weapon_arrow_controller.tres
+res://Items/Weapons/_Controllers/weapon_arrow_controller.gd
+res://Items/Weapons/_Controllers/weapon_bow_controller.gd
+res://Items/Weapons/_Controllers/weapon_shield_controller.gd
+res://Items/Weapons/_Controllers/weapon_sword_controller.gd
+res://Items/Weapons/weapon.gd
+res://Player/handler_playerAttack.gd

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="SwordController" load_steps=2 format=3 uid="uid://jyi1qt074ihv"]
+
+[ext_resource type="Script" uid="uid://cxo6r8kjay7ar" path="res://Items/Weapons/_Controllers/weapon_sword_controller.gd" id="1_nfeiv"]
+
+[resource]
+script = ExtResource("1_nfeiv")
+metadata/_custom_type_script = "uid://do4hvrwj7fb5u"

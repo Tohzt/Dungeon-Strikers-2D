@@ -77,8 +77,8 @@ func _handle_hold_detection(delta: float) -> void:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
 		if hold_duration >= HOLD_THRESHOLD:
 			# Only print hold updates every 0.5 seconds to avoid spam
-			if int(hold_duration * 2) != int((hold_duration - delta) * 2):
-				print("Left button HOLDING (duration: ", hold_duration, ")")
+			#if int(hold_duration * 2) != int((hold_duration - delta) * 2):
+				#print("Left button HOLDING (duration: ", hold_duration, ")")
 			_handle_weapon_input("hold", "left", hold_duration)
 	
 	if right_is_holding:

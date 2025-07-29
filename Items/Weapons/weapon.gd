@@ -46,11 +46,9 @@ func _set_props() -> void:
 		Sprite.position = Properties.weapon_offset
 		Collision.position = Properties.weapon_offset
 		_update_collisions("in-hand")
-	
-		##TODO:
-		## Notify weapon controller that weapon was equipped
-		#if Properties.weapon_controller:
-			#Properties.weapon_controller.on_equip(self)
+		
+		if Properties.weapon_controller:
+			Properties.weapon_controller.on_equip(self)
 	else:
 		_update_collisions("on-ground")
 
@@ -99,7 +97,6 @@ func _handle_thrown() -> void:
 						continue
 					if collider.is_in_group("Weapon") and collider.wielder == wielder:
 						continue
-				print("Resetting ", Properties.weapon_name, " to ground state")
 				reset_to_ground_state()
 
 
@@ -115,59 +112,58 @@ func _on_pickup_body_exited(body: Node2D) -> void:
 func attempt_pickup() -> void:
 	if wielder or things_nearby.size() == 0: return
 	
-	## TODO: Not sure, but this could break when another entity is near an item
-	var player: Node2D = things_nearby[0]
+	var nearest_thing: Node2D = things_nearby[0]
 	var target_hand: PlayerHandClass
-	
 	match Properties.weapon_hand:
 		Properties.Handedness.LEFT:
-			target_hand = player.Hands.Left
+			target_hand = nearest_thing.Hands.Left
 		Properties.Handedness.RIGHT:
-			target_hand = player.Hands.Right
+			target_hand = nearest_thing.Hands.Right
 		Properties.Handedness.BOTH:
-			if !player.Hands.Left.held_weapon:
-				target_hand = player.Hands.Left
-			elif !player.Hands.Right.held_weapon:
-				target_hand = player.Hands.Right
+			if !nearest_thing.Hands.Left.held_weapon:
+				target_hand = nearest_thing.Hands.Left
+			elif !nearest_thing.Hands.Right.held_weapon:
+				target_hand = nearest_thing.Hands.Right
 			else:
-				target_hand = player.Hands.Left
+				target_hand = nearest_thing.Hands.Left
 	
-	if target_hand.held_weapon:
-		drop_weapon(target_hand.held_weapon, player)
-	
-	pickup_weapon(player, target_hand)
+	pickup_weapon(nearest_thing, target_hand)
+
 
 func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
-	print("Attempting to pick up: ", Properties.weapon_name)
 	wielder = player
+	is_thrown = false
 	target_hand.held_weapon = self
+	things_nearby.erase(player)
 	
 	##TODO: Rip out to function (used in ready)
-	modulate = player.Sprite.modulate
+	modulate = wielder.Sprite.modulate
 	Sprite.position = Properties.weapon_offset
 	Collision.position = Properties.weapon_offset
 	global_position = target_hand.hand.global_position
-	call_deferred("reparent", target_hand.hand)
 	_update_collisions("in-hand")
 	
-	things_nearby.erase(player)
-	is_thrown = false
+	var held_weapons := target_hand.hand.get_children()
+	for held_weapon in held_weapons:
+		if held_weapon.is_in_group("Weapon"):
+			held_weapon.drop_weapon(held_weapon, wielder)
 	
-	##TODO:
-	## Notify weapon controller that weapon was equipped
-	#if Properties.weapon_controller:
-		#Properties.weapon_controller.on_equip(self)
+	call_deferred("reparent", target_hand.hand)
+	
+	# Notify weapon controller that weapon was equipped
+	if Properties.weapon_controller:
+		Properties.weapon_controller.on_equip(self)
+
 
 func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
-	##TODO:
-	## Notify weapon controller that weapon was unequipped
-	#if weapon.Properties.weapon_controller:
-		#weapon.Properties.weapon_controller.on_unequip(weapon)
+	# Notify weapon controller that weapon was unequipped
+	if weapon.Properties.weapon_controller:
+		weapon.Properties.weapon_controller.on_unequip(weapon)
 	
 	weapon.modulate = Color.WHITE
 	weapon.Sprite.position = Vector2.ZERO
 	weapon.Collision.position = Vector2.ZERO
-	_update_collisions("on-ground")
+	weapon._update_collisions("on-ground")
 	
 	# Find which hand holds this weapon
 	var hand_holding_weapon: PlayerHandClass = null
@@ -187,44 +183,45 @@ func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
 
 
 func throw_weapon(player: Node2D) -> void:
+	var hand_holding_weapon: PlayerHandClass = null
+	if player.Hands.Left.held_weapon == self:
+		hand_holding_weapon = player.Hands.Left
+	elif player.Hands.Right.held_weapon == self:
+		hand_holding_weapon = player.Hands.Right
+	if !hand_holding_weapon: return
+	
+	wielder = null
 	is_thrown = true
 	Sprite.position = Vector2.ZERO
 	Collision.position = Vector2.ZERO
+	hand_holding_weapon.held_weapon = null
+	global_position = hand_holding_weapon.hand.global_position
 	
 	var throw_direction := _calculate_throw_direction(player)
 	linear_velocity = throw_direction.normalized() * throw_force
 	
-	# Handle different throw styles
-	match Properties.throw_style:
+	match Properties.weapon_throw_style:
 		Properties.ThrowStyle.STRAIGHT:
+			printt("Throw: STRAIGHT")
 			global_rotation = throw_direction.angle()
 			angular_velocity = 0.0
 		Properties.ThrowStyle.SPIN:
+			printt("Throw: SPIN")
 			global_rotation = throw_direction.angle()
 			angular_velocity = throw_torque * 2.0
 		Properties.ThrowStyle.TUMBLE:
+			printt("Throw: TUMBLE")
 			global_rotation = throw_direction.angle()
 			angular_velocity = throw_torque * 0.5
 	
-	if wielder: 
-		var hand_holding_weapon: PlayerHandClass = null
-		if player.Hands.Left.held_weapon == self:
-			hand_holding_weapon = player.Hands.Left
-		elif player.Hands.Right.held_weapon == self:
-			hand_holding_weapon = player.Hands.Right
-		
-		if !hand_holding_weapon: return
-		
-		###TODO: Might be able to do without this
-		#add_collision_exception_with(wielder)
-		#add_collision_exception_with(wielder.Hands.Left.held_weapon)
-		#add_collision_exception_with(wielder.Hands.Right.held_weapon)
-		
-		call_deferred("reparent", player.get_parent())
-		wielder = null
-		hand_holding_weapon.held_weapon = null
-		global_position = hand_holding_weapon.hand.global_position
-		
+	
+	###TODO: Might be able to do without this
+	#add_collision_exception_with(wielder)
+	#add_collision_exception_with(wielder.Hands.Left.held_weapon)
+	#add_collision_exception_with(wielder.Hands.Right.held_weapon)
+	
+	_update_collisions("projectile")
+	call_deferred("reparent", player.get_parent())
 
 
 func reset_to_ground_state() -> void:
@@ -245,18 +242,14 @@ func _set_held_sprite_position() -> void:
 func handle_input(input_type: String, duration: float = 0.0) -> void:
 	if !wielder or !Properties.weapon_controller: return
 	
-	match Properties.input_mode:
-		Properties.InputMode.CLICK_ONLY:
-			if input_type == "click":
-				Properties.weapon_controller.handle_click(self)
-		Properties.InputMode.HOLD_ACTION:
-			if input_type == "click":
-				Properties.weapon_controller.handle_click(self)
-			elif input_type == "hold":
-				Properties.weapon_controller.handle_hold(self, duration)
-			elif input_type == "release":
-				Properties.weapon_controller.handle_release(self, duration)
-		Properties.InputMode.BOTH:
+	match input_type:
+		"click":
+			Properties.weapon_controller.handle_click(self)
+		"hold":
+			Properties.weapon_controller.handle_hold(self, duration)
+		"release":
+			Properties.weapon_controller.handle_release(self, duration)
+		_:
 			Properties.weapon_controller.handle_input(self, input_type, duration)
 
 ##TODO: I think I can remove this and rely on Throw mechanic
@@ -305,7 +298,6 @@ func _calculate_throw_direction(player: Node2D) -> Vector2:
 func _update_collisions(state: String) -> void:
 	match state:
 		"on-ground":
-			printt("On Ground: ", Properties.weapon_name)
 			set_collision_layer_value(4, true)  # Item
 			set_collision_layer_value(5, false) # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -315,7 +307,6 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_ON_GROUND)
 			
 		"in-hand":
-			printt("In Hand: ", Properties.weapon_name)
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, true)  # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -325,7 +316,6 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_IN_HAND)
 			
 		"projectile":
-			printt("Projectile: ", Properties.weapon_name)
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, true)  # Weapon
 			set_collision_mask_value(2, false)  # Player (don't hit the player who fired it)

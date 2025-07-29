@@ -100,7 +100,7 @@ func _update_hp(delta: float) -> void:
 
 
 @rpc("any_peer", "call_local")
-func attack(_7atk_dir: float, atk_side: String) -> void:
+func attack(_atk_dir: float, atk_side: String) -> void:
 	var hand: int = 0 if atk_side == "left" else 1
 	var target_hand: PlayerHandClass = Hands.get_child(hand)
 	
@@ -119,16 +119,6 @@ func attack(_7atk_dir: float, atk_side: String) -> void:
 	
 	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
 	if !entities_node: return
-	
-	##TODO: Update to new Attack Type
-	#var _atk: PlayerAttackClass = Global.ATTACK.instantiate()
-	#_atk.Attacker = self
-	#_atk.attack_power = atk_pwr
-	#_atk.global_position = global_position
-	#_atk.spawn_position = global_position
-	#_atk.modulate = Sprite.modulate
-	#entities_node.add_child(_atk, true)
-	#_atk.set_props("melee", 100, atk_dir, 0.5)
 
 @rpc("any_peer", "call_remote", "reliable")
 func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:

@@ -161,7 +161,7 @@ vertical_alignment = 1
 uppercase = true
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://btf8e0wnlbd82", "uid://cgg53vkkel4lq", "uid://cd37ndthdlhls", "uid://du4p0gdnajtii")
+_spawnable_scenes = PackedStringArray("uid://btf8e0wnlbd82", "uid://cgg53vkkel4lq", "uid://du4p0gdnajtii")
 spawn_path = NodePath("../Entities")
 spawn_limit = 16
 

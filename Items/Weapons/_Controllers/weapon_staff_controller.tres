@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="StaffController" load_steps=2 format=3 uid="uid://bo1ukrhgnf31h"]
+
+[ext_resource type="Script" uid="uid://dy8yxbxdixpdt" path="res://Items/Weapons/_Controllers/weapon_staff_controller.gd" id="1_32y83"]
+
+[resource]
+script = ExtResource("1_32y83")
+metadata/_custom_type_script = "uid://do4hvrwj7fb5u"

@@ -5,7 +5,6 @@ const MAIN: String = "res://Main Menu/Main Menu.tscn"
 const ROOM: String = "res://Game/Room/room.tscn"
 
 const PLAYER: PackedScene = preload("res://Player/player.tscn")
-const ATTACK: PackedScene = preload("res://Player/Attack/player_attack.tscn")
 const BALL: PackedScene = preload("res://Ball/ball.tscn")
 const BOSS: PackedScene = preload("res://Boss/boss.tscn")
 const WEAPON: PackedScene = preload("res://Items/Weapons/weapon.tscn")

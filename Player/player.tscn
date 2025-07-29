@@ -114,6 +114,8 @@ rotation = 1.74533
 [node name="Hand" parent="Hands/Left Hand/Arm" index="0"]
 position = Vector2(0, 60)
 
+[node name="GPUParticles2D" parent="Hands/Left Hand/Arm/Hand" index="0" groups=["Particle"]]
+
 [node name="Right Hand" parent="Hands" instance=ExtResource("5_k53q1")]
 handedness = "right"
 
