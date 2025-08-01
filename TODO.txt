@@ -1,0 +1,8 @@
+- Arrow quantity
++ Arrow break on impact?
+- weapon click/hold
+/ send weapon dmg to enemy
++ attack dummy
+- synergy weapon dmg combine?
+- pickup sword in either hand
+- launch sword from bow

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c8ke7sv8ukd5y" path="res://Items/Weapons/weapon.gd" id="1_6fu2l"]
 [ext_resource type="Texture2D" uid="uid://d3kudbiwgf2y7" path="res://Items/Weapons/Bow & Arrow/weapon_bow.png" id="3_637un"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_637un"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6fu2l"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6fu2l"]
 radius = 44.0
@@ -24,7 +24,8 @@ scale = Vector2(0.75, 0.75)
 texture = ExtResource("3_637un")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_637un")
+shape = SubResource("CapsuleShape2D_6fu2l")
+debug_color = Color(0, 0.693583, 0.178807, 0.419608)
 
 [node name="Pickup" type="Area2D" parent="."]
 collision_layer = 8

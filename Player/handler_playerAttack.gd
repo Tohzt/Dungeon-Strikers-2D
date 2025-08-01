@@ -41,7 +41,7 @@ func _handle_attack() -> void:
 			attack_confirmed = true
 			attack_side = "right"
 
-func _handle_hold_detection(delta: float) -> void:
+func _handle_hold_detection(_delta: float) -> void:
 	# Handle left mouse button hold detection
 	if Input_Handler.attack_left and !left_is_holding:
 		left_hold_start_time = Time.get_ticks_msec() / 1000.0
@@ -101,7 +101,7 @@ func _handle_weapon_input(input_type: String, input_side: String, duration: floa
 	if Input.is_action_pressed("interact") and input_type == "click":
 		if target_hand.held_weapon:
 			print("Throw from handler_playerAttack")
-			target_hand.held_weapon.throw_weapon(Master)
+			target_hand.held_weapon.throw_weapon()
 			return
 	
 	# Check if hand has a weapon and handle input

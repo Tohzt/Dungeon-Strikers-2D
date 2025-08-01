@@ -36,7 +36,7 @@ func handle_release(weapon: WeaponClass, _duration: float = 0.0) -> void:
 		##reset_arm_rotation(weapon, 0.016, 10.0)
 		##reset_arm_length(weapon, 0.016, 10.0)
 
-func update(weapon: WeaponClass, delta: float) -> void:
+func update(_weapon: WeaponClass, _delta: float) -> void:
 	pass
 	#var hand := get_hand(weapon)
 	#if !hand: return

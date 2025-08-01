@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="ArrowController" load_steps=2 format=3 uid="uid://cw0wkl8b2mu8x"]
-
-[ext_resource type="Script" uid="uid://dnl1i8s7rl1vc" path="res://Items/Weapons/_Controllers/weapon_arrow_controller.gd" id="1_jsws0"]
-
-[resource]
-script = ExtResource("1_jsws0")
-metadata/_custom_type_script = "uid://do4hvrwj7fb5u"

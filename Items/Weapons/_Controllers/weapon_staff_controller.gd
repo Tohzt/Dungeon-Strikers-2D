@@ -17,7 +17,7 @@ func handle_release(weapon: WeaponClass, _duration: float = 0.0) -> void:
 	##var slash_length := get_default_arm_length(weapon) * 1.2
 	##set_arm_length(weapon, slash_length, 0.016, 20.0)
 
-func update(weapon: WeaponClass, delta: float) -> void:
+func update(_weapon: WeaponClass, _delta: float) -> void:
 	pass
 	#var hand := get_hand(weapon)
 	#if !hand: return

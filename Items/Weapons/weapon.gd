@@ -9,9 +9,11 @@ var wielder: Node2D
 var is_attacking: bool = false
 var things_nearby: Array[Node2D] = []
 var is_thrown: bool = false
+var throw_clone: bool = false
 var throw_force: float = 800.0
 var throw_torque: float = 10.0
 var mod_angle: float = 0.0
+var has_synergy: bool
 
 
 func _ready() -> void: _set_props()
@@ -25,6 +27,10 @@ func _set_props() -> void:
 		return
 	
 	Sprite.texture = Properties.weapon_sprite[0]
+	
+	if Properties.weapon_controller:
+		Controller.set_script(Properties.weapon_controller)
+	
 	if Properties.weapon_name.is_empty():
 		var regex := RegEx.new()
 		regex.compile("([^/]+)\\.png")
@@ -33,22 +39,20 @@ func _set_props() -> void:
 			Properties.weapon_name = result.get_string(1)
 	self.name = Properties.weapon_name
 	
-	if Properties.weapon_collision:
-		if Collision: Collision.queue_free()
-		var new_collision: CollisionShape2D = Properties.weapon_collision.instantiate()
-		add_child(new_collision)
-		new_collision.name = "CollisionShape2D"
-		Collision = new_collision
-		Collision.position = Sprite.position
+	if Collision and Collision.shape is CapsuleShape2D:
+		Collision.shape.radius = Properties.weapon_col_radius
+		Collision.shape.height = Properties.weapon_col_height
+		Collision.rotation = Properties.weapon_col_rotation
+		Collision.position = Properties.weapon_col_position
+	else:
+		print_debug("DEBUG: Collision shape is not a CapsuleShape2D")
 	
 	if wielder:
 		modulate = wielder.Sprite.modulate
-		Sprite.position = Properties.weapon_offset
-		Collision.position = Properties.weapon_offset
 		_update_collisions("in-hand")
 		
-		if Properties.weapon_controller:
-			Properties.weapon_controller.on_equip(self)
+		if Controller.has_method("on_equip"):
+			Controller.on_equip(self)
 	else:
 		_update_collisions("on-ground")
 
@@ -59,36 +63,16 @@ func _handle_held_or_pickup(delta: float) -> void:
 		rotation = lerp_angle(rotation, get_parent().rotation + dir, delta*10)
 		
 		if Properties.weapon_controller:
-			Properties.weapon_controller.update(self, delta)
+			Controller.set_script(Properties.weapon_controller)
+			Controller.update(self, delta)
 	else:
 		if things_nearby and Input.is_action_just_pressed("interact"):
-			# Only attempt pickup if this is the highest priority weapon
-			if _is_highest_priority_weapon():
-				attempt_pickup()
-
-func _is_highest_priority_weapon() -> bool:
-	if !things_nearby.size() > 0: return false
-	
-	var player: Node2D = things_nearby[0]
-	var player_pos := player.global_position
-	
-	# Find all weapons near the player
-	var nearby_weapons: Array[WeaponClass] = []
-	for weapon in get_tree().get_nodes_in_group("Weapon"):
-		if weapon is WeaponClass and !weapon.wielder and weapon.things_nearby.has(player):
-			nearby_weapons.append(weapon)
-	
-	# Sort by distance to player (closest first)
-	nearby_weapons.sort_custom(func(a: WeaponClass, b: WeaponClass) -> bool: 
-		return a.global_position.distance_to(player_pos) < b.global_position.distance_to(player_pos)
-	)
-	
-	# Return true if this weapon is the closest
-	return nearby_weapons.size() > 0 and nearby_weapons[0] == self
+			attempt_pickup()
 
 
 func _handle_thrown() -> void:
 	if is_thrown:
+		wielder = null
 		var collisions := get_colliding_bodies()
 		for collider: Node2D in collisions:
 			if collider:
@@ -128,6 +112,8 @@ func attempt_pickup() -> void:
 				target_hand = nearest_thing.Hands.Left
 	
 	pickup_weapon(nearest_thing, target_hand)
+	#for weapon: WeaponClass in get_tree().get_nodes_in_group("Weapon"):
+		#weapon.things_nearby.clear()
 
 
 func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
@@ -149,149 +135,119 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 			held_weapon.drop_weapon(held_weapon, wielder)
 	
 	call_deferred("reparent", target_hand.hand)
-	
-	# Notify weapon controller that weapon was equipped
-	if Properties.weapon_controller:
-		Properties.weapon_controller.on_equip(self)
 
 
 func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
-	# Notify weapon controller that weapon was unequipped
-	if weapon.Properties.weapon_controller:
-		weapon.Properties.weapon_controller.on_unequip(weapon)
-	
 	weapon.modulate = Color.WHITE
 	weapon.Sprite.position = Vector2.ZERO
 	weapon.Collision.position = Vector2.ZERO
 	weapon._update_collisions("on-ground")
 	
-	# Find which hand holds this weapon
 	var hand_holding_weapon: PlayerHandClass = null
 	if player.Hands.Left.held_weapon == weapon:
 		hand_holding_weapon = player.Hands.Left
 	elif player.Hands.Right.held_weapon == weapon:
 		hand_holding_weapon = player.Hands.Right
 	
-	# Remove weapon from hand
 	weapon.wielder = null
 	if hand_holding_weapon:
 		hand_holding_weapon.held_weapon = null
 	
-	# Move weapon back to world
 	weapon.call_deferred("reparent", player.get_parent())
 	weapon.global_position = player.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20))
 
 
-func throw_weapon(player: Node2D) -> void:
-	var hand_holding_weapon: PlayerHandClass = null
-	if player.Hands.Left.held_weapon == self:
-		hand_holding_weapon = player.Hands.Left
-	elif player.Hands.Right.held_weapon == self:
-		hand_holding_weapon = player.Hands.Right
-	if !hand_holding_weapon: return
+func throw_weapon() -> void:
+	if !wielder: return
+	var throw_direction := _calculate_throw_direction(wielder)
+	var projectile: WeaponClass
+	if throw_clone:
+		
+		projectile = self.duplicate() as WeaponClass
+		if !projectile: return
+		
+		wielder.get_parent().add_child(projectile)
+		projectile.throw_clone = true
+		projectile.wielder = wielder
+		projectile.Sprite.position = Vector2.ZERO
+		projectile.Collision.position = Vector2.ZERO
+		projectile._update_collisions("projectile")
+	else:
+		projectile = self
+		# Remove from hand
+		var hand_holding_weapon: PlayerHandClass = null
+		if wielder.Hands.Left.held_weapon == self:
+			hand_holding_weapon = wielder.Hands.Left
+		elif wielder.Hands.Right.held_weapon == self:
+			hand_holding_weapon = wielder.Hands.Right
+		if hand_holding_weapon:
+			hand_holding_weapon.held_weapon = null
+		
+		projectile.is_thrown = true
+		projectile.Sprite.position = Vector2.ZERO
+		projectile.Collision.position = Vector2.ZERO
+		projectile._update_collisions("projectile")
 	
-	wielder = null
-	is_thrown = true
-	Sprite.position = Vector2.ZERO
-	Collision.position = Vector2.ZERO
-	hand_holding_weapon.held_weapon = null
-	global_position = hand_holding_weapon.hand.global_position
-	
-	var throw_direction := _calculate_throw_direction(player)
-	linear_velocity = throw_direction.normalized() * throw_force
-	
-	match Properties.weapon_throw_style:
+	match projectile.Properties.weapon_throw_style:
 		Properties.ThrowStyle.STRAIGHT:
-			printt("Throw: STRAIGHT")
-			global_rotation = throw_direction.angle()
-			angular_velocity = 0.0
+			projectile.global_rotation = throw_direction.angle()
+			projectile.angular_velocity = 0.0
 		Properties.ThrowStyle.SPIN:
-			printt("Throw: SPIN")
-			global_rotation = throw_direction.angle()
-			angular_velocity = throw_torque * 2.0
+			projectile.global_rotation = throw_direction.angle()
+			projectile.angular_velocity = throw_torque * 2.0
 		Properties.ThrowStyle.TUMBLE:
-			printt("Throw: TUMBLE")
-			global_rotation = throw_direction.angle()
-			angular_velocity = throw_torque * 0.5
+			projectile.global_rotation = throw_direction.angle()
+			projectile.angular_velocity = throw_torque * 0.5
 	
+	if !throw_clone: call_deferred("reparent", wielder.get_parent())
 	
-	###TODO: Might be able to do without this
-	#add_collision_exception_with(wielder)
-	#add_collision_exception_with(wielder.Hands.Left.held_weapon)
-	#add_collision_exception_with(wielder.Hands.Right.held_weapon)
+	projectile.wielder = null
+	projectile.global_position = global_position
+	projectile.linear_velocity = throw_direction.normalized() * throw_force
+	projectile.is_thrown = true
 	
-	_update_collisions("projectile")
-	call_deferred("reparent", player.get_parent())
-
 
 func reset_to_ground_state() -> void:
+	print("huh?: ", throw_clone)
+	if throw_clone: 
+		queue_free()
+		return
+	wielder = null
 	is_thrown = false
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0.0
 	Sprite.position = Vector2.ZERO
 	Collision.position = Vector2.ZERO
 	_update_collisions("on-ground")
+	var Entities := get_tree().get_first_node_in_group("Entities")
+	call_deferred("reparent", Entities)
 
 
-func _set_held_sprite_position() -> void:
-	# Safely set sprite position when weapon is held
-	if Sprite and Properties:
-		Sprite.position = Properties.weapon_offset
+#func _set_held_sprite_position() -> void:
+	## Safely set sprite position when weapon is held
+	#if Sprite and Properties:
+		#Sprite.position = Properties.weapon_offset
 
 # Weapon input handling methods
 func handle_input(input_type: String, duration: float = 0.0) -> void:
-	if !wielder or !Properties.weapon_controller: return
-	
+	if !wielder: return
 	match input_type:
 		"click":
-			Properties.weapon_controller.handle_click(self)
+			Controller.handle_click(self)
 		"hold":
-			Properties.weapon_controller.handle_hold(self, duration)
+			Controller.handle_hold(self, duration)
 		"release":
-			Properties.weapon_controller.handle_release(self, duration)
+			Controller.handle_release(self, duration)
 		_:
-			Properties.weapon_controller.handle_input(self, input_type, duration)
-
-##TODO: I think I can remove this and rely on Throw mechanic
-#func fire_weapon(trigger_weapon: WeaponClass = null) -> void:
-	#if !wielder: return
-	#
-	#var player: Node2D = wielder
-	#var throw_direction := _calculate_throw_direction(player)
-	#
-	#if !trigger_weapon:
-		#throw_weapon(throw_direction, player)
-		#return
-	#
-	## If trigger weapon provided, clone this weapon and fire it
-	#var weapon_clone: WeaponClass = Global.WEAPON.instantiate() as WeaponClass
-	#if !weapon_clone:
-		#print("Failed to create weapon clone!")
-		#return
-	#
-	#weapon_clone.Properties = Properties
-	#player.get_parent().add_child(weapon_clone)
-	#
-	## Ensure the weapon is properly initialized before setting collision layers
-	#weapon_clone._sest_props_or_queu()
-	#
-	#weapon_clone.modulate = player.Sprite.modulate
-	#weapon_clone.global_position = trigger_weapon.global_position + throw_direction.normalized() * 20.0
-	#weapon_clone.wielder = player
-	#
-	#weapon_clone.throw_weapon(throw_direction, player)
+			Controller.handle_input(self, input_type, duration)
 
 
-# Helper method to calculate throw direction
 func _calculate_throw_direction(player: Node2D) -> Vector2:
 	if !player.Input_Handler.look_dir.is_zero_approx():
-		# Use look direction (mouse or controller aim)
 		return player.Input_Handler.look_dir
 	elif !player.tar_pos.is_zero_approx():
-		# Use target direction if no look input
 		return player.tar_pos.normalized()
 	else:
-		# Fallback to player's facing direction
 		return Vector2(cos(player.rotation - PI/2), sin(player.rotation - PI/2))
 
 
@@ -301,15 +257,17 @@ func _update_collisions(state: String) -> void:
 			set_collision_layer_value(4, true)  # Item
 			set_collision_layer_value(5, false) # Weapon
 			set_collision_mask_value(2, false)  # Player
+			set_collision_mask_value(1, true)  # World
 			set_collision_mask_value(3, false)  # Enemy
-			set_collision_mask_value(4, false)  # Item
+			set_collision_mask_value(4, true)  # Item
 			set_collision_mask_value(5, false)  # Weapon
 			set_z_index(Global.Layers.WEAPON_ON_GROUND)
 			
 		"in-hand":
 			set_collision_layer_value(4, false) # Item
-			set_collision_layer_value(5, true)  # Weapon
+			set_collision_layer_value(5, false)  # Weapon
 			set_collision_mask_value(2, false)  # Player
+			set_collision_mask_value(1, false)  # World
 			set_collision_mask_value(3, true)   # Enemy
 			set_collision_mask_value(4, false)  # Item
 			set_collision_mask_value(5, false)  # Weapon
@@ -318,8 +276,9 @@ func _update_collisions(state: String) -> void:
 		"projectile":
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, true)  # Weapon
-			set_collision_mask_value(2, false)  # Player (don't hit the player who fired it)
-			set_collision_mask_value(3, true)   # Enemy (can hit enemies)
-			set_collision_mask_value(4, false)  # Item (don't hit items on ground)
-			set_collision_mask_value(5, false)  # Weapon (don't collide with other weapons when flying)
+			set_collision_mask_value(1, true)  # World
+			set_collision_mask_value(2, false)  # Player
+			set_collision_mask_value(3, true)   # Enemy
+			set_collision_mask_value(4, false)  # Item
+			set_collision_mask_value(5, false)  # Weapon
 			set_z_index(Global.Layers.PROJECTILES)

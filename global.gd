@@ -33,11 +33,11 @@ enum Layers {
 	WEAPON_IN_HAND = 8,
 	# Characters/Entities (9-19)
 	PLAYER_HANDS = 9,
-	PLAYER = 10,
-	ENEMIES = 11,
-	NPCS = 12,
+	PROJECTILES = 10,
+	PLAYER = 11,
+	ENEMIES = 12,
+	NPCS = 13,
 	# Effects/Attacks (20-29)
-	PROJECTILES = 21,
 	ATTACK_VISUALS = 23,
 	# UI/Overlay (30-39)
 	GAME_UI = 30,
@@ -100,11 +100,12 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		player.Hands.Left.held_weapon = left_weapon
 		left_weapon.wielder = player
 		# Add to scene tree first, then reparent
-		player.get_parent().add_child(left_weapon)
+		var Entities := get_tree().get_first_node_in_group("Entities")
+		Entities.add_child(left_weapon)
 		left_weapon.call_deferred("reparent", player.Hands.Left.hand)
 		left_weapon.global_position = player.Hands.Left.hand.global_position
 		# Set sprite position after the weapon is ready
-		left_weapon.call_deferred("_set_held_sprite_position")
+		#left_weapon.call_deferred("_set_held_sprite_position")
 		left_weapon.modulate = player.Sprite.modulate
 		
 	if player_held_weapons["right_hand"]:
@@ -113,9 +114,10 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		player.Hands.Right.held_weapon = right_weapon
 		right_weapon.wielder = player
 		# Add to scene tree first, then reparent
-		player.get_parent().add_child(right_weapon)
+		var Entities := get_tree().get_first_node_in_group("Entities")
+		Entities.add_child(right_weapon)
 		right_weapon.call_deferred("reparent", player.Hands.Right.hand)
 		right_weapon.global_position = player.Hands.Right.hand.global_position
 		# Set sprite position after the weapon is ready
-		right_weapon.call_deferred("_set_held_sprite_position")
+		#right_weapon.call_deferred("_set_held_sprite_position")
 		right_weapon.modulate = player.Sprite.modulate
