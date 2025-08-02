@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ddn5dflpnvmfn"]
+[gd_scene load_steps=14 format=3 uid="uid://ddn5dflpnvmfn"]
 
 [ext_resource type="Script" uid="uid://c6v4td75pemi0" path="res://Main Menu/main_menu.gd" id="1_col8w"]
 [ext_resource type="PackedScene" uid="uid://btf8e0wnlbd82" path="res://Player/player.tscn" id="2_5ms5j"]
@@ -11,6 +11,8 @@
 [ext_resource type="Resource" uid="uid://bjltlxtu1gq0f" path="res://Items/Weapons/Bow & Arrow/Bow.tres" id="8_hat6j"]
 [ext_resource type="Resource" uid="uid://5gjhgh1sidek" path="res://Items/Weapons/Bow & Arrow/Arrow.tres" id="9_8iwr2"]
 [ext_resource type="Resource" uid="uid://dfxnthrdfin2d" path="res://Items/Weapons/Staff/Staff.tres" id="10_y6014"]
+[ext_resource type="PackedScene" uid="uid://bxcrqtrb0qw0j" path="res://Items/Dummy/dummy_anchor.tscn" id="12_4myfj"]
+[ext_resource type="PackedScene" uid="uid://dfhyv1dxxl7j" path="res://Items/Chain/chain.tscn" id="12_hat6j"]
 
 [node name="Main Menu" type="Node2D" groups=["Main Menu"]]
 script = ExtResource("1_col8w")
@@ -125,14 +127,12 @@ Stat_Color = Color(0, 0, 1, 1)
 [node name="Chest_Str" parent="." instance=ExtResource("5_4wqtw")]
 modulate = Color(1, 0.523455, 0.543051, 1)
 position = Vector2(411, 205)
-scale = Vector2(1, 1)
 items = Array[Resource]([ExtResource("6_re3ss"), ExtResource("7_4myfj")])
 
 [node name="Chest_End" parent="." instance=ExtResource("5_4wqtw")]
 modulate = Color(0, 0.860488, 0.188099, 1)
 position = Vector2(581, 173)
 rotation = 0.0
-scale = Vector2(1, 1)
 items = Array[Resource]([ExtResource("8_hat6j"), ExtResource("9_8iwr2")])
 
 [node name="Chest_Int" parent="." instance=ExtResource("5_4wqtw")]
@@ -141,11 +141,15 @@ position = Vector2(758, 201)
 rotation = 0.808087
 items = Array[Resource]([ExtResource("10_y6014")])
 
-[node name="Dummy" parent="." instance=ExtResource("6_4wqtw")]
-position = Vector2(1020, 559)
-rotation = 2.24798
-
 [node name="Entities" type="Node2D" parent="." groups=["Entities"]]
+
+[node name="Dummy Anchor" parent="Entities" instance=ExtResource("12_4myfj")]
+position = Vector2(1048, 572)
+rotation = 2.21657
+chain_scene = ExtResource("12_hat6j")
+ball_scene = ExtResource("6_4wqtw")
+segment_distance = 20.0
+joint_damping = 0.0
 
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Join" to="." method="_on_join_pressed"]

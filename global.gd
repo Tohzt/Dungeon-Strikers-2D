@@ -8,6 +8,7 @@ const PLAYER: PackedScene = preload("res://Player/player.tscn")
 const BALL: PackedScene = preload("res://Ball/ball.tscn")
 const BOSS: PackedScene = preload("res://Boss/boss.tscn")
 const WEAPON: PackedScene = preload("res://Items/Weapons/weapon.tscn")
+const DISPLAY_DAMAGE: PackedScene = preload("res://HUD/display_damage.tscn")
 var player_display_name: String
 
 var rooms: Array[RoomClass]
@@ -121,3 +122,16 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		# Set sprite position after the weapon is ready
 		#right_weapon.call_deferred("_set_held_sprite_position")
 		right_weapon.modulate = player.Sprite.modulate
+
+func spawn_damage_display(damage: int, position: Vector2) -> void:
+	# Spawn a damage display label at the given position
+	var damage_label = DISPLAY_DAMAGE.instantiate()
+	damage_label.text = str(damage)
+	damage_label.global_position = position
+	
+	# Add to the current scene
+	var current_scene = get_tree().current_scene
+	if current_scene:
+		current_scene.add_child(damage_label)
+	else:
+		print("ERROR: No current scene to add damage label to!")

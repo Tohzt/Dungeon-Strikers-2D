@@ -17,17 +17,21 @@ collision_layer = 4
 collision_mask = 19
 mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_4wna1")
+contact_monitor = true
+max_contacts_reported = 2
 script = ExtResource("1_4wna1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -23.105)
+position = Vector2(0, -5)
 rotation = -0.785398
 texture = ExtResource("1_vt871")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 20)
 shape = SubResource("CircleShape2D_4wna1")
 
 [node name="Area2D" type="Area2D" parent="."]
+position = Vector2(0, 20)
 collision_layer = 4
 collision_mask = 10
 

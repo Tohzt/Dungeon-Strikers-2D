@@ -208,7 +208,6 @@ func throw_weapon() -> void:
 	
 
 func reset_to_ground_state() -> void:
-	print("huh?: ", throw_clone)
 	if throw_clone: 
 		queue_free()
 		return
@@ -268,7 +267,7 @@ func _update_collisions(state: String) -> void:
 			set_collision_layer_value(5, false)  # Weapon
 			set_collision_mask_value(2, false)  # Player
 			set_collision_mask_value(1, false)  # World
-			set_collision_mask_value(3, true)   # Enemy
+			set_collision_mask_value(3, false)   # Enemy
 			set_collision_mask_value(4, false)  # Item
 			set_collision_mask_value(5, false)  # Weapon
 			set_z_index(Global.Layers.WEAPON_IN_HAND)

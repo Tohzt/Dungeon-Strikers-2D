@@ -7,16 +7,13 @@ res://Player/player.tscn
 res://Items/Weapons/weapon.tscn
 res://Game/game.tscn
 res://Items/Chest/chest.tscn
-res://Items/Weapons/Sword/Sword_Collision.tscn
-res://Items/Weapons/Bow & Arrow/bow_collision.tscn
-res://Items/Weapons/Bow & Arrow/arrow_collision.tscn
-res://Items/Weapons/Shield/shield_collision.tscn
-res://Items/Weapons/Staff/staff_collision.tscn
-res://Items/Weapons/weapon.gd
-res://global.gd
-res://Items/Weapons/_Controllers/weapon_arrow_controller.gd
-res://Items/Weapons/_Controllers/weapon_bow_controller.gd
-res://TODO.txt
-res://Items/Dummy/dummy.gd
 res://Items/Dummy/dummy.tscn
-res://Items/Weapons/Sword/Sword.tres
+res://Items/Dummy/dummy_anchor.tscn
+res://Items/Chain/chain.gd
+res://Items/Dummy/dummy_anchor.gd
+res://Items/Chain/chain.tscn
+res://Items/Weapons/weapon.gd
+res://Items/Dummy/dummy.gd
+res://HUD/display_damage.tscn
+res://global.gd
+res://HUD/display_damage.gd
