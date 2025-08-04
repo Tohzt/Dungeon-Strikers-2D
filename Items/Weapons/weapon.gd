@@ -104,6 +104,8 @@ func attempt_pickup() -> void:
 		Properties.Handedness.RIGHT:
 			target_hand = nearest_thing.Hands.Right
 		Properties.Handedness.BOTH:
+			pass
+		Properties.Handedness.EITHER:
 			if !nearest_thing.Hands.Left.held_weapon:
 				target_hand = nearest_thing.Hands.Left
 			elif !nearest_thing.Hands.Right.held_weapon:
@@ -161,16 +163,24 @@ func throw_weapon() -> void:
 	if !wielder: return
 	var throw_direction := _calculate_throw_direction(wielder)
 	var projectile: WeaponClass
+	
 	if throw_clone:
-		
 		projectile = self.duplicate() as WeaponClass
 		if !projectile: return
+		projectile.Properties = projectile.Properties.duplicate()
+		if !projectile.Properties: return
 		
 		wielder.get_parent().add_child(projectile)
 		projectile.throw_clone = true
 		projectile.wielder = wielder
 		projectile.Sprite.position = Vector2.ZERO
 		projectile.Collision.position = Vector2.ZERO
+		var offhand: WeaponClass
+		if Properties.weapon_hand == Properties.Handedness.LEFT:
+			offhand = wielder.get_right_weapon()
+		if Properties.weapon_hand == Properties.Handedness.RIGHT:
+			offhand = wielder.get_left_weapon()
+		projectile.Properties.weapon_damage += offhand.Properties.weapon_damage
 		projectile._update_collisions("projectile")
 	else:
 		projectile = self
@@ -234,9 +244,9 @@ func handle_input(input_type: String, duration: float = 0.0) -> void:
 		"click":
 			Controller.handle_click(self)
 		"hold":
-			Controller.handle_hold(self, duration)
+			Controller.handle_hold(self)
 		"release":
-			Controller.handle_release(self, duration)
+			Controller.handle_release(self)
 		_:
 			Controller.handle_input(self, input_type, duration)
 
@@ -253,6 +263,7 @@ func _calculate_throw_direction(player: Node2D) -> Vector2:
 func _update_collisions(state: String) -> void:
 	match state:
 		"on-ground":
+			modulate = Color.WEB_GRAY
 			set_collision_layer_value(4, true)  # Item
 			set_collision_layer_value(5, false) # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -263,6 +274,7 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_ON_GROUND)
 			
 		"in-hand":
+			modulate = Color.BLUE
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, false)  # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -273,6 +285,7 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_IN_HAND)
 			
 		"projectile":
+			modulate = Color.RED
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, true)  # Weapon
 			set_collision_mask_value(1, true)  # World

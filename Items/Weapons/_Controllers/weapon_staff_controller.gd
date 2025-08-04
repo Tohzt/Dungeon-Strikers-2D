@@ -4,10 +4,10 @@ class_name StaffController extends WeaponControllerBase
 func handle_click(weapon: WeaponClass) -> void:
 	super.handle_click(weapon)
 
-func handle_hold(weapon: WeaponClass, _duration: float = 0.0) -> void:
+func handle_hold(weapon: WeaponClass) -> void:
 	super.handle_hold(weapon)
 
-func handle_release(weapon: WeaponClass, _duration: float = 0.0) -> void:
+func handle_release(weapon: WeaponClass) -> void:
 	super.handle_release(weapon)
 
 

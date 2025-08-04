@@ -33,6 +33,7 @@ collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pickup"]
 shape = SubResource("CircleShape2D_6fu2l")
+debug_color = Color(0, 0.6, 0.701961, 0.0392157)
 
 [connection signal="body_entered" from="Pickup" to="." method="_on_pickup_body_entered"]
 [connection signal="body_exited" from="Pickup" to="." method="_on_pickup_body_exited"]

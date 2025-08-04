@@ -3,8 +3,8 @@ class_name WeaponControllerBase extends Node
 var hold_position: bool = false
 
 func handle_click(_weapon: WeaponClass) -> void: pass
-func handle_hold(_weapon: WeaponClass, _duration: float = 0.0) -> void: pass
-func handle_release(_weapon: WeaponClass, _duration: float = 0.0) -> void: pass
+func handle_hold(_weapon: WeaponClass) -> void: pass
+func handle_release(_weapon: WeaponClass) -> void: pass
 
 
 func update(_weapon: WeaponClass, _delta: float) -> void: pass
@@ -16,6 +16,8 @@ func is_right_handed(weapon: WeaponClass) -> bool:
 	return weapon.Properties.weapon_hand == WeaponResource.Handedness.RIGHT
 func is_both_handed(weapon: WeaponClass) -> bool:
 	return weapon.Properties.weapon_hand == WeaponResource.Handedness.BOTH
+func is_either_handed(weapon: WeaponClass) -> bool:
+	return weapon.Properties.weapon_hand == WeaponResource.Handedness.EITHER
 
 
 func get_arm(weapon: WeaponClass) -> RayCast2D:
@@ -34,19 +36,26 @@ func get_default_arm_length(weapon: WeaponClass) -> float:
 	return 100.0
 
 func get_hand(weapon: WeaponClass) -> PlayerHandClass:
-	if !weapon.wielder: return null  # Return null instead of undefined
+	if !weapon.wielder: return null
 	if is_left_handed(weapon): return weapon.wielder.Hands.Left
 	if is_right_handed(weapon): return weapon.wielder.Hands.Right
+	if is_either_handed(weapon):
+		if weapon.wielder.Hands.Left.held_weapon == weapon:
+			return weapon.wielder.Hands.Left
+		if weapon.wielder.Hands.Right.held_weapon == weapon:
+			return weapon.wielder.Hands.Right
+		return null
+	
 	return weapon.wielder.Hands.Both
 
 
 func get_offhand_weapon(weapon: WeaponClass) -> WeaponClass:
-	#var current_hand := get_hand(weapon)
 	var offhand_weapon: WeaponClass
 	if is_left_handed(weapon): 
 		offhand_weapon = weapon.wielder.Hands.Right.held_weapon
 	if is_right_handed(weapon): 
 		offhand_weapon = weapon.wielder.Hands.Left.held_weapon
+	##TODO: handle either
 	return offhand_weapon
 
 
@@ -73,8 +82,7 @@ func reset_arm_position(weapon: WeaponClass, delta: float, speed: float = 10.0) 
 	var default_length := get_default_arm_length(weapon)
 	set_arm_position(weapon, default_length, delta, speed)
 
-
-#func swing_arm(weapon: WeaponClass, direction: float, delta: float, speed: float = 3.0) -> void:
-	#var arm := get_arm(weapon)
-	#if arm:
-		#arm.rotation += direction * speed * delta
+func swing_arm(weapon: WeaponClass, direction: float, delta: float, speed: float = 3.0) -> void:
+	var arm := get_arm(weapon)
+	if arm:
+		arm.rotation += direction * speed * delta

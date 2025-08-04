@@ -176,3 +176,11 @@ func apply_knockback(direction: Vector2, force: float) -> void:
 func _end_iframes() -> void:
 	is_in_iframes = false
 	modulate.a = 1.0
+
+
+
+func get_left_weapon() -> WeaponClass:
+	return Hands.Left.held_weapon
+
+func get_right_weapon() -> WeaponClass:
+	return Hands.Right.held_weapon

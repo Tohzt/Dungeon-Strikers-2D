@@ -2,6 +2,7 @@
 + Arrow break on impact?
 - weapon click/hold
 / send weapon dmg to enemy
++ Display Damage
 + attack dummy
 - synergy weapon dmg combine?
 - pickup sword in either hand

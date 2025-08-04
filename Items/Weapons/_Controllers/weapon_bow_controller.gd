@@ -12,11 +12,11 @@ func handle_click(weapon: WeaponClass) -> void:
 	#var swing_length := get_default_arm_length(weapon) * 1.2  # 120% of adjusted default length
 	#set_arm_length(weapon, swing_length, 0.016, 20.0)
 
-func handle_hold(weapon: WeaponClass, _duration: float = 0.0) -> void:
+func handle_hold(weapon: WeaponClass) -> void:
 	super.handle_hold(weapon)
 	#hold_position = true
 
-func handle_release(weapon: WeaponClass, _duration: float = 0.0) -> void:
+func handle_release(weapon: WeaponClass) -> void:
 	super.handle_release(weapon)
 	#if hold_position:
 		#hold_position = false

@@ -1,42 +1,81 @@
 class_name SwordController extends WeaponControllerBase
 
+var is_charging: bool = false
+var charge_complete: bool = false
+var charge_duration: float = 0.0
+var charge_limit_in_sec: float = 1.00
+
 var is_slashing: bool = false
 var slash_duration: float = 0.0
-const SLASH_DURATION_MAX: float = 0.4
+var slash_limit_in_sec: float = 0.05
+
+func handle_click(sword: WeaponClass) -> void:
+	super.handle_click(sword)
+	if is_slashing or slash_duration > 0.0: return
+	_slash_start(sword)
+
+func handle_hold(sword: WeaponClass, _duration: float = 0.0) -> void:
+	super.handle_hold(sword)
+	if is_slashing or slash_duration > 0.0: return
+	if !is_charging:
+		_charge_start()
+
+func handle_release(sword: WeaponClass, _duration: float = 0.0) -> void:
+	super.handle_release(sword)
+	if is_charging and !is_slashing:
+		_charge_end(sword)
+
+func update(sword: WeaponClass, delta: float) -> void:
+	var hand := get_hand(sword)
+	if !hand: return
+	
+	if is_slashing: _slashing(sword, delta)
+	elif is_charging: _charging(sword, delta)
+	else:
+		reset_arm_rotation(sword, delta, 8.0)
+		reset_arm_position(sword, delta, 8.0) 
 
 
-func handle_click(weapon: WeaponClass) -> void:
-	super.handle_click(weapon)
+func _slash_start(sword: WeaponClass, mod_dur: float = 0.0) -> void:
+	is_slashing = true
+	slash_duration = slash_limit_in_sec + mod_dur
+	sword._update_collisions("projectile")
 
-func handle_hold(weapon: WeaponClass, _duration: float = 0.0) -> void:
-	super.handle_hold(weapon)
+func _slash_end(sword: WeaponClass, delta: float) -> void:
+	is_slashing = false
+	slash_duration = 0.0
+	reset_arm_rotation(sword, delta, 10.0)
+	reset_arm_position(sword, delta, 10.0)
+	sword._update_collisions("in-hand")
 
-func handle_release(weapon: WeaponClass, _duration: float = 0.0) -> void:
-	super.handle_release(weapon)
+func _slashing(sword: WeaponClass, delta: float) -> void:
+		slash_duration -= delta
+		var swing_direction := 1.0
+		var slash_position := get_default_arm_length(sword) * 1.6
+		swing_arm(sword, swing_direction * 3.0, delta, 6.0)
+		set_arm_position(sword, slash_position, delta, 6.0)
+		
+		if slash_duration <= 0:
+			_slash_end(sword, delta)
 
 
-#func handle_click(weapon: WeaponClass) -> void:
-	#print("Click from the Sword?")
-	#is_slashing = true
-	#slash_duration = SLASH_DURATION_MAX
-	##var slash_length := get_default_arm_length(weapon) * 1.2
-	##set_arm_length(weapon, slash_length, 0.016, 20.0)
+func _charge_start() -> void:
+	is_charging = true
 
-func update(_weapon: WeaponClass, _delta: float) -> void:
-	pass
-	#var hand := get_hand(weapon)
-	#if !hand: return
-	#
-	#if is_slashing:
-		#slash_duration -= delta
-		#var swing_direction := 1.0 if hand.handedness == "left" else -1.0
-		#swing_arm(weapon, swing_direction * 3.0, delta, 6.0)  # Medium swing speed
-		#
-		#if slash_duration <= 0:
-			#is_slashing = false
-			#reset_arm_rotation(weapon, delta, 10.0)
-			#reset_arm_length(weapon, delta, 10.0)
-	#
-	#else:
-		#reset_arm_rotation(weapon, delta, 8.0)
-		#reset_arm_length(weapon, delta, 8.0) 
+func _charging(sword: WeaponClass, delta: float) -> void:
+	charge_duration += delta
+	if charge_duration >= charge_limit_in_sec:
+		print("charge complete")
+		charge_duration = charge_limit_in_sec
+		charge_complete = true
+	else:
+		var charge_rotation := deg_to_rad(45)
+		var charge_position := get_default_arm_length(sword) * 0.6
+		set_arm_rotation(sword, charge_rotation, delta, charge_duration)
+		set_arm_position(sword, charge_position, delta, charge_duration)
+
+func _charge_end(sword: WeaponClass) -> void:
+	if charge_complete:
+		_slash_start(sword, charge_duration)
+	is_charging = false
+	charge_duration = 0.0

@@ -1,24 +1,23 @@
 extends Label
 
-var move_speed: float = 50.0  # Pixels per second
-var fade_speed: float = 1.0   # Opacity change per second
-var lifetime: float = 2.0     # Total lifetime in seconds
+var move_speed: float = 50.0
+var fade_speed: float = 1.0
+var lifetime: float = 2.0
 var elapsed_time: float = 0.0
 
-func _ready():
-	# Set initial position slightly above the spawn point
-	position.y -= 20
+func _ready() -> void:
+	z_index = Global.Layers.HUD
+	position.y -= randi_range(20,40)
 
-func _process(delta):
+
+func _process(delta: float) -> void:
 	elapsed_time += delta
-	
-	# Move upward
 	position.y -= move_speed * delta
+	_fade_out()
 	
-	# Fade out over time
-	var alpha = 1.0 - (elapsed_time / lifetime)
+
+func _fade_out() -> void:
+	var alpha := 1.0 - (elapsed_time / lifetime)
 	modulate.a = alpha
-	
-	# Destroy when lifetime expires or fully faded
 	if elapsed_time >= lifetime or alpha <= 0:
 		queue_free()

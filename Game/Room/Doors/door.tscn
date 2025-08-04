@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://b6tqbqvxpm0pi"]
 
-[ext_resource type="Script" uid="uid://cqfnxk6ba4jpe" path="res://door.gd" id="1_v6xrn"]
+[ext_resource type="Script" uid="uid://cqfnxk6ba4jpe" path="res://Game/Room/Doors/door.gd" id="1_v6xrn"]
 [ext_resource type="Texture2D" uid="uid://dd5j74bg2syef" path="res://Game/Room/Doors/wall_damaged.png" id="2_0phs7"]
 [ext_resource type="Texture2D" uid="uid://d1dvtvpbks3jj" path="res://Game/Room/Doors/wall_demolished.png" id="3_0phs7"]
 

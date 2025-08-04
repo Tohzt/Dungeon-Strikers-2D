@@ -1,6 +1,6 @@
 class_name WeaponResource extends Resource
 
-enum Handedness { LEFT, RIGHT, BOTH }
+enum Handedness { LEFT, RIGHT, BOTH, EITHER }
 enum ThrowStyle { SPIN, STRAIGHT, TUMBLE }
 enum InputMode { CLICK_ONLY, HOLD_ACTION, BOTH }
 enum Types { SWORD, SHIELD, STAFF, BOW, ARROW}

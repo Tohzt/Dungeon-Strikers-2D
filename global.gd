@@ -123,14 +123,14 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		#right_weapon.call_deferred("_set_held_sprite_position")
 		right_weapon.modulate = player.Sprite.modulate
 
-func spawn_damage_display(damage: int, position: Vector2) -> void:
+func display_damage(damage: float, position: Vector2) -> void:
 	# Spawn a damage display label at the given position
-	var damage_label = DISPLAY_DAMAGE.instantiate()
+	var damage_label := DISPLAY_DAMAGE.instantiate()
 	damage_label.text = str(damage)
 	damage_label.global_position = position
 	
 	# Add to the current scene
-	var current_scene = get_tree().current_scene
+	var current_scene := get_tree().current_scene
 	if current_scene:
 		current_scene.add_child(damage_label)
 	else:

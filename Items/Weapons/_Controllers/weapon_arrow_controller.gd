@@ -8,11 +8,11 @@ func handle_click(arrow: WeaponClass) -> void:
 	#var stab_length := get_default_arm_length(arrow) * 1.4  # 140% of adjusted default length
 	#set_arm_length(arrow, stab_length, 0.016, 20.0)
 
-func handle_hold(arrow: WeaponClass, _duration: float = 0.0) -> void:
+func handle_hold(arrow: WeaponClass) -> void:
 	super.handle_hold(arrow)
 	hold_position = true
 
-func handle_release(arrow: WeaponClass, _duration: float = 0.0) -> void:
+func handle_release(arrow: WeaponClass) -> void:
 	super.handle_release(arrow)
 	hold_position = false
 	#if is_in_ready_position:
