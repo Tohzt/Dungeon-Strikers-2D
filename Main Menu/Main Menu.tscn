@@ -30,6 +30,7 @@ current_room = true
 [node name="Door" parent="Rooms" instance=ExtResource("4_8iwr2")]
 position = Vector2(1140, 330)
 rotation = 1.5708
+invincible = true
 
 [node name="Door2" parent="Rooms" instance=ExtResource("4_8iwr2")]
 position = Vector2(0, 330)

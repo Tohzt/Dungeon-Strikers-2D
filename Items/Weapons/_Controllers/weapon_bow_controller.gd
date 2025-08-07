@@ -1,59 +1,51 @@
 class_name BowController extends WeaponControllerBase
 
+@onready var bow := weapon
+
 var charge_level: float = 0.0
 var draw_start_time: float = 0.0
 var is_drawn: bool = false
 var ammo: WeaponClass
 
-func handle_click(weapon: WeaponClass) -> void:
-	super.handle_click(weapon)
-	_attack(weapon)
-	
-	#var swing_length := get_default_arm_length(weapon) * 1.2  # 120% of adjusted default length
-	#set_arm_length(weapon, swing_length, 0.016, 20.0)
+func handle_click() -> void:
+	super.handle_click()
+	_attack()
 
-func handle_hold(weapon: WeaponClass) -> void:
-	super.handle_hold(weapon)
-	#hold_position = true
+func handle_hold() -> void:
+	super.handle_hold()
 
-func handle_release(weapon: WeaponClass) -> void:
-	super.handle_release(weapon)
-	#if hold_position:
-		#hold_position = false
-		#_attack(weapon, ammo)
-		
-		# Reset to normal position
-		#reset_arm_rotation(weapon, 0.016, 10.0)
-		#reset_arm_length(weapon, 0.016, 10.0)
+func handle_release() -> void:
+	super.handle_release()
 
 
-func update(weapon: WeaponClass, delta: float) -> void:
+func update(delta: float) -> void:
+	super.update(delta)
 	if hold_position:
-		_move_to_ready_position(weapon, delta)
+		_move_to_ready_position(delta)
 	else:
-		reset_arm_rotation(weapon, delta)
-		reset_arm_position(weapon, delta)
+		reset_arm_rotation(delta)
+		reset_arm_position(delta)
 	
 	hold_position = false
-	ammo = get_offhand_weapon(weapon)
+	ammo = get_offhand_weapon()
 	if !ammo: return
 		
-	if weapon.Properties.weapon_synergies.has(ammo.Properties.weapon_type):
+	if bow.Properties.weapon_synergies.has(ammo.Properties.weapon_type):
 		hold_position = ammo.Controller.hold_position
 	else:
 		hold_position = false
 		ammo = null
 
 
-func _move_to_ready_position(bow: WeaponClass, delta: float) -> void:
+func _move_to_ready_position(delta: float) -> void:
 	var forward_rotation := deg_to_rad(180)
 	var bow_distance := 100.0
-	set_arm_rotation(bow, forward_rotation, delta)
-	set_arm_position(bow, bow_distance, delta)
+	set_arm_rotation(forward_rotation, delta)
+	set_arm_position(bow_distance, delta)
 
 
-func _attack(weapon: WeaponClass) -> void:
-	if !weapon.wielder or !ammo: return
+func _attack() -> void:
+	if !bow.wielder or !ammo: return
 	
 	if hold_position:
 		ammo.throw_weapon()

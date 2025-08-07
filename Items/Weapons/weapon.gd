@@ -3,7 +3,7 @@ class_name WeaponClass extends RigidBody2D
 @export var Properties: WeaponResource
 @onready var Sprite := $Sprite2D
 @onready var Collision := $CollisionShape2D
-@onready var Controller := $Controller
+@onready var Controller: WeaponControllerBase = $Controller
 
 var wielder: Node2D
 var is_attacking: bool = false
@@ -30,6 +30,7 @@ func _set_props() -> void:
 	
 	if Properties.weapon_controller:
 		Controller.set_script(Properties.weapon_controller)
+		Controller._ready()
 	
 	if Properties.weapon_name.is_empty():
 		var regex := RegEx.new()
@@ -52,19 +53,22 @@ func _set_props() -> void:
 		_update_collisions("in-hand")
 		
 		if Controller.has_method("on_equip"):
-			Controller.on_equip(self)
+			Controller.on_equip()
 	else:
 		_update_collisions("on-ground")
 
 
 func _handle_held_or_pickup(delta: float) -> void:
 	if wielder and !is_thrown:
-		var dir := deg_to_rad(Properties.weapon_angle + mod_angle)
+		var weapon_angle: float = Properties.weapon_angle
+		if Controller.is_either_handed() and Controller.in_offhand:
+			weapon_angle = 180 - Properties.weapon_angle
+		var dir := deg_to_rad(weapon_angle + mod_angle)
 		rotation = lerp_angle(rotation, get_parent().rotation + dir, delta*10)
 		
 		if Properties.weapon_controller:
 			Controller.set_script(Properties.weapon_controller)
-			Controller.update(self, delta)
+			Controller.update(delta)
 	else:
 		if things_nearby and Input.is_action_just_pressed("interact"):
 			attempt_pickup()
@@ -137,6 +141,7 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 			held_weapon.drop_weapon(held_weapon, wielder)
 	
 	call_deferred("reparent", target_hand.hand)
+	Controller.on_equip()
 
 
 func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
@@ -197,8 +202,13 @@ func throw_weapon() -> void:
 		projectile.Sprite.position = Vector2.ZERO
 		projectile.Collision.position = Vector2.ZERO
 		projectile._update_collisions("projectile")
+		print("throw: ", projectile.wielder)
 	
-	match projectile.Properties.weapon_throw_style:
+	var throw_style := projectile.Properties.weapon_throw_style
+	if projectile.Controller.in_offhand and projectile.Controller.hold_position:
+		throw_style = Properties.ThrowStyle.STRAIGHT
+		projectile.Controller.handle_release()
+	match throw_style:
 		Properties.ThrowStyle.STRAIGHT:
 			projectile.global_rotation = throw_direction.angle()
 			projectile.angular_velocity = 0.0
@@ -242,13 +252,13 @@ func handle_input(input_type: String, duration: float = 0.0) -> void:
 	if !wielder: return
 	match input_type:
 		"click":
-			Controller.handle_click(self)
+			Controller.handle_click()
 		"hold":
-			Controller.handle_hold(self)
+			Controller.handle_hold()
 		"release":
-			Controller.handle_release(self)
+			Controller.handle_release()
 		_:
-			Controller.handle_input(self, input_type, duration)
+			Controller.handle_input(input_type, duration)
 
 
 func _calculate_throw_direction(player: Node2D) -> Vector2:
@@ -263,7 +273,7 @@ func _calculate_throw_direction(player: Node2D) -> Vector2:
 func _update_collisions(state: String) -> void:
 	match state:
 		"on-ground":
-			modulate = Color.WEB_GRAY
+			#modulate = Color.WEB_GRAY
 			set_collision_layer_value(4, true)  # Item
 			set_collision_layer_value(5, false) # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -274,7 +284,7 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_ON_GROUND)
 			
 		"in-hand":
-			modulate = Color.BLUE
+			#modulate = Color.BLUE
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, false)  # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -285,7 +295,7 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_IN_HAND)
 			
 		"projectile":
-			modulate = Color.RED
+			#modulate = Color.RED
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, true)  # Weapon
 			set_collision_mask_value(1, true)  # World

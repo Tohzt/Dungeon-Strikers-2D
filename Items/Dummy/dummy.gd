@@ -1,7 +1,7 @@
 extends RigidBody2D
 
 var invincible: bool = false
-var i_frame_duration: float = 0.5  # Half a second of invincibility
+var i_frame_duration: float = 0.1  # Half a second of invincibility
 
 func _ready() -> void:
 	body_entered.connect(_on_weapon_hit)
@@ -34,6 +34,7 @@ func _start_i_frames() -> void:
 	add_child(timer)
 	timer.timeout.connect(_end_i_frames)
 	timer.start(i_frame_duration)
+	timer.one_shot = true
 
 func _end_i_frames() -> void:
 	modulate = Color.WHITE

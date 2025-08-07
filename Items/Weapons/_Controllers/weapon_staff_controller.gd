@@ -1,37 +1,51 @@
 class_name StaffController extends WeaponControllerBase
 
 
-func handle_click(weapon: WeaponClass) -> void:
-	super.handle_click(weapon)
+var is_casting: bool = false
+var is_charging: bool = false
+var charge_complete: bool = false
+var charge_duration: float = 0.0
+var charge_limit_in_sec: float = 0.5
 
-func handle_hold(weapon: WeaponClass) -> void:
-	super.handle_hold(weapon)
+func handle_click() -> void:
+	super.handle_click()
+	if cooldown_duration <= 0.0:
+		is_casting = true
+		
+func handle_hold() -> void:
+	super.handle_hold()
+	is_charging = true
+	
+func handle_release() -> void:
+	super.handle_release()
+	is_charging = false
+	charge_duration = 0.0
+	if charge_complete:
+		charge_complete = false
+		is_casting = true
 
-func handle_release(weapon: WeaponClass) -> void:
-	super.handle_release(weapon)
 
+func update(delta: float) -> void:
+	super.update(delta)
+	var hand := get_hand()
+	if !hand: return
+	
+	if is_casting:
+		var block_rotation := deg_to_rad(180)
+		var block_position := get_default_arm_length() * 0.6
+		set_arm_rotation(block_rotation, delta, 8.0)
+		set_arm_position(block_position, delta, 8.0)
+		_cast_spell()
+	elif is_charging:
+		charge_duration = min(charge_limit_in_sec, charge_duration + delta)
+		if charge_duration >= charge_limit_in_sec:
+			charge_complete = true
+	else:
+		reset_arm_rotation(delta, 8.0)
+		reset_arm_position(delta, 8.0) 
 
-#func handle_click(weapon: WeaponClass) -> void:
-	#print("Click from the Staff?")
-	#pass
-	##var slash_length := get_default_arm_length(weapon) * 1.2
-	##set_arm_length(weapon, slash_length, 0.016, 20.0)
-
-func update(_weapon: WeaponClass, _delta: float) -> void:
-	pass
-	#var hand := get_hand(weapon)
-	#if !hand: return
-	#
-	#if is_slashing:
-		#slash_duration -= delta
-		#var swing_direction := 1.0 if hand.handedness == "left" else -1.0
-		#swing_arm(weapon, swing_direction * 3.0, delta, 6.0)  # Medium swing speed
-		#
-		#if slash_duration <= 0:
-			#is_slashing = false
-			#reset_arm_rotation(weapon, delta, 10.0)
-			#reset_arm_length(weapon, delta, 10.0)
-	#
-	#else:
-		#reset_arm_rotation(weapon, delta, 8.0)
-		#reset_arm_length(weapon, delta, 8.0) 
+func _cast_spell() -> void:
+	is_casting = false
+	is_charging = false
+	charge_duration = 0.0
+	cooldown_duration = cooldown_limit_in_sec

@@ -1,4 +1,6 @@
 class_name DoorClass extends StaticBody2D
+@export var invincible: bool = false
+
 @onready var block_1: Sprite2D = $Blocks/Block1
 @onready var block_2: Sprite2D = $Blocks/Block2
 @onready var block_3: Sprite2D = $Blocks/Block3
@@ -6,7 +8,6 @@ class_name DoorClass extends StaticBody2D
 @onready var block_5: Sprite2D = $Blocks/Block5
 @onready var block_6: Sprite2D = $Blocks/Block6
 
-@export var placement: String
 var durability_max: int = 3
 var durability: int = durability_max
 var under_attack: bool = false
@@ -52,7 +53,17 @@ func _process(delta: float) -> void:
 	if under_attack:
 		under_attack = false
 		iframes = iframes_max_sec
-		durability -= 1
+		if !invincible:
+			durability -= 1
+
+
+
+func _physics_process(_delta: float) -> void:
+	var collision: KinematicCollision2D = move_and_collide(Vector2.ZERO, true)
+	if collision:
+		if collision.get_collider().is_in_group("Weapon"):
+			under_attack = true
+
 
 func apply_rumble() -> void:
 	# Apply random offset to each block
