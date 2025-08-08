@@ -35,8 +35,6 @@ func handle_release(_duration: float = 0.0) -> void:
 
 func update(delta: float) -> void:
 	super.update(delta)
-	var hand := get_hand()
-	if !hand: return
 	
 	cooldown_duration = max(0, cooldown_duration - delta)
 	if is_slashing: _slashing(delta)

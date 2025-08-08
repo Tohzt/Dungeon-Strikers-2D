@@ -8,6 +8,7 @@ class_name WeaponClass extends RigidBody2D
 var wielder: Node2D
 var is_attacking: bool = false
 var things_nearby: Array[Node2D] = []
+var destroy_on_impact: bool = false
 var is_thrown: bool = false
 var throw_clone: bool = false
 var throw_force: float = 800.0
@@ -164,7 +165,8 @@ func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
 	weapon.global_position = player.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20))
 
 
-func throw_weapon() -> void:
+func throw_weapon(mod_damage: float = 0.0) -> void:
+	printt("MD: ", mod_damage)
 	if !wielder: return
 	var throw_direction := _calculate_throw_direction(wielder)
 	var projectile: WeaponClass
@@ -180,12 +182,14 @@ func throw_weapon() -> void:
 		projectile.wielder = wielder
 		projectile.Sprite.position = Vector2.ZERO
 		projectile.Collision.position = Vector2.ZERO
-		var offhand: WeaponClass
-		if Properties.weapon_hand == Properties.Handedness.LEFT:
-			offhand = wielder.get_right_weapon()
-		if Properties.weapon_hand == Properties.Handedness.RIGHT:
-			offhand = wielder.get_left_weapon()
-		projectile.Properties.weapon_damage += offhand.Properties.weapon_damage
+		##TODO: Replace offhand system with mod_damage
+		#var offhand: WeaponClass
+		#if Properties.weapon_hand == Properties.Handedness.LEFT:
+			#offhand = wielder.get_right_weapon()
+		#if Properties.weapon_hand == Properties.Handedness.RIGHT:
+			#offhand = wielder.get_left_weapon()
+		#projectile.Properties.weapon_damage += offhand.Properties.weapon_damage
+		projectile.Properties.weapon_mod_damage = mod_damage
 		projectile._update_collisions("projectile")
 	else:
 		projectile = self
@@ -228,15 +232,17 @@ func throw_weapon() -> void:
 	
 
 func reset_to_ground_state() -> void:
-	if throw_clone: 
+	destroy_on_impact = destroy_on_impact or throw_clone
+	if destroy_on_impact: 
 		queue_free()
 		return
 	wielder = null
 	is_thrown = false
-	linear_velocity = Vector2.ZERO
 	angular_velocity = 0.0
+	linear_velocity = Vector2.ZERO
 	Sprite.position = Vector2.ZERO
 	Collision.position = Vector2.ZERO
+	Properties.weapon_mod_damage = 0.0
 	_update_collisions("on-ground")
 	var Entities := get_tree().get_first_node_in_group("Entities")
 	call_deferred("reparent", Entities)

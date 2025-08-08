@@ -12,11 +12,13 @@ func _process(_delta: float) -> void:
 func _on_weapon_hit(body: Node2D) -> void:
 	if body and body.is_in_group("Weapon") and !invincible:
 		var weapon_damage: float = body.Properties.weapon_damage
+		var weapon_mod_damage: float = body.Properties.weapon_mod_damage
+		var weapon_total_damage: float = weapon_damage + weapon_mod_damage
 		var weapon_velocity: Vector2 = body.linear_velocity
-		var impact_force := weapon_velocity * weapon_damage
+		var impact_force := weapon_velocity * weapon_total_damage
 		apply_central_impulse(impact_force)
 		
-		Global.display_damage(weapon_damage, global_position)
+		Global.display_damage(weapon_total_damage, global_position)
 		
 		# Start invincibility frames
 		_start_i_frames()

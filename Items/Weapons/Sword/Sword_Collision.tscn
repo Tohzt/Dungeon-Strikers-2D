@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://2fjyv4yp3s1w"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3k6kt"]
-height = 64.0
-
-[node name="CollisionShape2D" type="CollisionShape2D"]
-rotation = -1.57079
-shape = SubResource("CapsuleShape2D_3k6kt")
-debug_color = Color(0.964006, 0, 0.49534, 0.42)

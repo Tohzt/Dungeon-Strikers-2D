@@ -1,5 +1,6 @@
 class_name StaffController extends WeaponControllerBase
-
+@onready var SPELL = preload("res://Items/Weapons/Staff/Spell.tres")
+@onready var staff := weapon
 
 var is_casting: bool = false
 var is_charging: bool = false
@@ -27,8 +28,6 @@ func handle_release() -> void:
 
 func update(delta: float) -> void:
 	super.update(delta)
-	var hand := get_hand()
-	if !hand: return
 	
 	if is_casting:
 		var block_rotation := deg_to_rad(180)
@@ -49,3 +48,11 @@ func _cast_spell() -> void:
 	is_charging = false
 	charge_duration = 0.0
 	cooldown_duration = cooldown_limit_in_sec
+	var spell: WeaponClass = Global.WEAPON.instantiate()
+	spell.Properties = SPELL
+	spell.Properties.weapon_mod_damage = staff.Properties.weapon_damage
+	spell.wielder = staff.wielder
+	spell.destroy_on_impact = true
+	spell.global_position = staff.global_position
+	var Entities: Node2D = get_tree().get_first_node_in_group("Entities")
+	Entities.add_child(spell)

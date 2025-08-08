@@ -1,9 +1,9 @@
 class_name WeaponResource extends Resource
 
-enum Handedness { LEFT, RIGHT, BOTH, EITHER }
+enum Handedness { LEFT, RIGHT, BOTH, EITHER, NONE }
 enum ThrowStyle { SPIN, STRAIGHT, TUMBLE }
 enum InputMode { CLICK_ONLY, HOLD_ACTION, BOTH }
-enum Types { SWORD, SHIELD, STAFF, BOW, ARROW}
+enum Types { SWORD, SHIELD, STAFF, BOW, ARROW, INSTANCE}
 
 # Basic Weapon Information
 @export_group("Basic Info")
@@ -29,6 +29,7 @@ enum Types { SWORD, SHIELD, STAFF, BOW, ARROW}
 # Combat Properties
 @export_group("Combat")
 @export var weapon_damage: float = 0.0
+@export var weapon_mod_damage: float = 0.0
 @export var weapon_cooldown: float = 0.0
 @export var weapon_duration: float = 1.0
 @export var weapon_mana_cost: float = 0.0

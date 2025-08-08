@@ -15,8 +15,6 @@ func handle_release() -> void:
 
 func update(delta: float) -> void:
 	super.update(delta)
-	var hand := get_hand()
-	if !hand: return
 	
 	if is_blocking:
 		var block_rotation := deg_to_rad(180)

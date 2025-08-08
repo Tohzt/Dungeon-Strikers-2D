@@ -48,5 +48,5 @@ func _attack() -> void:
 	if !bow.wielder or !ammo: return
 	
 	if hold_position:
-		ammo.throw_weapon()
+		ammo.throw_weapon(bow.Properties.weapon_damage)
 		pass
