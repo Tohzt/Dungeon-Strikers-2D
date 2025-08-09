@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://ddn5dflpnvmfn"]
+[gd_scene load_steps=16 format=3 uid="uid://ddn5dflpnvmfn"]
 
 [ext_resource type="Script" uid="uid://c6v4td75pemi0" path="res://Main Menu/main_menu.gd" id="1_col8w"]
 [ext_resource type="PackedScene" uid="uid://btf8e0wnlbd82" path="res://Player/player.tscn" id="2_5ms5j"]
@@ -14,6 +14,7 @@
 [ext_resource type="Resource" uid="uid://dfxnthrdfin2d" path="res://Items/Weapons/Staff/Staff.tres" id="10_y6014"]
 [ext_resource type="PackedScene" uid="uid://bxcrqtrb0qw0j" path="res://Items/Dummy/dummy_anchor.tscn" id="12_4myfj"]
 [ext_resource type="PackedScene" uid="uid://dfhyv1dxxl7j" path="res://Items/Chain/chain.tscn" id="12_hat6j"]
+[ext_resource type="Script" uid="uid://bpcle3ik1vh4n" path="res://Main Menu/mobile_ui.gd" id="15_y6014"]
 
 [node name="Main Menu" type="Node2D" groups=["Main Menu"]]
 script = ExtResource("1_col8w")
@@ -169,7 +170,34 @@ chain_segments = 2
 segment_distance = 60.0
 joint_damping = 0.0
 
+[node name="MobileUI" type="CanvasLayer" parent="."]
+script = ExtResource("15_y6014")
+
+[node name="left_click" type="Button" parent="MobileUI"]
+offset_left = 890.0
+offset_top = 534.0
+offset_right = 969.0
+offset_bottom = 611.0
+text = "
+Left Cilck
+
+"
+
+[node name="right_click" type="Button" parent="MobileUI"]
+offset_left = 1007.0
+offset_top = 535.0
+offset_right = 1086.0
+offset_bottom = 612.0
+text = "
+Left Cilck
+
+"
+
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Quick Play" to="." method="_on_quick_play_pressed"]
+[connection signal="button_down" from="MobileUI/left_click" to="MobileUI" method="_on_left_click_button_down"]
+[connection signal="button_up" from="MobileUI/left_click" to="MobileUI" method="_on_left_click_button_up"]
+[connection signal="button_down" from="MobileUI/right_click" to="MobileUI" method="_on_right_click_button_down"]
+[connection signal="button_up" from="MobileUI/right_click" to="MobileUI" method="_on_right_click_button_up"]

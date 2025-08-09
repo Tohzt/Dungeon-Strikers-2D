@@ -5,8 +5,8 @@ res://Items/Weapons/Sword/Sword.tres
 res://Items/Weapons/Staff/Staff.tres
 res://Items/Weapons/Bow & Arrow/Bow.tres
 res://Items/Weapons/Bow & Arrow/Arrow.tres
+res://Main Menu/mobile_ui.gd
 res://Player/player.tscn
 res://Items/Weapons/weapon.tscn
 res://Items/Dummy/dummy.tscn
 res://Game/Room/room.tscn
-res://Items/Weapons/weapon.gd
