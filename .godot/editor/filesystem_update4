@@ -1,26 +1,16 @@
 res://Main Menu/Main Menu.tscn
 res://Items/Weapons/Shield/Shield.tres
 res://Items/Weapons/Sword/Sword.tres
+res://Items/Weapons/Staff/Spell.tres
 res://Items/Weapons/Staff/Staff.tres
 res://Items/Weapons/Bow & Arrow/Bow.tres
 res://Items/Weapons/Bow & Arrow/Arrow.tres
 res://Player/player.tscn
 res://Items/Weapons/weapon.tscn
-res://Game/game.tscn
-res://Items/Chest/chest.tscn
 res://Items/Dummy/dummy.tscn
-res://HUD/display_damage.tscn
-res://Game/Room/Doors/door.tscn
-res://Items/Weapons/_Controllers/base_weapon_controller.gd
-res://Items/Weapons/_Controllers/weapon_shield_controller.gd
-res://Items/Weapons/_Controllers/weapon_staff_controller.gd
-res://Items/Weapons/_Controllers/weapon_sword_controller.gd
-res://Items/Weapons/Staff/spell_collision.tscn
-res://Items/Weapons/Bow & Arrow/arrow_collision.tscn
-res://Items/Weapons/Staff/Spell.tres
-res://Items/Weapons/weapon_resource.gd
-res://Items/Weapons/_Controllers/weapon_spell_controller.gd
+res://Game/Room/room.tscn
+res://Player/handler_playerAttack.gd
+res://Player/player.gd
 res://Items/Weapons/weapon.gd
-res://TODO.txt
-res://Items/Weapons/_Controllers/weapon_bow_controller.gd
-res://Items/Dummy/dummy.gd
+res://Player/Hand/hand.gd
+res://Items/Weapons/_Controllers/base_weapon_controller.gd

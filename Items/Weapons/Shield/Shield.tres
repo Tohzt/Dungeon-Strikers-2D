@@ -19,6 +19,7 @@ weapon_col_height = 80.0
 weapon_col_rotation = 0.0
 weapon_col_position = Vector2(20, 0)
 weapon_damage = 2.0
+weapon_mod_damage = 0.0
 weapon_cooldown = 0.3
 weapon_duration = 0.5
 weapon_mana_cost = 0.0

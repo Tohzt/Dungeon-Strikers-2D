@@ -1,5 +1,5 @@
 class_name StaffController extends WeaponControllerBase
-@onready var SPELL = preload("res://Items/Weapons/Staff/Spell.tres")
+@onready var SPELL: Resource = preload("res://Items/Weapons/Staff/Spell.tres")
 @onready var staff := weapon
 
 var is_casting: bool = false

@@ -104,15 +104,6 @@ func attack(_atk_dir: float, atk_side: String) -> void:
 	var hand: int = 0 if atk_side == "left" else 1
 	var target_hand: PlayerHandClass = Hands.get_child(hand)
 	
-	##TODO: Let handler track interact
-	##      Pass bools here to trigger throw
-	## Check for weapon throwing
-	#if Input.is_action_pressed("interact"):
-		#if target_hand.held_weapon:
-			#print("Throw from Player")
-			#target_hand.held_weapon.throw_weapon()
-			#return
-	
 	# Only set is_attacking if no weapon is equipped (legacy attack system)
 	if !target_hand.held_weapon:
 		target_hand.is_attacking = true
