@@ -1,7 +1,7 @@
 res://Main Menu/Main Menu.tscn
+res://Items/Weapons/Staff/Spell.tres
 res://Items/Weapons/Shield/Shield.tres
 res://Items/Weapons/Sword/Sword.tres
-res://Items/Weapons/Staff/Spell.tres
 res://Items/Weapons/Staff/Staff.tres
 res://Items/Weapons/Bow & Arrow/Bow.tres
 res://Items/Weapons/Bow & Arrow/Arrow.tres
@@ -9,8 +9,4 @@ res://Player/player.tscn
 res://Items/Weapons/weapon.tscn
 res://Items/Dummy/dummy.tscn
 res://Game/Room/room.tscn
-res://Player/handler_playerAttack.gd
-res://Player/player.gd
 res://Items/Weapons/weapon.gd
-res://Player/Hand/hand.gd
-res://Items/Weapons/_Controllers/base_weapon_controller.gd

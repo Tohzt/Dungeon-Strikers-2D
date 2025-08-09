@@ -16,6 +16,9 @@ var throw_torque: float = 10.0
 var mod_angle: float = 0.0
 var has_synergy: bool
 
+var can_pickup: bool = true
+var can_pickup_cd: float = 0.0
+
 
 func _ready() -> void: _set_props()
 func _process(delta: float) -> void: _handle_held_or_pickup(delta)
@@ -71,6 +74,12 @@ func _handle_held_or_pickup(delta: float) -> void:
 			Controller.set_script(Properties.weapon_controller)
 			Controller.update(delta)
 	else:
+		can_pickup_cd = max(can_pickup_cd - delta, 0.0)
+		if can_pickup_cd == 0.0:
+			can_pickup = true
+		else:
+			print('cooldown: ', can_pickup_cd)
+		if !can_pickup: return
 		if things_nearby and Input.is_action_just_pressed("interact"):
 			attempt_pickup()
 
@@ -229,6 +238,8 @@ func reset_to_ground_state() -> void:
 	if destroy_on_impact: 
 		queue_free()
 		return
+	can_pickup = false
+	can_pickup_cd = get_process_delta_time() * 100
 	wielder = null
 	is_thrown = false
 	angular_velocity = 0.0
