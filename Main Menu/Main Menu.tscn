@@ -143,20 +143,20 @@ Stat_Color = Color(0, 0, 1, 1)
 
 [node name="Chest_Str" parent="." instance=ExtResource("5_4wqtw")]
 modulate = Color(1, 0.523455, 0.543051, 1)
-position = Vector2(220, 160)
+position = Vector2(217, 197)
 rotation = -0.785398
 items = Array[Resource]([ExtResource("6_re3ss"), ExtResource("7_4myfj")])
 
 [node name="Chest_End" parent="." instance=ExtResource("5_4wqtw")]
 modulate = Color(0, 0.860488, 0.188099, 1)
-position = Vector2(150, 330)
-rotation = -1.5708
+position = Vector2(130, 346)
+rotation = -1.17968
 items = Array[Resource]([ExtResource("8_hat6j"), ExtResource("9_8iwr2")])
 
 [node name="Chest_Int" parent="." instance=ExtResource("5_4wqtw")]
 modulate = Color(0.601776, 0.596467, 1, 1)
-position = Vector2(220, 500)
-rotation = -2.35619
+position = Vector2(381, 136)
+rotation = -0.320798
 items = Array[Resource]([ExtResource("10_y6014"), ExtResource("7_4myfj")])
 
 [node name="Entities" type="Node2D" parent="." groups=["Entities"]]
@@ -192,6 +192,41 @@ text = "
 Left Cilck
 
 "
+
+[node name="up" type="Button" parent="MobileUI"]
+offset_left = 157.0
+offset_top = 458.0
+offset_right = 204.0
+offset_bottom = 489.0
+text = "  UP  "
+
+[node name="left" type="Button" parent="MobileUI"]
+offset_left = 54.0
+offset_top = 526.0
+offset_right = 115.0
+offset_bottom = 557.0
+text = "  LEFT  "
+
+[node name="right" type="Button" parent="MobileUI"]
+offset_left = 257.0
+offset_top = 524.0
+offset_right = 334.0
+offset_bottom = 555.0
+text = "  RIGHT   "
+
+[node name="down" type="Button" parent="MobileUI"]
+offset_left = 143.0
+offset_top = 574.0
+offset_right = 220.0
+offset_bottom = 605.0
+text = "  DOWN  "
+
+[node name="interact" type="Button" parent="MobileUI"]
+offset_left = 144.0
+offset_top = 523.0
+offset_right = 221.0
+offset_bottom = 554.0
+text = "  [ E ]  "
 
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Join" to="." method="_on_join_pressed"]

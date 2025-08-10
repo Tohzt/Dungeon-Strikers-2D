@@ -18,7 +18,7 @@ const MOUSE_LOOK_STRENGTH: float = 15.0  # Increased from 10 to make rotation mo
 func _ready() -> void:
 	last_mouse_pos = Master.get_global_mouse_position()
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	# Keep this for references
 	# if Global.input_type == "Keyboard":
 	# # Get Aim Direction from MOUSE
