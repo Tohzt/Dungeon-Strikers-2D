@@ -18,6 +18,7 @@ var has_synergy: bool
 
 var can_pickup: bool = true
 var can_pickup_cd: float = 0.0
+var can_pickup_dur_in_sec: float = 1.0
 
 
 func _ready() -> void: _set_props()
@@ -77,8 +78,12 @@ func _handle_held_or_pickup(delta: float) -> void:
 		can_pickup_cd = max(can_pickup_cd - delta, 0.0)
 		if can_pickup_cd == 0.0:
 			can_pickup = true
+			if !is_thrown:
+				modulate = Color.WHITE
 		else:
+			modulate = lerp(modulate, modulate.lightened(0.1), can_pickup_dur_in_sec-can_pickup_cd)
 			print('cooldown: ', can_pickup_cd)
+		
 		if !can_pickup: return
 		if things_nearby and Input.is_action_just_pressed("interact"):
 			attempt_pickup()
@@ -137,8 +142,7 @@ func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
 	is_thrown = false
 	target_hand.held_weapon = self
 	things_nearby.erase(player)
-	
-	##TODO: Rip out to function (used in ready)
+
 	modulate = wielder.Sprite.modulate
 	Sprite.position = Properties.weapon_offset
 	Collision.position = Properties.weapon_offset
@@ -239,7 +243,7 @@ func reset_to_ground_state() -> void:
 		queue_free()
 		return
 	can_pickup = false
-	can_pickup_cd = get_process_delta_time() * 100
+	can_pickup_cd = can_pickup_dur_in_sec
 	wielder = null
 	is_thrown = false
 	angular_velocity = 0.0

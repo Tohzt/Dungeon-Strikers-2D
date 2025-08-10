@@ -1,7 +1,7 @@
 extends RigidBody2D
 
 var invincible: bool = false
-var i_frame_duration: float = 0.1  # Half a second of invincibility
+var i_frame_duration: float = 0.1
 
 func _ready() -> void:
 	body_entered.connect(_on_weapon_hit)
@@ -20,18 +20,12 @@ func _on_weapon_hit(body: Node2D) -> void:
 		
 		Global.display_damage(weapon_total_damage, global_position)
 		
-		# Start invincibility frames
 		_start_i_frames()
-		
-		##TODO: Probs a good idea to add this get_
-		#if body.has_method("get_weapon_damage"):
-			#weapon_damage = body.get_weapon_damage()
 
 func _start_i_frames() -> void:
 	modulate = Color.RED
 	invincible = true
 	
-	# Create a timer for the i-frames
 	var timer := Timer.new()
 	add_child(timer)
 	timer.timeout.connect(_end_i_frames)
@@ -41,4 +35,3 @@ func _start_i_frames() -> void:
 func _end_i_frames() -> void:
 	modulate = Color.WHITE
 	invincible = false
-		

@@ -12,8 +12,8 @@ var attack_right: bool = false
 # Mouse movement tracking
 var last_mouse_pos: Vector2
 var mouse_movement_timer: float = 0.0
-const MOUSE_MOVEMENT_COOLDOWN: float = 0.5  # Increased to 1 second for testing
-const MOUSE_LOOK_STRENGTH: float = 15.0  # Increased from 10 to make rotation more responsive
+const MOUSE_MOVEMENT_COOLDOWN: float = 0.5
+const MOUSE_LOOK_STRENGTH: float = 15.0
 
 func _ready() -> void:
 	last_mouse_pos = Master.get_global_mouse_position()
@@ -35,7 +35,6 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		last_mouse_pos = Master.get_global_mouse_position()
 		mouse_movement_timer = MOUSE_MOVEMENT_COOLDOWN
-		# Update look_dir immediately on mouse movement for more responsive feel
 		look_dir = (last_mouse_pos - Master.global_position).normalized()
 	
 	if event.is_action_pressed("attack_left"):
@@ -76,11 +75,9 @@ func _physics_process(delta: float) -> void:
 	if Global.input_type == "Keyboard":
 		var current_mouse_pos: Vector2 = Master.get_global_mouse_position()
 		if current_mouse_pos != last_mouse_pos:
-			# Mouse has moved, update look_dir and reset timer
 			look_dir = (current_mouse_pos - Master.global_position).normalized()
 			mouse_movement_timer = MOUSE_MOVEMENT_COOLDOWN
 		else:
-			# Mouse hasn't moved, count down timer
 			mouse_movement_timer -= delta
 			if mouse_movement_timer <= 0:
 				look_dir = Vector2.ZERO

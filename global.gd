@@ -71,7 +71,6 @@ func get_nearest(from: Vector2, type: String) -> Dictionary:
 				"dist": entity_dist
 			}
 			return obj
-	##TODO: Do somethnig with failed state
 	return {"found": false}
 
 func _input(event: InputEvent) -> void:
