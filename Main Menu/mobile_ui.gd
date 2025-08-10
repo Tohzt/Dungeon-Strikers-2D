@@ -19,4 +19,27 @@ func _on_right_click_button_up() -> void:
 
 
 func _on_up_button_down() -> void:
-	pass # Replace with function body.
+	Input.action_press("move_up")
+func _on_up_button_up() -> void:
+	Input.action_release("move_up")
+
+func _on_left_button_down() -> void:
+	Input.action_press("move_left")
+func _on_left_button_up() -> void:
+	Input.action_release("move_left")
+
+func _on_right_button_down() -> void:
+	Input.action_press("move_right")
+func _on_right_button_up() -> void:
+	Input.action_release("move_right")
+	
+func _on_down_button_down() -> void:
+	Input.action_press("move_down")
+func _on_down_button_up() -> void:
+	Input.action_release("move_down")
+
+func _on_interact_button_down() -> void:
+	Input.action_press("interact")
+func _on_interact_button_up() -> void:
+	Input.action_release("interact")
+	
