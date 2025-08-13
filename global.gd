@@ -107,7 +107,7 @@ func get_nearest(from: Vector2, type: String, ignore: Node2D = null) -> Dictiona
 	# Find the closest entity in a single pass
 	for entity: Node2D in entities:
 		if entity != ignore and !entity.global_position.is_equal_approx(from):
-			var distance = from.distance_to(entity.global_position)
+			var distance := from.distance_to(entity.global_position)
 			if distance < min_distance:
 				min_distance = distance
 				closest_entity = entity

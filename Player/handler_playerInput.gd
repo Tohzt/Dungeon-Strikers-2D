@@ -6,6 +6,7 @@ var move_dir: Vector2
 var look_dir: Vector2 = Vector2.ZERO
 var dodge_pressed: bool = false
 @onready var toggle_target: bool = false
+var target_scroll: bool = false
 var attack_left: bool = false
 var attack_right: bool = false
 
@@ -56,6 +57,10 @@ func _input(event: InputEvent) -> void:
 		toggle_target = true
 	if event.is_action_released("target"):
 		toggle_target = false
+	
+	if event.is_action("target_scroll"):
+		target_scroll = true
+		print("Target Scroll")
 
 
 func _physics_process(delta: float) -> void:

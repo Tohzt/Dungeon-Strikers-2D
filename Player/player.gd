@@ -55,12 +55,21 @@ func _process(delta: float) -> void:
 	if !is_active: return
 	_update_hud()
 	
+	if target and Input_Handler.target_scroll:
+		Input_Handler.target_scroll = false
+		var nearest := Global.get_nearest(global_position, "Entity", target)
+		if nearest.has("inst"):
+			target = nearest["inst"]
+	
 	# Handle target cycling
 	if Input_Handler.toggle_target:
 		Input_Handler.toggle_target = false
 		
+		if target:
+			target = null
+			return
+		
 		var nearest := Global.get_nearest(global_position, "Entity", target)
-		print(nearest)
 		if nearest.has("inst"):
 			target = nearest["inst"]
 	
