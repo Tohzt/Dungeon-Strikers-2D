@@ -57,13 +57,12 @@ func _process(delta: float) -> void:
 	
 	# Handle target cycling
 	if Input_Handler.toggle_target:
-		if target:
-			target = null
-		else:
-			var nearest := Global.get_nearest(global_position, "Entity")
-			if nearest.has("inst"):
-				target = nearest["inst"]
 		Input_Handler.toggle_target = false
+		
+		var nearest := Global.get_nearest(global_position, "Entity", target)
+		print(nearest)
+		if nearest.has("inst"):
+			target = nearest["inst"]
 	
 	# Update tar_pos based on target state
 	if target and is_instance_valid(target):

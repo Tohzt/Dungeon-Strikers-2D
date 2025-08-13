@@ -60,18 +60,67 @@ func set_current_room(room: RoomClass) -> void:
 	if game:
 		game.camera_target = room.global_position
 
-func get_nearest(from: Vector2, type: String) -> Dictionary:
+#func get_nearest(from: Vector2, type: String, ignore: Node2D = null) -> Dictionary:
+	#var entities: Array[Node] = get_tree().get_nodes_in_group(type)
+	#var entity_dist := INF
+	#for entity: Node2D in entities:
+		#if entity != ignore:
+			#if !entity.global_position.is_equal_approx(from):
+				#entity_dist = min(entity_dist, from.distance_to(entity.global_position))
+				#var obj: Dictionary = {
+					#"inst": entity,
+					#"dist": entity_dist
+				#}
+				#return obj
+	#return {"found": false}
+
+## Version 1: Sort entire array (useful if you might want multiple closest entities)
+#func get_nearest(from: Vector2, type: String, ignore: Node2D = null) -> Dictionary:
+	#var entities: Array[Node] = get_tree().get_nodes_in_group(type)
+	#var valid_entities: Array[Dictionary] = []
+	#
+	## Build array of valid entities with distances
+	#for entity: Node2D in entities:
+		#if entity != ignore and !entity.global_position.is_equal_approx(from):
+			#var distance = from.distance_to(entity.global_position)
+			#valid_entities.append({
+				#"inst": entity,
+				#"dist": distance
+			#})
+	#
+	## Return empty result if no valid entities found
+	#if valid_entities.is_empty():
+		#return {"found": false}
+	#
+	## Sort by distance (closest first)
+	#valid_entities.sort_custom(func(a, b): return a.dist < b.dist)
+	#
+	## Return the closest entity
+	#return valid_entities[0]
+
+# Version 2: More efficient - find minimum without sorting
+func get_nearest(from: Vector2, type: String, ignore: Node2D = null) -> Dictionary:
 	var entities: Array[Node] = get_tree().get_nodes_in_group(type)
-	var entity_dist := INF
+	var closest_entity: Node2D = null
+	var min_distance := INF
+	
+	# Find the closest entity in a single pass
 	for entity: Node2D in entities:
-		if !entity.global_position.is_equal_approx(from):
-			entity_dist = min(entity_dist, from.distance_to(entity.global_position))
-			var obj: Dictionary = {
-				"inst": entity,
-				"dist": entity_dist
-			}
-			return obj
-	return {"found": false}
+		if entity != ignore and !entity.global_position.is_equal_approx(from):
+			var distance = from.distance_to(entity.global_position)
+			if distance < min_distance:
+				min_distance = distance
+				closest_entity = entity
+	
+	# Return result
+	if closest_entity == null:
+		return {"found": false}
+	else:
+		return {
+			"inst": closest_entity,
+			"dist": min_distance
+		}
+
 
 func _input(event: InputEvent) -> void:
 	##TODO: Update for Multiplayer/Server
