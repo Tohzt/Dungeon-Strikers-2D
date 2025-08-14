@@ -1,8 +1,9 @@
 - weapon cooldown before someone else can pick it up
 	Weapon should keep wielders color when throw/dropped(?) for a few sec
 
-- Target cycle
 
+
++ Target cycle
 + synergy weapon dmg combine?
 + send weapon dmg to enemy
 + Arrow break on impact?

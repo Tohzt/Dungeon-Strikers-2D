@@ -290,7 +290,7 @@ func _calculate_throw_direction(player: Node2D) -> Vector2:
 func _update_collisions(state: String) -> void:
 	match state:
 		"on-ground":
-			#modulate = Color.WEB_GRAY
+			modulate = Color.WEB_GRAY
 			set_collision_layer_value(4, true)  # Item
 			set_collision_layer_value(5, false) # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -301,7 +301,7 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_ON_GROUND)
 			
 		"in-hand":
-			#modulate = Color.BLUE
+			modulate = Color.BLUE
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, false)  # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -312,7 +312,7 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_IN_HAND)
 			
 		"projectile":
-			#modulate = Color.RED
+			modulate = Color.RED
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, true)  # Weapon
 			set_collision_mask_value(1, true)  # World

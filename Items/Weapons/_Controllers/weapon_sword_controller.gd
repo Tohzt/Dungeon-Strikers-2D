@@ -35,7 +35,6 @@ func handle_release(_duration: float = 0.0) -> void:
 
 func update(delta: float) -> void:
 	super.update(delta)
-	
 	cooldown_duration = max(0, cooldown_duration - delta)
 	if is_slashing: _slashing(delta)
 	elif is_charging: _charging(delta)
@@ -56,7 +55,7 @@ func _slash_start(mod_dur: float = 0.0) -> void:
 	if cooldown_duration > 0.0: return
 	is_slashing = true
 	slash_duration = slash_limit_in_sec + mod_dur
-	weapon._update_collisions("projectile")
+	sword._update_collisions("projectile")
 
 func _slash_end(delta: float) -> void:
 	cooldown_duration = cooldown_limit_in_sec
@@ -64,7 +63,7 @@ func _slash_end(delta: float) -> void:
 	slash_duration = 0.0
 	reset_arm_rotation(delta, 10.0)
 	reset_arm_position(delta, 10.0)
-	weapon._update_collisions("in-hand")
+	sword._update_collisions("in-hand")
 
 func _slashing(delta: float) -> void:
 		slash_duration -= delta
