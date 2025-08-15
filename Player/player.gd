@@ -11,9 +11,13 @@ class_name PlayerClass extends CharacterBody2D
 @export var Attack_Handler: PlayerAttackHandler
 
 @export_category("Health")
+@export var healthbar: TextureProgressBar
 var hp_max: float = 1000.0
 var hp: float = hp_max
-@export var healthbar: TextureProgressBar
+
+var strength: int = 0
+var intelligence: int = 0
+var endurance: int = 0
 
 var name_display: String
 const SPEED: float = 300.0  
@@ -28,12 +32,12 @@ var spawn_rot: float = 0.0
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
 
-@export var is_actice: bool = false
+@export var is_active: bool = false
 var has_control: bool = false
 
 ##TODO: All Multiplayer/Offline authentication should alter this. 
-func is_active(TorF: bool) -> void:
-	is_actice = TorF
+func _is_active(TorF: bool) -> void:
+	is_active = TorF
 
 func _enter_tree() -> void:
 	if multiplayer.has_multiplayer_peer():
@@ -94,7 +98,7 @@ func _process(delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	##HACK: Waiting for update to multiplayer/offline
 	#if !Server.OFFLINE and !is_multiplayer_authority(): return
-	if is_actice and has_control:
+	if is_active and has_control:
 		velocity = Input_Handler.velocity
 		move_and_slide()
 
@@ -149,9 +153,13 @@ func set_color(color: Color = Color.WHITE) -> void:
 
 @rpc("any_peer")
 func reset(active_status: bool = true) -> void:
-	is_actice = active_status
+	is_active = active_status
 	has_control = active_status
 	set_color(Properties.player_color)
+	
+	strength = Properties.player_strength
+	intelligence = Properties.player_intelligence
+	endurance = Properties.player_endurance
 	
 	global_position = spawn_pos
 

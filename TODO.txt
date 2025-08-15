@@ -13,4 +13,4 @@
 + pickup sword in either hand
 + launch sword from bow
 
-? Arrow quantity
+? Arrow quantity - nah, i don't think so anymore..

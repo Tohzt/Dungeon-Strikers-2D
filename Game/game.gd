@@ -31,6 +31,7 @@ func _ready() -> void:
 		
 		Player = _player
 		Player.reset()
+		printt(_player.strength, _player.intelligence, _player.endurance)
 		
 		# Restore player's weapons after spawning
 		Global.restore_player_weapons(Player)
