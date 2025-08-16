@@ -30,11 +30,10 @@ func _ready() -> void:
 		_player.Properties = new_properties
 		
 		Player = _player
-		Player.reset()
-		printt(_player.strength, _player.intelligence, _player.endurance)
-		
-		# Restore player's weapons after spawning
-		Global.restore_player_weapons(Player)
+	
+	Player.reset()
+	Global.restore_player_weapons(Player)
+	HUD.set_hud()
 	
 	for room: RoomClass in $Rooms.get_children():
 		if !Global.rooms.has(room):
