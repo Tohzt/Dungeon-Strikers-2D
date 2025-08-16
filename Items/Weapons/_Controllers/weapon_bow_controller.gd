@@ -1,7 +1,7 @@
 class_name BowController extends WeaponControllerBase
 
 @onready var bow := weapon
-@onready var is_drawn := hold_position
+# Remove the problematic is_drawn reference - use hold_position directly
 
 var ammo: WeaponClass
 var is_attacking: bool = false
@@ -12,8 +12,11 @@ var charge_duration: float = 0.0
 var charge_limit_in_sec: float = 1.0
 
 
+
+
 func handle_click() -> void:
 	super.handle_click()
+	# Attack on click - this is needed for shooting arrows
 	_attack()
 
 func handle_hold() -> void:
@@ -32,32 +35,49 @@ func handle_release() -> void:
 
 func update(delta: float) -> void:
 	super.update(delta)
-	if is_drawn:
-		is_drawn = false
+	
+	# Get the offhand weapon (arrow)
+	ammo = get_offhand_weapon()
+	
+	# Check if we have ammo and if it's a synergy weapon
+	if ammo and bow.Properties.weapon_synergies.has(ammo.Properties.weapon_type):
+		# If the arrow is in hold position, the bow should also be in hold position
+		if ammo.Controller.hold_position:
+			hold_position = true
+		else:
+			hold_position = false
+			# Reset charging state when arrow is released
+			if is_charging:
+				is_charging = false
+				charge_duration = 0.0
+	else:
+		ammo = null
+		hold_position = false
+		# Reset charging state when no arrow
+		if is_charging:
+			is_charging = false
+			charge_duration = 0.0
+	
+	# Handle bow positioning based on hold_position
+	if hold_position:
 		_move_to_ready_position(delta)
 	elif is_attacking:
-		printt("Attack dur: ", attack_duration)
 		attack_duration = min(attack_limit_in_sec, attack_duration+delta)
 		_move_to_ready_position(delta*7)
 	elif is_charging:
 		charge_duration = min(charge_limit_in_sec, charge_duration+delta)
 	else:
-		reset_arm_rotation(delta)
-		reset_arm_position(delta)
+		reset_arm_rotation(delta, 8.0)
+		reset_arm_position(delta, 8.0)
 	
 	if attack_duration >= attack_limit_in_sec:
 		is_attacking = false
 		attack_duration = 0.0
+		# Reset hand attacking state so arm can move naturally
+		if hand:
+			hand.is_attacking = false
+		# Ensure bow is back in normal collision mode after attack
 		bow._update_collisions("in-hand")
-	
-	ammo = get_offhand_weapon()
-	if !ammo: return
-		
-	if bow.Properties.weapon_synergies.has(ammo.Properties.weapon_type):
-		is_drawn = ammo.Controller.hold_position
-	else:
-		is_drawn = false
-		ammo = null
 
 
 func _move_to_ready_position(delta: float) -> void:
@@ -70,8 +90,37 @@ func _move_to_ready_position(delta: float) -> void:
 func _attack() -> void:
 	if !bow.wielder or !ammo: return
 	
-	if is_drawn:
+	# Check if the arrow is in hold position (right hand)
+	if ammo.Controller.hold_position:
+		# Arrow is held, so fire it
 		ammo.throw_weapon(bow.Properties.weapon_damage)
+		# After firing, ensure we're not stuck in any special state
+		is_attacking = false
+		attack_duration = 0.0
+		is_charging = false
+		charge_duration = 0.0
+		# Reset hand attacking state so arm can move naturally
+		if hand:
+			hand.is_attacking = false
+		# Force bow out of hold position after shooting
+		hold_position = false
 	else:
-		is_attacking = true
-		bow._update_collisions("projectile")
+		# No arrow in hold position - do basic bow attack
+		# But only if we're not just doing a regular click
+		if is_charging:
+			# We were charging, so this is a click to shoot
+			# Try to fire the arrow even if not in perfect hold position
+			if ammo:
+				ammo.throw_weapon(bow.Properties.weapon_damage)
+				# Reset states
+				is_attacking = false
+				attack_duration = 0.0
+				is_charging = false
+				charge_duration = 0.0
+				if hand:
+					hand.is_attacking = false
+				hold_position = false
+		else:
+			# Regular click without charging - basic attack
+			is_attacking = true
+			bow._update_collisions("projectile")

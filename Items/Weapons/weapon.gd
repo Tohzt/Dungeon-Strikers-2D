@@ -82,7 +82,6 @@ func _handle_held_or_pickup(delta: float) -> void:
 				modulate = Color.WHITE
 		else:
 			modulate = lerp(modulate, modulate.lightened(0.1), can_pickup_dur_in_sec-can_pickup_cd)
-			print('cooldown: ', can_pickup_cd)
 		
 		if !can_pickup: return
 		if things_nearby and Input.is_action_just_pressed("interact"):
@@ -279,10 +278,11 @@ func handle_input(input_type: String, duration: float = 0.0) -> void:
 
 
 func _calculate_throw_direction(player: Node2D) -> Vector2:
-	if !player.Input_Handler.look_dir.is_zero_approx():
-		return player.Input_Handler.look_dir
-	elif !player.tar_pos.is_zero_approx():
+	# Prioritize target direction when target locking is active
+	if !player.tar_pos.is_zero_approx():
 		return player.tar_pos.normalized()
+	elif !player.Input_Handler.look_dir.is_zero_approx():
+		return player.Input_Handler.look_dir
 	else:
 		return Vector2(cos(player.rotation - PI/2), sin(player.rotation - PI/2))
 

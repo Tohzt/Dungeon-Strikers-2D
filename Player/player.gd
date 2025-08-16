@@ -63,12 +63,12 @@ func _process(delta: float) -> void:
 	_update_stamina(delta)  # Add stamina update
 	##HACK: Waiting for update to multiplayer/offline
 	#if !Server.OFFLINE and !is_multiplayer_authority(): return
-	if !is_active: return
-	_update_hud()
 	
 	if target and Input_Handler.target_scroll:
 		Input_Handler.target_scroll = false
-		var nearest := Global.get_nearest(global_position, "Entity", target)
+		# Get nearest entity, excluding the current target if it's still valid
+		var exclude_target := target if target and is_instance_valid(target) else null
+		var nearest := Global.get_nearest(global_position, "Entity", exclude_target)
 		if nearest.has("inst"):
 			target = nearest["inst"]
 	
@@ -80,7 +80,9 @@ func _process(delta: float) -> void:
 			target = null
 			return
 		
-		var nearest := Global.get_nearest(global_position, "Entity", target)
+		# Get nearest entity, excluding the current target if it's still valid
+		var exclude_target := target if target and is_instance_valid(target) else null
+		var nearest := Global.get_nearest(global_position, "Entity", exclude_target)
 		if nearest.has("inst"):
 			target = nearest["inst"]
 	
@@ -107,10 +109,7 @@ func _physics_process(_delta: float) -> void:
 	if is_active and has_control:
 		velocity = Input_Handler.velocity
 		move_and_slide()
-
-func _update_hud() -> void:
-	##HACK: Parent Trap
-	pass#get_parent().get_parent().HUD.update(rotation, hp)
+ 
 
 func _update_hp(delta: float) -> void:
 	healthbar.global_position = global_position - Vector2(70,80)
@@ -168,16 +167,13 @@ func reset(active_status: bool = true) -> void:
 	has_control = active_status
 	set_color(Properties.player_color)
 	
-	strength = Properties.player_strength
-	intelligence = Properties.player_intelligence
-	endurance = Properties.player_endurance
+	strength = Properties.player_strength + 10
+	intelligence = Properties.player_intelligence + 10
+	endurance = Properties.player_endurance + 10
 	
 	# Reset stamina when player respawns
 	stamina_max = float(endurance)
 	stamina_current = stamina_max
-	
-	# Debug output to see stamina values
-	print("Player stats loaded - Endurance: ", endurance, " Stamina Max: ", stamina_max, " Stamina Current: ", stamina_current)
 	
 	global_position = spawn_pos
 

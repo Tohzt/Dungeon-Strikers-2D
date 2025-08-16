@@ -41,13 +41,19 @@ func on_equip() -> void:
 
 
 func get_default_arm_rotation() -> float:
-	return hand.def_arm_rot
+	if hand:
+		return hand.def_arm_rot
+	else:
+		return 0.0
 
 func get_default_arm_length() -> float:
-	var base_length: float = hand.def_arm_length
-	if weapon.Properties.weapon_arm_length != 0:
-		base_length += weapon.Properties.weapon_arm_length
-	return base_length
+	if hand:
+		var base_length: float = hand.def_arm_length
+		if weapon.Properties.weapon_arm_length != 0:
+			base_length += weapon.Properties.weapon_arm_length
+		return base_length
+	else:
+		return 0.0
 
 func get_hand() -> PlayerHandClass:
 	if !weapon.wielder: return null
@@ -89,12 +95,14 @@ func set_arm_position(target_length: float, delta: float, speed: float = 10.0) -
 
 
 func reset_arm_rotation(delta: float, speed: float = 10.0) -> void:
-	var default_rotation := get_default_arm_rotation()
-	set_arm_rotation(default_rotation, delta, speed)
+	if hand and arm:
+		var default_rotation := get_default_arm_rotation()
+		set_arm_rotation(default_rotation, delta, speed)
 
 func reset_arm_position(delta: float, speed: float = 10.0) -> void:
-	var default_length := get_default_arm_length()
-	set_arm_position(default_length, delta, speed)
+	if hand and arm:
+		var default_length := get_default_arm_length()
+		set_arm_position(default_length, delta, speed)
 
 func swing_arm(direction: float, delta: float, speed: float = 3.0) -> void:
 	arm.rotation += direction * speed * delta

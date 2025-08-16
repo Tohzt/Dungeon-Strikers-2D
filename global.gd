@@ -182,4 +182,4 @@ func display_damage(damage: float, position: Vector2) -> void:
 	if current_scene:
 		current_scene.add_child(damage_label)
 	else:
-		print("ERROR: No current scene to add damage label to!")
+		print_debug("ERROR: No current scene to add damage label to!")

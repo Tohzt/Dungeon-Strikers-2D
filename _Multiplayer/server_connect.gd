@@ -8,7 +8,6 @@ func Host(PORT: int, MAX_CLIENTS: int) -> void:
 	get_tree().change_scene_to_file(Global.GAME)
 
 func _establish_host(PORT: int, MAX_CLIENTS: int) -> void:
-	print("Host connecting to server...")
 	var error: Error = peer.create_server(PORT, MAX_CLIENTS)
 	if error != OK:
 		print_debug("Host cannot host: " + str(error))
@@ -28,7 +27,7 @@ func client_connected(peer_id: int) -> void:
 		boss.set_color.rpc_id(peer_id, boss.color)
 
 func client_disconnected(peer_id: int) -> void:
-	print("Peer " + str(peer_id) + " Disonnected!")
+	print_debug("Peer " + str(peer_id) + " Disonnected!")
 
 
 # Client Code
@@ -37,7 +36,7 @@ func Client(IP_ADDRESS: String, PORT: int) -> void:
 	get_tree().change_scene_to_file(Global.GAME)
 
 func _establish_client(IP_ADDRESS: String, PORT: int) -> void:
-	print("Client connecting to server...")
+	print_debug("Client connecting to server...")
 	var error: Error = peer.create_client(IP_ADDRESS, PORT)
 	if error != OK:
 		print_debug("Client cannot connect: " + str(error))

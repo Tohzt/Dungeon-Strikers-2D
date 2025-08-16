@@ -62,15 +62,12 @@ func _trigger_attack(hand_side: String, input_type: String, duration: float) -> 
 	# Check stamina before allowing actual attacks (not holds)
 	var stamina_cost := Master.attack_stamina_cost
 	if input_type != "hold" and Master.stamina_current < stamina_cost:
-		print("Attack blocked - Not enough stamina! Current: ", Master.stamina_current, " Cost: ", stamina_cost)
+		# No stamina for attacks - just return
 		return
 	
 	# Consume stamina only for actual attacks (click or release)
 	if input_type != "hold":
 		Master.stamina_current -= stamina_cost
-		print("Attack triggered - Stamina consumed. Remaining: ", Master.stamina_current)
-	else:
-		print("Charge/hold - No stamina consumed")
 	
 	# Get the target hand
 	var target_hand: PlayerHandClass
@@ -95,9 +92,10 @@ func _trigger_attack(hand_side: String, input_type: String, duration: float) -> 
 func _trigger_basic_attack(hand: PlayerHandClass, input_type: String, _duration: float) -> void:
 	# Basic attack logic - can be customized per weapon or used standalone
 	if input_type == "click":
-		hand.is_attacking = true
-		# You can add basic attack animations, effects, etc. here
-		print("Basic attack triggered for ", hand.name)
+		# Only set is_attacking if no weapon is held
+		# This allows weapon controllers to manage the hand stated
+		if !hand.held_weapon:
+			hand.is_attacking = true 
 
 func _handle_hold_detection(_delta: float) -> void:
 	# Handle left mouse button hold detection
@@ -133,12 +131,12 @@ func _handle_hold_detection(_delta: float) -> void:
 	# Handle ongoing holds
 	if left_is_holding:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
-		if hold_duration >= HOLD_THRESHOLD:
+		if hold_duration >= HOLD_THRESHOLD and !attack_left_hold:
 			attack_left_hold = true
 	
 	if right_is_holding:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
-		if hold_duration >= HOLD_THRESHOLD:
+		if hold_duration >= HOLD_THRESHOLD and !attack_right_hold:
 			attack_right_hold = true
 
 func _get_hold_duration(hand_side: String) -> float:
