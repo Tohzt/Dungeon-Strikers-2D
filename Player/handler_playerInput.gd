@@ -60,7 +60,6 @@ func _input(event: InputEvent) -> void:
 	
 	if event.is_action("target_scroll"):
 		target_scroll = true
-		print("Target Scroll")
 
 
 func _physics_process(delta: float) -> void:

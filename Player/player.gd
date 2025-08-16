@@ -19,6 +19,12 @@ var strength: int = 0
 var intelligence: int = 0
 var endurance: int = 0
 
+# Add stamina system variables
+var stamina_max: float = 5.0  # Based on endurance stat (0-5)
+var stamina_current: float = 5.0
+var stamina_regen_rate: float = 2.0  # Stamina per second
+var attack_stamina_cost: float = 1.0  # Hardcoded for now, will come from weapon later
+
 var name_display: String
 const SPEED: float = 300.0  
 var atk_pwr: float = 400.0  
@@ -54,6 +60,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_update_hp(delta)
+	_update_stamina(delta)  # Add stamina update
 	##HACK: Waiting for update to multiplayer/offline
 	#if !Server.OFFLINE and !is_multiplayer_authority(): return
 	if !is_active: return
@@ -91,9 +98,8 @@ func _process(delta: float) -> void:
 	elif !velocity.is_zero_approx():
 		rotation = lerp_angle(rotation, velocity.angle() + PI/2, delta * 10)
 	
-	if Attack_Handler.attack_confirmed:
-		attack.rpc(Input_Handler.look_dir.angle(), Attack_Handler.attack_side)
-		Attack_Handler.attack_confirmed = false
+	# Attack handling is now done in the Attack_Handler
+	# Stamina consumption happens there
 
 func _physics_process(_delta: float) -> void:
 	##HACK: Waiting for update to multiplayer/offline
@@ -109,6 +115,11 @@ func _update_hud() -> void:
 func _update_hp(delta: float) -> void:
 	healthbar.global_position = global_position - Vector2(70,80)
 	healthbar.value = lerp(healthbar.value, float(hp/hp_max)*hp_max, delta*10)
+
+func _update_stamina(delta: float) -> void:
+	# Regenerate stamina over time
+	if stamina_current < stamina_max:
+		stamina_current = min(stamina_current + stamina_regen_rate * delta, stamina_max)
 
 
 @rpc("any_peer", "call_local")
@@ -160,6 +171,13 @@ func reset(active_status: bool = true) -> void:
 	strength = Properties.player_strength
 	intelligence = Properties.player_intelligence
 	endurance = Properties.player_endurance
+	
+	# Reset stamina when player respawns
+	stamina_max = float(endurance)
+	stamina_current = stamina_max
+	
+	# Debug output to see stamina values
+	print("Player stats loaded - Endurance: ", endurance, " Stamina Max: ", stamina_max, " Stamina Current: ", stamina_current)
 	
 	global_position = spawn_pos
 

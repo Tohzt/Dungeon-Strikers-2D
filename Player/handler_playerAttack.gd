@@ -3,9 +3,15 @@ class_name PlayerAttackHandler extends Node
 @export var Input_Handler: PlayerInputHandler
 
 var attack_cooldown: float = 0.0
-var attack_cooldown_max: float= 0.25
-var attack_confirmed: bool = false
-var attack_side: String
+var attack_cooldown_max: float = 0.25
+
+# Attack flags - set by input handler
+var attack_left_click: bool = false
+var attack_right_click: bool = false
+var attack_left_hold: bool = false
+var attack_right_hold: bool = false
+var attack_left_release: bool = false
+var attack_right_release: bool = false
 
 # Hold detection variables
 var left_hold_start_time: float = 0.0
@@ -17,29 +23,81 @@ const HOLD_THRESHOLD: float = 0.2  # Time in seconds to distinguish click from h
 func _process(delta: float) -> void:
 	_handle_attack_cooldown(delta)
 	_handle_hold_detection(delta)
+	_handle_attacks()
 
 func _handle_attack_cooldown(delta: float) -> void:
 	if attack_cooldown > 0.0:
 		attack_cooldown -= delta
-	else:
-		_handle_attack()
 
-func _handle_attack() -> void:
-	# Only handle legacy attack system if no weapons are equipped
-	var has_weapons := (Master.Hands.Left.held_weapon != null or Master.Hands.Right.held_weapon != null)
+func _handle_attacks() -> void:
+	# Handle left hand attacks
+	if attack_left_click and attack_cooldown <= 0.0:
+		_trigger_attack("left", "click", 0.0)
+		attack_left_click = false
+		attack_cooldown = attack_cooldown_max
 	
-	if !has_weapons:
-		if Input_Handler.attack_left:
-			Input_Handler.attack_left = false
-			attack_cooldown = attack_cooldown_max
-			attack_confirmed = true
-			attack_side = "left"
-		
-		elif Input_Handler.attack_right:
-			Input_Handler.attack_right = false
-			attack_cooldown = attack_cooldown_max
-			attack_confirmed = true
-			attack_side = "right"
+	if attack_left_hold:
+		_trigger_attack("left", "hold", _get_hold_duration("left"))
+		attack_left_hold = false
+	
+	if attack_left_release:
+		_trigger_attack("left", "release", _get_hold_duration("left"))
+		attack_left_release = false
+	
+	# Handle right hand attacks
+	if attack_right_click and attack_cooldown <= 0.0:
+		_trigger_attack("right", "click", 0.0)
+		attack_right_click = false
+		attack_cooldown = attack_cooldown_max
+	
+	if attack_right_hold:
+		_trigger_attack("right", "hold", _get_hold_duration("right"))
+		attack_right_hold = false
+	
+	if attack_right_release:
+		_trigger_attack("right", "release", _get_hold_duration("right"))
+		attack_right_release = false
+
+func _trigger_attack(hand_side: String, input_type: String, duration: float) -> void:
+	# Check stamina before allowing actual attacks (not holds)
+	var stamina_cost := Master.attack_stamina_cost
+	if input_type != "hold" and Master.stamina_current < stamina_cost:
+		print("Attack blocked - Not enough stamina! Current: ", Master.stamina_current, " Cost: ", stamina_cost)
+		return
+	
+	# Consume stamina only for actual attacks (click or release)
+	if input_type != "hold":
+		Master.stamina_current -= stamina_cost
+		print("Attack triggered - Stamina consumed. Remaining: ", Master.stamina_current)
+	else:
+		print("Charge/hold - No stamina consumed")
+	
+	# Get the target hand
+	var target_hand: PlayerHandClass
+	if hand_side == "left":
+		target_hand = Master.Hands.Left
+	else:
+		target_hand = Master.Hands.Right
+	
+	# Check for weapon throwing first (hold E + click)
+	if Input.is_action_pressed("interact") and input_type == "click":
+		if target_hand.held_weapon:
+			target_hand.held_weapon.throw_weapon()
+			return
+	
+	# Handle weapon attacks
+	if target_hand.held_weapon:
+		target_hand.held_weapon.handle_input(input_type, duration)
+	
+	# Handle basic attacks (can be combined with weapon attacks)
+	_trigger_basic_attack(target_hand, input_type, duration)
+
+func _trigger_basic_attack(hand: PlayerHandClass, input_type: String, _duration: float) -> void:
+	# Basic attack logic - can be customized per weapon or used standalone
+	if input_type == "click":
+		hand.is_attacking = true
+		# You can add basic attack animations, effects, etc. here
+		print("Basic attack triggered for ", hand.name)
 
 func _handle_hold_detection(_delta: float) -> void:
 	# Handle left mouse button hold detection
@@ -51,10 +109,10 @@ func _handle_hold_detection(_delta: float) -> void:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
 		if hold_duration < HOLD_THRESHOLD:
 			# Quick click
-			_handle_weapon_input("click", "left", 0.0)
+			attack_left_click = true
 		else:
 			# Hold release
-			_handle_weapon_input("release", "left", hold_duration)
+			attack_left_release = true
 		left_is_holding = false
 	
 	# Handle right mouse button hold detection
@@ -66,37 +124,25 @@ func _handle_hold_detection(_delta: float) -> void:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
 		if hold_duration < HOLD_THRESHOLD:
 			# Quick click
-			_handle_weapon_input("click", "right", 0.0)
+			attack_right_click = true
 		else:
 			# Hold release
-			_handle_weapon_input("release", "right", hold_duration)
+			attack_right_release = true
 		right_is_holding = false
 	
 	# Handle ongoing holds
 	if left_is_holding:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
 		if hold_duration >= HOLD_THRESHOLD:
-			_handle_weapon_input("hold", "left", hold_duration)
+			attack_left_hold = true
 	
 	if right_is_holding:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
 		if hold_duration >= HOLD_THRESHOLD:
-			_handle_weapon_input("hold", "right", hold_duration)
+			attack_right_hold = true
 
-func _handle_weapon_input(input_type: String, input_side: String, duration: float) -> void:
-	# Get the appropriate hand
-	var target_hand: PlayerHandClass
-	if input_side == "left":
-		target_hand = Master.Hands.Left
+func _get_hold_duration(hand_side: String) -> float:
+	if hand_side == "left":
+		return (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
 	else:
-		target_hand = Master.Hands.Right
-	
-	# Check for weapon throwing first (hold E + click)
-	if Input.is_action_pressed("interact") and input_type == "click":
-		if target_hand.held_weapon:
-			target_hand.held_weapon.throw_weapon()
-			return
-	
-	# Check if hand has a weapon and handle input
-	if target_hand.held_weapon:
-		target_hand.held_weapon.handle_input(input_type, duration)
+		return (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
