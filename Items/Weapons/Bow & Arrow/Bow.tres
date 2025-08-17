@@ -23,6 +23,7 @@ weapon_damage = 8.0
 weapon_mod_damage = 0.0
 weapon_cooldown = 0.8
 weapon_duration = 0.3
+weapon_stamina_cost = 3.0
 weapon_mana_cost = 0.0
 weapon_cast_duration = 0.0
 weapon_arm_length = 0.0

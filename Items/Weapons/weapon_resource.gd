@@ -1,3 +1,4 @@
+##TODO: Remove the "weapon_" prefix
 class_name WeaponResource extends Resource
 
 enum Handedness { LEFT, RIGHT, BOTH, EITHER, NONE }
@@ -32,6 +33,7 @@ enum Types { SWORD, SHIELD, STAFF, BOW, ARROW, INSTANCE}
 @export var weapon_mod_damage: float = 0.0
 @export var weapon_cooldown: float = 0.0
 @export var weapon_duration: float = 1.0
+@export var weapon_stamina_cost: float = 0.0
 @export var weapon_mana_cost: float = 0.0
 @export var weapon_cast_duration: float = 0.0
 

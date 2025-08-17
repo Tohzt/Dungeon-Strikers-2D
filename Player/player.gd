@@ -5,6 +5,8 @@ class_name PlayerClass extends CharacterBody2D
 @export var Sprite: Sprite2D
 @export var Hands: Node2D
 @export var Attack_Origin: Marker2D
+@export var spawn_pos: Vector2
+@export var is_active: bool = false
 
 @export_category("Handlers")
 @export var Input_Handler: PlayerInputHandler
@@ -12,33 +14,37 @@ class_name PlayerClass extends CharacterBody2D
 
 @export_category("Health")
 @export var healthbar: TextureProgressBar
-var hp_max: float = 1000.0
-var hp: float = hp_max
 
 var strength: int = 0
 var intelligence: int = 0
 var endurance: int = 0
 
-# Add stamina system variables
-var stamina_max: float = 5.0  # Based on endurance stat (0-5)
-var stamina_current: float = 5.0
-var stamina_regen_rate: float = 2.0  # Stamina per second
-var attack_stamina_cost: float = 1.0  # Hardcoded for now, will come from weapon later
+var hp_max: float = 1000.0
+var hp: float = hp_max
+
+var mana_max: float = 100.0
+var mana: float = mana_max
+var mana_cost: float = 0.0
+var mana_cost_default: float = 0.0
+
+var stamina_max: float = 5.0
+var stamina: float = 5.0
+var stamina_regen_rate: float = 2.0
+var stamina_cost: float = 1.0
+var stamina_cost_default: float = 1.0
 
 var name_display: String
-const SPEED: float = 300.0  
 var atk_pwr: float = 400.0  
 var def_base: float = 100.0
 var tar_pos: Vector2
 var target: Node2D = null
+const SPEED: float = 300.0  
 
-@export var spawn_pos: Vector2
 var spawn_rot: float = 0.0
 
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
 
-@export var is_active: bool = false
 var has_control: bool = false
 
 ##TODO: All Multiplayer/Offline authentication should alter this. 
@@ -117,8 +123,8 @@ func _update_hp(delta: float) -> void:
 
 func _update_stamina(delta: float) -> void:
 	# Regenerate stamina over time
-	if stamina_current < stamina_max:
-		stamina_current = min(stamina_current + stamina_regen_rate * delta, stamina_max)
+	if stamina < stamina_max:
+		stamina = min(stamina + stamina_regen_rate * delta, stamina_max)
 
 
 @rpc("any_peer", "call_local")
@@ -173,7 +179,7 @@ func reset(active_status: bool = true) -> void:
 	
 	# Reset stamina when player respawns
 	stamina_max = float(endurance)
-	stamina_current = stamina_max
+	stamina = stamina_max
 	
 	global_position = spawn_pos
 
