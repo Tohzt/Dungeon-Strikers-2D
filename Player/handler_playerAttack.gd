@@ -167,9 +167,71 @@ func _trigger_interact() -> void:
 	for weapon: WeaponClass in weapons:
 		printt(weapon.name, weapon.global_position.distance_to(Master.global_position))
 		if weapon.global_position.distance_to(Master.global_position) < 50.0:
-			if try_left and weapon.Controller.is_left_handed():
-				try_left = false
-				weapon.pickup_weapon(Master, Master.Hands.Left)
-			if try_right and weapon.Controller.is_right_handed():
-				try_right = false
-				weapon.pickup_weapon(Master, Master.Hands.Right)
+			if weapon.can_pickup:
+				if try_left and weapon.Controller.is_left_handed():
+					try_left = false
+					attempt_pickup(weapon)
+					return
+				if try_right and weapon.Controller.is_right_handed():
+					try_right = false
+					attempt_pickup(weapon)
+					return
+
+func attempt_pickup(weapon) -> void:
+	var target_hand: PlayerHandClass
+	match weapon.Properties.weapon_hand:
+		weapon.Properties.Handedness.LEFT:
+			target_hand = Master.Hands.Left
+		weapon.Properties.Handedness.RIGHT:
+			target_hand = Master.Hands.Right
+		weapon.Properties.Handedness.BOTH:
+			pass
+		weapon.Properties.Handedness.EITHER:
+			if !Master.Hands.Left.held_weapon:
+				target_hand = Master.Hands.Left
+			elif !Master.Hands.Right.held_weapon:
+				target_hand = Master.Hands.Right
+			else:
+				target_hand = Master.Hands.Left
+	
+	pickup_weapon(weapon, target_hand)
+
+
+func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
+	weapon.can_pickup = false
+	weapon.wielder = Master
+	weapon.is_thrown = false
+
+	weapon.modulate = Master.Sprite.modulate
+	weapon.Sprite.position = weapon.Properties.weapon_offset
+	weapon.Collision.position = weapon.Properties.weapon_offset
+	weapon.global_position = target_hand.hand.global_position
+	weapon._update_collisions("in-hand")
+	
+	#if target_hand.held_weapon:
+		#drop_weapon(target_hand.held_weapon)
+	target_hand.held_weapon = weapon
+	
+	call_deferred("reparent", target_hand.hand)
+	weapon.Controller.on_equip()
+
+
+func drop_weapon(weapon: WeaponClass) -> void:
+	weapon.modulate = Color.WHITE
+	weapon.Sprite.position = Vector2.ZERO
+	weapon.Collision.position = Vector2.ZERO
+	weapon._update_collisions("on-ground")
+	
+	var hand_holding_weapon: PlayerHandClass = null
+	if Master.Hands.Left.held_weapon == weapon:
+		hand_holding_weapon = Master.Hands.Left
+	elif Master.Hands.Right.held_weapon == weapon:
+		hand_holding_weapon = Master.Hands.Right
+	
+	weapon.wielder = null
+	if hand_holding_weapon:
+		hand_holding_weapon.held_weapon = null
+	
+	##TODO: Create Entities reference in Global
+	weapon.call_deferred("reparent", Master.get_parent())
+	weapon.global_position = Master.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20))

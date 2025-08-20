@@ -83,9 +83,6 @@ func _handle_held_or_pickup(delta: float) -> void:
 		else:
 			modulate = lerp(modulate, modulate.lightened(0.1), can_pickup_dur_in_sec-can_pickup_cd)
 		
-		if !can_pickup: return
-		if things_nearby and Input.is_action_just_pressed("interact"):
-			attempt_pickup()
 
 
 func _handle_thrown() -> void:
@@ -100,85 +97,6 @@ func _handle_thrown() -> void:
 					if collider.is_in_group("Weapon") and collider.wielder == wielder:
 						continue
 				reset_to_ground_state()
-
-
-func _on_pickup_body_entered(body: Node2D) -> void:
-	pass
-	#if !body.is_in_group("Player"): return
-	#if !things_nearby.has(body):
-		#things_nearby.append(body)
-
-func _on_pickup_body_exited(body: Node2D) -> void:
-	pass
-	#if things_nearby.has(body):
-		#things_nearby.remove_at(things_nearby.find(body))
-
-func attempt_pickup() -> void:
-	##TODO: This should be done in the player
-	##      Perhaps in the handler_playerAttac
-	if wielder or things_nearby.size() == 0: return
-	
-	var nearest_thing: Node2D = things_nearby[0]
-	var target_hand: PlayerHandClass
-	match Properties.weapon_hand:
-		Properties.Handedness.LEFT:
-			target_hand = nearest_thing.Hands.Left
-		Properties.Handedness.RIGHT:
-			target_hand = nearest_thing.Hands.Right
-		Properties.Handedness.BOTH:
-			pass
-		Properties.Handedness.EITHER:
-			if !nearest_thing.Hands.Left.held_weapon:
-				target_hand = nearest_thing.Hands.Left
-			elif !nearest_thing.Hands.Right.held_weapon:
-				target_hand = nearest_thing.Hands.Right
-			else:
-				target_hand = nearest_thing.Hands.Left
-	
-	pickup_weapon(nearest_thing, target_hand)
-	#for weapon: WeaponClass in get_tree().get_nodes_in_group("Weapon"):
-		#weapon.things_nearby.clear()
-
-
-func pickup_weapon(player: Node2D, target_hand: PlayerHandClass) -> void:
-	wielder = player
-	is_thrown = false
-	target_hand.held_weapon = self
-	things_nearby.erase(player)
-
-	modulate = wielder.Sprite.modulate
-	Sprite.position = Properties.weapon_offset
-	Collision.position = Properties.weapon_offset
-	global_position = target_hand.hand.global_position
-	_update_collisions("in-hand")
-	
-	var held_weapons := target_hand.hand.get_children()
-	for held_weapon in held_weapons:
-		if held_weapon.is_in_group("Weapon"):
-			held_weapon.drop_weapon(held_weapon, wielder)
-	
-	call_deferred("reparent", target_hand.hand)
-	Controller.on_equip()
-
-
-func drop_weapon(weapon: WeaponClass, player: Node2D) -> void:
-	weapon.modulate = Color.WHITE
-	weapon.Sprite.position = Vector2.ZERO
-	weapon.Collision.position = Vector2.ZERO
-	weapon._update_collisions("on-ground")
-	
-	var hand_holding_weapon: PlayerHandClass = null
-	if player.Hands.Left.held_weapon == weapon:
-		hand_holding_weapon = player.Hands.Left
-	elif player.Hands.Right.held_weapon == weapon:
-		hand_holding_weapon = player.Hands.Right
-	
-	weapon.wielder = null
-	if hand_holding_weapon:
-		hand_holding_weapon.held_weapon = null
-	
-	weapon.call_deferred("reparent", player.get_parent())
-	weapon.global_position = player.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20))
 
 
 func throw_weapon(mod_damage: float = 0.0) -> void:
