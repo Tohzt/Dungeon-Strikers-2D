@@ -103,15 +103,19 @@ func _handle_thrown() -> void:
 
 
 func _on_pickup_body_entered(body: Node2D) -> void:
-	if !body.is_in_group("Player"): return
-	if !things_nearby.has(body):
-		things_nearby.append(body)
+	pass
+	#if !body.is_in_group("Player"): return
+	#if !things_nearby.has(body):
+		#things_nearby.append(body)
 
 func _on_pickup_body_exited(body: Node2D) -> void:
-	if things_nearby.has(body):
-		things_nearby.remove_at(things_nearby.find(body))
+	pass
+	#if things_nearby.has(body):
+		#things_nearby.remove_at(things_nearby.find(body))
 
 func attempt_pickup() -> void:
+	##TODO: This should be done in the player
+	##      Perhaps in the handler_playerAttac
 	if wielder or things_nearby.size() == 0: return
 	
 	var nearest_thing: Node2D = things_nearby[0]

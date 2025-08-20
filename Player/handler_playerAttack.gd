@@ -6,19 +6,23 @@ var cooldown: float = 0.0
 var cooldown_max: float = 0.25
 
 # Attack flags - set by input handler
-var left_click: bool = false
-var right_click: bool = false
-var left_hold: bool = false
-var right_hold: bool = false
-var left_release: bool = false
+var left_click:    bool = false
+var right_click:   bool = false
+var left_hold:     bool = false
+var right_hold:    bool = false
+var left_release:  bool = false
 var right_release: bool = false
+var interact:      bool = false
 
 # Hold detection variables
-var left_hold_start_time: float = 0.0
+##TODO: Get ric of this silly cursor duration.
+## Refer to weapon props
+const HOLD_THRESHOLD:      float = 0.2
+var left_hold_start_time:  float = 0.0
 var right_hold_start_time: float = 0.0
-var left_is_holding: bool = false
+var left_is_holding:  bool = false
 var right_is_holding: bool = false
-const HOLD_THRESHOLD: float = 0.2  # Time in seconds to distinguish click from hold
+
 
 func _process(delta: float) -> void:
 	_handle_cooldown(delta)
@@ -57,11 +61,14 @@ func _handle_attacks() -> void:
 	if right_release:
 		_trigger_attack("right", "release")
 		right_release = false
+	
+	if interact:
+		_trigger_interact()
+		Input_Handler.interact = false
+		interact = false
+
 
 func _trigger_attack(hand_side: String, input_type: String) -> void:
-	
-	
-	# Get the target hand
 	var target_hand: PlayerHandClass
 	if hand_side == "left":
 		target_hand = Master.Hands.Left
@@ -146,3 +153,23 @@ func _handle_hold_detection(_delta: float) -> void:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
 		if hold_duration >= HOLD_THRESHOLD and !right_hold:
 			right_hold = true
+	
+	
+	# Handle Interact
+	interact = Input_Handler.interact
+
+func _trigger_interact() -> void:
+	var try_left := true
+	var try_right := true
+	var weapons: Array = get_tree().get_nodes_in_group("Weapon")
+	weapons = weapons.filter(func (e: WeaponClass) -> bool: return true if !e.wielder else false)
+	if !weapons: return
+	for weapon: WeaponClass in weapons:
+		printt(weapon.name, weapon.global_position.distance_to(Master.global_position))
+		if weapon.global_position.distance_to(Master.global_position) < 50.0:
+			if try_left and weapon.Controller.is_left_handed():
+				try_left = false
+				weapon.pickup_weapon(Master, Master.Hands.Left)
+			if try_right and weapon.Controller.is_right_handed():
+				try_right = false
+				weapon.pickup_weapon(Master, Master.Hands.Right)

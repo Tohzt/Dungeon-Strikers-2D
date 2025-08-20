@@ -9,6 +9,7 @@ var dodge_pressed: bool = false
 var target_scroll: bool = false
 var attack_left: bool = false
 var attack_right: bool = false
+var interact: bool = false
 
 # Mouse movement tracking
 var last_mouse_pos: Vector2
@@ -57,6 +58,11 @@ func _input(event: InputEvent) -> void:
 		toggle_target = true
 	if event.is_action_released("target"):
 		toggle_target = false
+	
+	if event.is_action_pressed("interact"):
+		interact = true
+	if event.is_action_released("interact"):
+		interact = false
 	
 	if event.is_action("target_scroll"):
 		target_scroll = true
