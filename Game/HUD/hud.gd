@@ -8,7 +8,7 @@ class_name HUDClass extends CanvasLayer
 
 var signals_connected: bool = false
 
-func _physics_process(_delta: float) -> void:
+func _process(_delta: float) -> void:
 	if game.Player and !signals_connected:
 		signals_connected = true
 		_connect_signals()
@@ -17,6 +17,11 @@ func _connect_signals() -> void:
 	game.Player.hp_changed.connect(_on_hp_changed)
 	game.Player.mana_changed.connect(_on_mana_changed)
 	game.Player.stamina_changed.connect(_on_stamina_changed)
+	
+	# Get initial values immediately after connecting
+	_on_hp_changed(game.Player.hp, game.Player.hp_max)
+	_on_mana_changed(game.Player.mana, game.Player.mana_max)
+	_on_stamina_changed(game.Player.stamina, game.Player.stamina_max)
 
 func _on_hp_changed(new_hp: float, max_hp: float) -> void:
 	health_bar.max_value = max_hp

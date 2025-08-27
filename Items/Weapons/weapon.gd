@@ -265,7 +265,7 @@ func reset_to_ground_state() -> void:
 
 # Weapon input handling methods
 func handle_input(input_type: String, duration: float = 0.0) -> void:
-	if !wielder: return
+	if !wielder or !input_type: return
 	match input_type:
 		"click":
 			Controller.handle_click()

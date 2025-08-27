@@ -22,41 +22,100 @@ const HOLD_THRESHOLD: float = 0.2  # Time in seconds to distinguish click from h
 
 func _process(delta: float) -> void:
 	_handle_cooldown(delta)
-	_handle_hold_detection(delta)
+	_handle_attack_input(delta)
 	_handle_attacks()
 
 func _handle_cooldown(delta: float) -> void:
 	if cooldown > 0.0:
 		cooldown -= delta
 
+
+func _handle_attack_input(_delta: float) -> void:
+	# Handle left mouse button hold detection
+	if Input_Handler.attack_left and !left_is_holding:
+		left_hold_start_time = Time.get_ticks_msec() / 1000.0
+		left_is_holding = true
+	elif !Input_Handler.attack_left and left_is_holding:
+		# Button released - determine if it was a click or hold
+		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
+		if hold_duration < HOLD_THRESHOLD:
+			# Quick click
+			left_click = true
+		else:
+			# Hold release
+			left_release = true
+		left_is_holding = false
+	
+	# Handle right mouse button hold detection
+	if Input_Handler.attack_right and !right_is_holding:
+		right_hold_start_time = Time.get_ticks_msec() / 1000.0
+		right_is_holding = true
+	elif !Input_Handler.attack_right and right_is_holding:
+		# Button released - determine if it was a click or hold
+		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
+		if hold_duration < HOLD_THRESHOLD:
+			# Quick click
+			right_click = true
+		else:
+			# Hold release
+			right_release = true
+		right_is_holding = false
+	
+	# Handle ongoing holds
+	if left_is_holding:
+		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
+		if hold_duration >= HOLD_THRESHOLD and !left_hold:
+			left_hold = true
+	
+	if right_is_holding:
+		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
+		if hold_duration >= HOLD_THRESHOLD and !right_hold:
+			right_hold = true
+
+
 func _handle_attacks() -> void:
 	if cooldown > 0.0: return
+	var hand_side := ""
+	var input_type := ""
 	
 	if left_click:
 		left_click = false
 		cooldown = cooldown_max
-		_trigger_attack("left", "click")
+		hand_side = "left"
+		input_type = "click"
+		_trigger_attack(hand_side, input_type)
 	
 	if left_hold:
-		_trigger_attack("left", "hold")
 		left_hold = false
+		hand_side = "left"
+		input_type = "hold"
+		_trigger_attack(hand_side, input_type)
 	
 	if left_release:
-		_trigger_attack("left", "release")
 		left_release = false
+		hand_side = "left"
+		input_type = "release"
+		_trigger_attack(hand_side, input_type)
 	
 	if right_click:
-		_trigger_attack("right", "click")
 		right_click = false
 		cooldown = cooldown_max
+		hand_side = "right"
+		input_type = "click"
+		_trigger_attack(hand_side, input_type)
 	
 	if right_hold:
-		_trigger_attack("right", "hold")
 		right_hold = false
+		hand_side = "right"
+		input_type = "hold"
+		_trigger_attack(hand_side, input_type)
 	
 	if right_release:
-		_trigger_attack("right", "release")
 		right_release = false
+		hand_side = "right"
+		input_type = "release"
+		_trigger_attack(hand_side, input_type)
+
 
 func _trigger_attack(hand_side: String, input_type: String) -> void:
 	var target_hand: PlayerHandClass
@@ -101,45 +160,3 @@ func _trigger_basic_attack(hand: PlayerHandClass, input_type: String) -> void:
 		# This allows weapon controllers to manage the hand stated
 		if !hand.held_weapon:
 			hand.is_attacking = true 
-
-func _handle_hold_detection(_delta: float) -> void:
-	# Handle left mouse button hold detection
-	if Input_Handler.attack_left and !left_is_holding:
-		left_hold_start_time = Time.get_ticks_msec() / 1000.0
-		left_is_holding = true
-	elif !Input_Handler.attack_left and left_is_holding:
-		# Button released - determine if it was a click or hold
-		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
-		if hold_duration < HOLD_THRESHOLD:
-			# Quick click
-			left_click = true
-		else:
-			# Hold release
-			left_release = true
-		left_is_holding = false
-	
-	# Handle right mouse button hold detection
-	if Input_Handler.attack_right and !right_is_holding:
-		right_hold_start_time = Time.get_ticks_msec() / 1000.0
-		right_is_holding = true
-	elif !Input_Handler.attack_right and right_is_holding:
-		# Button released - determine if it was a click or hold
-		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
-		if hold_duration < HOLD_THRESHOLD:
-			# Quick click
-			right_click = true
-		else:
-			# Hold release
-			right_release = true
-		right_is_holding = false
-	
-	# Handle ongoing holds
-	if left_is_holding:
-		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
-		if hold_duration >= HOLD_THRESHOLD and !left_hold:
-			left_hold = true
-	
-	if right_is_holding:
-		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
-		if hold_duration >= HOLD_THRESHOLD and !right_hold:
-			right_hold = true

@@ -1,3 +1,5 @@
+##TODO: Create EntityClass Node as handler_Entity or something
+# Entity should emit signals back to owner and handler ui updates. 
 ##TODO: Set up an isActive to overwrite multiplayer status
 class_name PlayerClass extends CharacterBody2D
 
@@ -25,19 +27,19 @@ var strength: int = 0
 var intelligence: int = 0
 var endurance: int = 0
 
-# Health maximums
+# Max Values
 var hp_max: float = 1000.0
 var mana_max: float = 100.0
 var stamina_max: float = 5.0
 
-# Cost and regeneration settings
+# Costs and Regens
 var mana_cost: float = 0.0
 var mana_cost_default: float = 0.0
 var stamina_regen_rate: float = 2.0
 var stamina_cost: float = 1.0
 var stamina_cost_default: float = 1.0
 
-# Internal components
+# _Internal
 var _stamina_regen_timer: Timer
 var _health_values: Dictionary = {}
 
@@ -249,7 +251,6 @@ func apply_knockback(direction: Vector2, force: float) -> void:
 func _end_iframes() -> void:
 	is_in_iframes = false
 	modulate.a = 1.0
-
 
 
 # ===== UTILITY FUNCTIONS =====
