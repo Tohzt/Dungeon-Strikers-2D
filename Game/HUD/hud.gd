@@ -6,25 +6,27 @@ class_name HUDClass extends CanvasLayer
 @onready var mana_bar:    TextureProgressBar = $ManaBar
 @onready var player_icon: TextureRect        = $PlayerIcon
 
+var signals_connected: bool = false
 
-func set_hud() -> void:
-	player_icon.modulate  = game.Player.Properties.player_color
-	health_bar.max_value  = game.Player.hp_max
-	health_bar.value      = game.Player.hp
-	stamina_bar.max_value = game.Player.stamina_max
-	stamina_bar.value     = game.Player.stamina
-	mana_bar.max_value    = game.Player.mana_max
-	mana_bar.value        = game.Player.mana
+func _physics_process(_delta: float) -> void:
+	if game.Player and !signals_connected:
+		signals_connected = true
+		_connect_signals()
 
-##TODO: Update bar vaulues via signals
-func _process(delta: float) -> void:
-	player_icon.rotation = game.Player.rotation
-	
-	var health_value_new  := game.Player.hp/game.Player.hp_max           * health_bar.max_value
-	var stamina_value_new := game.Player.stamina/game.Player.stamina_max * stamina_bar.max_value
-	var mana_value_new    := game.Player.mana/game.Player.mana_max       * mana_bar.max_value
-	
-	health_bar.value  = lerp(health_bar.value,  health_value_new, delta*10)
-	stamina_bar.value = lerp(stamina_bar.value, stamina_value_new, delta*10)
-	mana_bar.value    = lerp(mana_bar.value,    mana_value_new, delta*10)
+func _connect_signals() -> void:
+	game.Player.hp_changed.connect(_on_hp_changed)
+	game.Player.mana_changed.connect(_on_mana_changed)
+	game.Player.stamina_changed.connect(_on_stamina_changed)
+
+func _on_hp_changed(new_hp: float, max_hp: float) -> void:
+	health_bar.max_value = max_hp
+	health_bar.value = new_hp
+
+func _on_mana_changed(new_mana: float, max_mana: float) -> void:
+	mana_bar.max_value = max_mana
+	mana_bar.value = new_mana
+
+func _on_stamina_changed(new_stamina: float, max_stamina: float) -> void:
+	stamina_bar.max_value = max_stamina
+	stamina_bar.value = new_stamina
 	

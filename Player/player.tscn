@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://btf8e0wnlbd82"]
+[gd_scene load_steps=14 format=3 uid="uid://btf8e0wnlbd82"]
 
 [ext_resource type="Script" uid="uid://b1wxwtmfhlg00" path="res://Player/player.gd" id="1_iyeam"]
 [ext_resource type="Script" uid="uid://q3o4p2j5hpsk" path="res://Player/handler_playerInput.gd" id="2_4ntmi"]
@@ -26,36 +26,12 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath("Sprite Inner:modulate")
 properties/4/spawn = true
 properties/4/replication_mode = 1
-properties/5/path = NodePath("Healthbar:tint_progress")
+properties/5/path = NodePath(".:name_display")
 properties/5/spawn = true
 properties/5/replication_mode = 1
-properties/6/path = NodePath("Healthbar:tint_under")
-properties/6/spawn = true
-properties/6/replication_mode = 1
-properties/7/path = NodePath(".:name_display")
-properties/7/spawn = true
-properties/7/replication_mode = 1
-properties/8/path = NodePath("Healthbar:position")
-properties/8/spawn = true
-properties/8/replication_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m6ryd"]
 radius = 30.0
-
-[sub_resource type="Gradient" id="Gradient_p5o4e"]
-interpolation_mode = 1
-offsets = PackedFloat32Array(0.552995)
-colors = PackedColorArray(1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_gu6f8"]
-gradient = SubResource("Gradient_p5o4e")
-
-[sub_resource type="Gradient" id="Gradient_00tjw"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_x3vf3"]
-gradient = SubResource("Gradient_00tjw")
 
 [sub_resource type="Gradient" id="Gradient_x3vf3"]
 offsets = PackedFloat32Array(0.464968, 0.654777, 0.673102, 0.689833, 0.693694, 0.70399, 0.71686)
@@ -68,7 +44,7 @@ height = 128
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("Sprite", "Hands", "Attack_Origin", "Input_Handler", "Attack_Handler", "healthbar") groups=["Entity", "Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("Sprite", "Hands", "Attack_Origin", "Input_Handler", "Attack_Handler") groups=["Entity", "Player"]]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_iyeam")
@@ -77,7 +53,6 @@ Hands = NodePath("Hands")
 Attack_Origin = NodePath("Attack Origin")
 Input_Handler = NodePath("Input Handler")
 Attack_Handler = NodePath("Attack Handler")
-healthbar = NodePath("Healthbar")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_emixd")
@@ -128,19 +103,6 @@ position = Vector2(0, 60)
 [node name="Body" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("CircleShape2D_m6ryd")
-
-[node name="Healthbar" type="TextureProgressBar" parent="."]
-top_level = true
-offset_left = -69.0
-offset_top = -101.0
-offset_right = 71.0
-offset_bottom = -85.0
-max_value = 1000.0
-value = 500.0
-nine_patch_stretch = true
-texture_under = SubResource("GradientTexture1D_gu6f8")
-texture_progress = SubResource("GradientTexture1D_x3vf3")
-tint_progress = Color(0, 1, 1, 1)
 
 [node name="Label" type="Label" parent="."]
 top_level = true

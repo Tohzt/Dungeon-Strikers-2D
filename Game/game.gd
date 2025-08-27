@@ -33,8 +33,7 @@ func _ready() -> void:
 	
 	Player.reset()
 	Global.restore_player_weapons(Player)
-	HUD.set_hud()
-	
+ 	
 	for room: RoomClass in $Rooms.get_children():
 		if !Global.rooms.has(room):
 			Global.rooms.append(room)

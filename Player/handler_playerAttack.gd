@@ -59,16 +59,13 @@ func _handle_attacks() -> void:
 		right_release = false
 
 func _trigger_attack(hand_side: String, input_type: String) -> void:
-	
-	
-	# Get the target hand
 	var target_hand: PlayerHandClass
 	if hand_side == "left":
 		target_hand = Master.Hands.Left
 	else:
 		target_hand = Master.Hands.Right
 	
-	# Check for weapon throwing first (hold E + click)
+	##TODO: Input should be handled by _input_handler.
 	if Input.is_action_pressed("interact") and input_type == "click":
 		if target_hand.held_weapon:
 			target_hand.held_weapon.throw_weapon()

@@ -1,10 +1,14 @@
 ##TODO: Set up an isActive to overwrite multiplayer status
 class_name PlayerClass extends CharacterBody2D
 
+# ===== EXPORT VARIABLES =====
+@export_category("Core Components")
 @export var Properties: PlayerResource
 @export var Sprite: Sprite2D
 @export var Hands: Node2D
 @export var Attack_Origin: Marker2D
+
+@export_category("Spawn & State")
 @export var spawn_pos: Vector2
 @export var is_active: bool = false
 
@@ -12,45 +16,72 @@ class_name PlayerClass extends CharacterBody2D
 @export var Input_Handler: PlayerInputHandler
 @export var Attack_Handler: PlayerAttackHandler
 
-@export_category("Health")
-@export var healthbar: TextureProgressBar
+# ===== CONSTANTS =====
+const SPEED: float = 300.0
 
+# ===== HEALTH SYSTEM =====
+# Base stats
 var strength: int = 0
 var intelligence: int = 0
 var endurance: int = 0
 
+# Health maximums
 var hp_max: float = 1000.0
-var hp: float = hp_max
-
 var mana_max: float = 100.0
-var mana: float = mana_max
+var stamina_max: float = 5.0
+
+# Cost and regeneration settings
 var mana_cost: float = 0.0
 var mana_cost_default: float = 0.0
-
-var stamina_max: float = 5.0
-var stamina: float = 5.0
 var stamina_regen_rate: float = 2.0
 var stamina_cost: float = 1.0
 var stamina_cost_default: float = 1.0
 
-var name_display: String
+# Internal components
+var _stamina_regen_timer: Timer
+var _health_values: Dictionary = {}
+
+# Health properties with automatic signal emission
+var hp: float:
+	get: return _health_values.get("hp", hp_max)
+	set(value): 
+		_health_values["hp"] = value
+		hp_changed.emit(value, hp_max)
+
+var mana: float:
+	get: return _health_values.get("mana", mana_max)
+	set(value): 
+		_health_values["mana"] = value
+		mana_changed.emit(value, mana_max)
+
+var stamina: float:
+	get: return _health_values.get("stamina", stamina_max)
+	set(value): 
+		_health_values["stamina"] = value
+		stamina_changed.emit(value, stamina_max)
+		# Restart stamina regeneration if we're below max
+		if value < stamina_max and _stamina_regen_timer and _stamina_regen_timer.is_stopped():
+			_stamina_regen_timer.start()
+
+# ===== COMBAT & MOVEMENT =====
 var atk_pwr: float = 400.0  
 var def_base: float = 100.0
 var tar_pos: Vector2
 var target: Node2D = null
-const SPEED: float = 300.0  
 
+# ===== STATE VARIABLES =====
+var name_display: String
 var spawn_rot: float = 0.0
-
 var is_in_iframes: bool = false
 var iframes_duration: float = 0.5
-
 var has_control: bool = false
 
-##TODO: All Multiplayer/Offline authentication should alter this. 
-func _is_active(TorF: bool) -> void:
-	is_active = TorF
+# ===== SIGNALS =====
+signal hp_changed(new_hp: float, max_hp: float)
+signal mana_changed(new_mana: float, max_mana: float)
+signal stamina_changed(new_stamina: float, max_stamina: float)
 
+# ===== GODOT ENGINE FUNCTIONS =====
 func _enter_tree() -> void:
 	if multiplayer.has_multiplayer_peer():
 		var peer_id := int(str(name))
@@ -60,13 +91,13 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	z_index = Global.Layers.PLAYER
-	healthbar.max_value = hp_max
-	healthbar.value = hp_max
-	hide()
+	hp = hp_max
+	mana = mana_max
+	stamina = stamina_max
+	_setup_stamina_regen_timer()
+	#hide()
 
 func _process(delta: float) -> void:
-	_update_hp(delta)
-	_update_stamina(delta)  # Add stamina update
 	##HACK: Waiting for update to multiplayer/offline
 	#if !Server.OFFLINE and !is_multiplayer_authority(): return
 	
@@ -115,18 +146,31 @@ func _physics_process(_delta: float) -> void:
 	if is_active and has_control:
 		velocity = Input_Handler.velocity
 		move_and_slide()
- 
 
-func _update_hp(delta: float) -> void:
-	healthbar.global_position = global_position - Vector2(70,80)
-	healthbar.value = lerp(healthbar.value, float(hp/hp_max)*hp_max, delta*10)
+# ===== HEALTH SYSTEM FUNCTIONS =====
+func _setup_stamina_regen_timer() -> void:
+	_stamina_regen_timer = Timer.new()
+	_stamina_regen_timer.wait_time = 1.0 / stamina_regen_rate  # Convert rate to interval
+	_stamina_regen_timer.timeout.connect(_on_stamina_regen_tick)
+	add_child(_stamina_regen_timer)
+	_stamina_regen_timer.start()
 
-func _update_stamina(delta: float) -> void:
-	# Regenerate stamina over time
+func _on_stamina_regen_tick() -> void:
 	if stamina < stamina_max:
-		stamina = min(stamina + stamina_regen_rate * delta, stamina_max)
+		stamina = min(stamina + 1.0, stamina_max)
+		# Stop timer if we're at max stamina
+		if stamina >= stamina_max:
+			_stamina_regen_timer.stop()
+	# Restart timer if we're below max stamina
+	elif stamina < stamina_max and _stamina_regen_timer.is_stopped():
+		_stamina_regen_timer.start()
 
+# ===== MULTIPLAYER & NETWORKING =====
+##TODO: All Multiplayer/Offline authentication should alter this. 
+func _is_active(TorF: bool) -> void:
+	is_active = TorF
 
+# ===== COMBAT FUNCTIONS =====
 @rpc("any_peer", "call_local")
 func attack(_atk_dir: float, atk_side: String) -> void:
 	var hand: int = 0 if atk_side == "left" else 1
@@ -141,17 +185,14 @@ func attack(_atk_dir: float, atk_side: String) -> void:
 	var entities_node: Node2D = get_tree().get_first_node_in_group("Entities")
 	if !entities_node: return
 
+# ===== PLAYER STATE MANAGEMENT =====
 @rpc("any_peer", "call_remote", "reliable")
 func set_pos_and_sprite(pos: Vector2, rot: float, color: Color) -> void:
 	if Server.OFFLINE or multiplayer.get_unique_id() == int(name):
 		get_parent().get_parent().HUD.set_hud(color, hp_max)
-		healthbar.hide()
 		$Label.hide()
 
-	healthbar.tint_progress = color
-	healthbar.tint_under = color.darkened(0.5)
-	
-	
+	# Color updates are now handled by the health bar component
 	
 	spawn_pos = pos
 	rotation = rot
@@ -181,6 +222,11 @@ func reset(active_status: bool = true) -> void:
 	stamina_max = float(endurance)
 	stamina = stamina_max
 	
+	# Restart stamina regeneration timer
+	if _stamina_regen_timer:
+		_stamina_regen_timer.stop()
+		_stamina_regen_timer.start()
+	
 	global_position = spawn_pos
 
 @rpc("any_peer", "call_local")
@@ -206,6 +252,7 @@ func _end_iframes() -> void:
 
 
 
+# ===== UTILITY FUNCTIONS =====
 func get_left_weapon() -> WeaponClass:
 	return Hands.Left.held_weapon
 
