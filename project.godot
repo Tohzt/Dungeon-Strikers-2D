@@ -38,11 +38,15 @@ window/stretch/mode="viewport"
 folder_colors={
 "res://Assets/": "teal",
 "res://Attacks/": "red",
-"res://Boss/": "pink",
+"res://Entities/": "purple",
+"res://Entities/Ball/": "orange",
+"res://Entities/Boss/": "red",
+"res://Entities/Dummy/": "orange",
+"res://Entities/Player/": "green",
+"res://Entities/Resources/": "gray",
 "res://Game/": "green",
 "res://Items/": "yellow",
 "res://Main Menu/": "gray",
-"res://Player/": "purple",
 "res://_DEP/": "gray",
 "res://_Multiplayer/": "orange"
 }

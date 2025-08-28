@@ -156,7 +156,9 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		# Set sprite position after the weapon is ready
 		#left_weapon.call_deferred("_set_held_sprite_position")
 		left_weapon.modulate = player.Sprite.modulate
-		
+		left_weapon.Sprite.position = left_weapon.Properties.weapon_offset
+		left_weapon.Collision.position = left_weapon.Properties.weapon_offset
+ 		
 	if player_held_weapons["right_hand"]:
 		var right_weapon: WeaponClass = WEAPON.instantiate()
 		right_weapon.Properties = player_held_weapons["right_hand"]
@@ -170,7 +172,9 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		# Set sprite position after the weapon is ready
 		#right_weapon.call_deferred("_set_held_sprite_position")
 		right_weapon.modulate = player.Sprite.modulate
-
+		right_weapon.Sprite.position = right_weapon.Properties.weapon_offset
+		right_weapon.Collision.position = right_weapon.Properties.weapon_offset
+ 
 func display_damage(damage: float, position: Vector2) -> void:
 	# Spawn a damage display label at the given position
 	var damage_label := DISPLAY_DAMAGE.instantiate()
