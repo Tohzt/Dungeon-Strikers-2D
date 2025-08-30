@@ -37,10 +37,10 @@ func _on_quick_play_pressed() -> void:
 	Global.resources_to_load.append(new_properties)
 	Server.Offline()
 
-func _ready() -> void:
-	Player.spawn_pos = Player.global_position
-	Player.set_color()
-	update_points(0)
+#func _ready() -> void:
+	#Player.EB.spawn_pos = Player.global_position
+	#Player.EB.set_color()
+	#update_points(0)
 
 func _process(_delta: float) -> void:
 	var bodies := Room.area.get_overlapping_bodies()

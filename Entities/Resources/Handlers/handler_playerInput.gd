@@ -72,11 +72,11 @@ func _physics_process(delta: float) -> void:
 	move_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if move_dir:
 		var prev_dir: Vector2 = velocity.normalized()
-		velocity.x = lerp(prev_dir.x, move_dir.x, delta*10) * Master.SPEED
-		velocity.y = lerp(prev_dir.y, move_dir.y, delta*10) * Master.SPEED
+		velocity.x = lerp(prev_dir.x, move_dir.x, delta*10) * Master.EB.SPEED
+		velocity.y = lerp(prev_dir.y, move_dir.y, delta*10) * Master.EB.SPEED
 	else:
-		velocity.x = move_toward(velocity.x, 0, Master.SPEED)
-		velocity.y = move_toward(velocity.y, 0, Master.SPEED)
+		velocity.x = move_toward(velocity.x, 0, Master.EB.SPEED)
+		velocity.y = move_toward(velocity.y, 0, Master.EB.SPEED)
 	
 	if dodge_pressed: 
 		look_dir = Vector2.ZERO

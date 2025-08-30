@@ -140,14 +140,14 @@ func _trigger_attack(hand_side: String, input_type: String) -> void:
 			stamina_cost = target_hand.held_weapon.Properties.weapon_stamina_cost
 			mana_cost    = target_hand.held_weapon.Properties.weapon_mana_cost
 		else:
-			stamina_cost = Master.stamina_cost_default
-			mana_cost    = Master.mana_cost_default
+			stamina_cost = Master.EB.stamina_cost_default
+			mana_cost    = Master.EB.mana_cost_default
 		
-		if Master.stamina < stamina_cost or Master.mana < mana_cost: 
+		if Master.EB.stamina < stamina_cost or Master.EB.mana < mana_cost: 
 			return
 	
-	Master.stamina -= stamina_cost
-	Master.mana -= mana_cost
+	Master.EB.stamina -= stamina_cost
+	Master.EB.mana -= mana_cost
 	
 	# Handle weapon attacks
 	if target_hand.held_weapon:
@@ -187,7 +187,7 @@ func _trigger_interact() -> void:
 					attempt_pickup(weapon)
 					return
 
-func attempt_pickup(weapon) -> void:
+func attempt_pickup(weapon: WeaponClass) -> void:
 	var target_hand: PlayerHandClass
 	match weapon.Properties.weapon_hand:
 		weapon.Properties.Handedness.LEFT:

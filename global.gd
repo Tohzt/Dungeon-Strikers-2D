@@ -4,9 +4,9 @@ const GAME: String = "res://Game/game.tscn"
 const MAIN: String = "res://Main Menu/Main Menu.tscn"
 const ROOM: String = "res://Game/Room/room.tscn"
 
-const PLAYER: PackedScene = preload("res://Player/player.tscn")
-const BALL: PackedScene = preload("res://Ball/ball.tscn")
-const BOSS: PackedScene = preload("res://Boss/boss.tscn")
+const PLAYER: PackedScene = preload("res://Entities/Player/player.tscn")
+const BALL: PackedScene = preload("res://Entities/Ball/ball.tscn")
+const BOSS: PackedScene = preload("res://Entities/Boss/boss.tscn")
 const WEAPON: PackedScene = preload("res://Items/Weapons/weapon.tscn")
 const DISPLAY_DAMAGE: PackedScene = preload("res://HUD/display_damage.tscn")
 var player_display_name: String

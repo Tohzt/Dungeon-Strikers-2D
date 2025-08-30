@@ -13,6 +13,7 @@ func spawn_player(peer_id: int) -> void:
 			
 			if  multiplayer.has_multiplayer_peer() \
 			and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
+				##TODO: There has to be a way to handle this in the player ready
 				player_node.set_pos_and_sprite.rpc_id(peer_id, spawn_position, spawn_rotation, player_color)
 				get_tree().current_scene.set_loading.rpc_id(peer_id, false)
 

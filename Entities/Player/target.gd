@@ -6,7 +6,9 @@ func _ready() -> void:
 	hide()
 
 func _process(_delta: float) -> void:
-	modulate = Master.Sprite.modulate
+	##HACK: This just feels weird... 
+	if !Master.EB.Sprite: return
+	modulate = Master.EB.Sprite.modulate
 	if Master.target:
 		global_position = Master.target.global_position + offset
 		if !visible: show()
