@@ -56,7 +56,9 @@ Attack_Handler = NodePath("Attack Handler")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_emixd")
 
-[node name="EntityBehavior" parent="." instance=ExtResource("2_x1y6q")]
+[node name="EntityBehavior" parent="." node_paths=PackedStringArray("Sprite", "Attack_Origin") instance=ExtResource("2_x1y6q")]
+Sprite = NodePath("../Sprite Inner")
+Attack_Origin = NodePath("../Attack Origin")
 
 [node name="Input Handler" type="Node" parent="."]
 script = ExtResource("2_4ntmi")

@@ -141,7 +141,7 @@ func apply_knockback(direction: Vector2, force: float) -> void:
 
 func set_color(color: Color = Color.WHITE) -> void:
 	var new_color: Color = color
-	Sprite.modulate = new_color
+	Master.EB.Sprite.modulate = new_color
 	##TODO: Maybe the Player should do the hands shit?
 	if !Master.Hands: return
 	var hands: Array = Master.Hands.get_children()

@@ -9,7 +9,7 @@ func _process(_delta: float) -> void:
 	##HACK: This just feels weird... 
 	if !Master.EB.Sprite: return
 	modulate = Master.EB.Sprite.modulate
-	if Master.target:
+	if Master.EB.target:
 		global_position = Master.target.global_position + offset
 		if !visible: show()
 	else:

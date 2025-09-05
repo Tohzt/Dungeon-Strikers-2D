@@ -67,7 +67,7 @@ func update_points(amt: int) -> void:
 	var _green := 1 - _str - _int
 	var _blue  := 1 - _str - _end
 	Player_Color = Color(_red, _green, _blue)
-	Player.set_color(Player_Color)
+	Player.EB.set_color(Player_Color)
 	
 	STAT_POINTS += amt
 	var display: Label = $"Menu UI/Multiplayer/MarginContainer/VBoxContainer/Character Select/VBoxContainer/Points Remaining"
