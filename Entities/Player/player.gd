@@ -4,7 +4,7 @@ class_name PlayerClass extends CharacterBody2D
 @export var Hands: Node2D
 @export var Properties: PlayerResource
 @export var Input_Handler: PlayerInputHandler
-@export var Attack_Handler: PlayerAttackHandler
+@export var Action_Handler: PlayerActionHandler
 
 @onready var EB: EntityBehaviorClass = $EntityBehavior
 
@@ -26,11 +26,20 @@ func _process(delta: float) -> void:
 	_handle_target()
 	_handle_rotation(delta)
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	##HACK: Waiting for update to multiplayer/offline
 	#if !Server.OFFLINE and !is_multiplayer_authority(): return
+	
 	if EB.is_active and EB.has_control:
-		velocity = Input_Handler.velocity
+		var move_dir: Vector2 = Input_Handler.move_dir
+		if move_dir:
+			var prev_dir: Vector2 = velocity.normalized()
+			velocity.x = lerp(prev_dir.x, move_dir.x, delta*10) * EB.SPEED
+			velocity.y = lerp(prev_dir.y, move_dir.y, delta*10) * EB.SPEED
+		else:
+			velocity.x = move_toward(velocity.x, 0, EB.SPEED)
+			velocity.y = move_toward(velocity.y, 0, EB.SPEED)
+		
 		move_and_slide()
 
 
@@ -44,8 +53,8 @@ func _handle_target() -> void:
 			EB.target = nearest["inst"]
 	
 	# Handle target cycling
-	if Input_Handler.toggle_target:
-		Input_Handler.toggle_target = false
+	if Input_Handler.target_toggle:
+		Input_Handler.target_toggle = false
 		
 		if EB.target:
 			EB.target = null

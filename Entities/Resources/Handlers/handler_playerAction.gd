@@ -1,4 +1,4 @@
-class_name PlayerAttackHandler extends Node
+class_name PlayerActionHandler extends Node
 @onready var Master: PlayerClass = get_parent()
 @export var Input_Handler: PlayerInputHandler
 
@@ -14,6 +14,7 @@ var left_release:  bool = false
 var right_release: bool = false
 var interact:      bool = false
 
+
 # Hold detection variables
 ##TODO: Get ric of this silly cursor duration.
 ## Refer to weapon props
@@ -26,19 +27,21 @@ var right_is_holding: bool = false
 
 func _process(delta: float) -> void:
 	_handle_cooldown(delta)
-	_handle_attack_input(delta)
+	_update_action_input(delta)
 	_handle_attacks()
+	if interact:
+		_trigger_interact()
 
 func _handle_cooldown(delta: float) -> void:
 	if cooldown > 0.0:
 		cooldown -= delta
 
-func _handle_attack_input(_delta: float) -> void:
+func _update_action_input(_delta: float) -> void:
 	# Handle left mouse button hold detection
-	if Input_Handler.attack_left and !left_is_holding:
+	if Input_Handler.action_left and !left_is_holding:
 		left_hold_start_time = Time.get_ticks_msec() / 1000.0
 		left_is_holding = true
-	elif !Input_Handler.attack_left and left_is_holding:
+	elif !Input_Handler.action_left and left_is_holding:
 		# Button released - determine if it was a click or hold
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - left_hold_start_time
 		if hold_duration < HOLD_THRESHOLD:
@@ -50,10 +53,10 @@ func _handle_attack_input(_delta: float) -> void:
 		left_is_holding = false
 	
 	# Handle right mouse button hold detection
-	if Input_Handler.attack_right and !right_is_holding:
+	if Input_Handler.action_right and !right_is_holding:
 		right_hold_start_time = Time.get_ticks_msec() / 1000.0
 		right_is_holding = true
-	elif !Input_Handler.attack_right and right_is_holding:
+	elif !Input_Handler.action_right and right_is_holding:
 		# Button released - determine if it was a click or hold
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
 		if hold_duration < HOLD_THRESHOLD:
@@ -74,6 +77,8 @@ func _handle_attack_input(_delta: float) -> void:
 		var hold_duration := (Time.get_ticks_msec() / 1000.0) - right_hold_start_time
 		if hold_duration >= HOLD_THRESHOLD and !right_hold:
 			right_hold = true
+	
+	interact = Input_Handler.interact
 
 
 func _handle_attacks() -> void:
@@ -118,6 +123,8 @@ func _handle_attacks() -> void:
 		hand_side = "right"
 		input_type = "release"
 		_trigger_attack(hand_side, input_type)
+	
+	
 
 
 func _trigger_attack(hand_side: String, input_type: String) -> void:
@@ -128,7 +135,7 @@ func _trigger_attack(hand_side: String, input_type: String) -> void:
 		target_hand = Master.Hands.Right
 	
 	##TODO: Input should be handled by _input_handler.
-	if Input.is_action_pressed("interact") and input_type == "click":
+	if interact and input_type == "click":
 		if target_hand.held_weapon:
 			target_hand.held_weapon.throw_weapon()
 			return
@@ -163,10 +170,6 @@ func _trigger_basic_attack(hand: PlayerHandClass, input_type: String) -> void:
 		# This allows weapon controllers to manage the hand stated
 		if !hand.held_weapon:
 			hand.is_attacking = true 
-	
-	
-	# Handle Interact
-	interact = Input_Handler.interact
 
 func _trigger_interact() -> void:
 	var try_left := true
@@ -212,7 +215,7 @@ func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
 	weapon.wielder = Master
 	weapon.is_thrown = false
 
-	weapon.modulate = Master.Sprite.modulate
+	weapon.modulate = Master.EB.Sprite.modulate
 	weapon.Sprite.position = weapon.Properties.weapon_offset
 	weapon.Collision.position = weapon.Properties.weapon_offset
 	weapon.global_position = target_hand.hand.global_position

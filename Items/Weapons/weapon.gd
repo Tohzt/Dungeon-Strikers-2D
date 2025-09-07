@@ -54,7 +54,7 @@ func _set_props() -> void:
 		print_debug("DEBUG: Collision shape is not a CapsuleShape2D")
 	
 	if wielder:
-		modulate = wielder.Sprite.modulate
+		modulate = wielder.EB.Sprite.modulate
 		_update_collisions("in-hand")
 		
 		if Controller.has_method("on_equip"):
@@ -201,8 +201,8 @@ func handle_input(input_type: String, duration: float = 0.0) -> void:
 
 func _calculate_throw_direction(player: Node2D) -> Vector2:
 	# Prioritize target direction when target locking is active
-	if !player.tar_pos.is_zero_approx():
-		return player.tar_pos.normalized()
+	if !player.EB.tar_pos.is_zero_approx():
+		return player.EB.tar_pos.normalized()
 	elif !player.Input_Handler.look_dir.is_zero_approx():
 		return player.Input_Handler.look_dir
 	else:

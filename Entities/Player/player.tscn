@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b1wxwtmfhlg00" path="res://Entities/Player/player.gd" id="1_iyeam"]
 [ext_resource type="Script" uid="uid://q3o4p2j5hpsk" path="res://Entities/Resources/Handlers/handler_playerInput.gd" id="2_4ntmi"]
 [ext_resource type="PackedScene" uid="uid://4d8varbj5cx5" path="res://Entities/Resources/Entity_Behavior.tscn" id="2_x1y6q"]
-[ext_resource type="Script" uid="uid://fhp5dwkco2h" path="res://Entities/Resources/Handlers/handler_playerAttack.gd" id="3_btcbx"]
+[ext_resource type="Script" uid="uid://fhp5dwkco2h" path="res://Entities/Resources/Handlers/handler_playerAction.gd" id="3_btcbx"]
 [ext_resource type="Texture2D" uid="uid://bt3cn2bx00oq1" path="res://Entities/Player/Assets/Skribble Character_Inner.png" id="4_od3ui"]
 [ext_resource type="Script" uid="uid://dc1vqfeqpwv8e" path="res://Entities/Player/Hand/hands.gd" id="5_fhl08"]
 [ext_resource type="PackedScene" uid="uid://bjesokgs5hi8v" path="res://Entities/Player/Hand/hand.tscn" id="5_k53q1"]
@@ -45,13 +45,13 @@ height = 128
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("Hands", "Input_Handler", "Attack_Handler") groups=["Entity", "Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("Hands", "Input_Handler", "Action_Handler") groups=["Entity", "Player"]]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_iyeam")
 Hands = NodePath("Hands")
 Input_Handler = NodePath("Input Handler")
-Attack_Handler = NodePath("Attack Handler")
+Action_Handler = NodePath("Action Handler")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_emixd")
@@ -63,7 +63,7 @@ Attack_Origin = NodePath("../Attack Origin")
 [node name="Input Handler" type="Node" parent="."]
 script = ExtResource("2_4ntmi")
 
-[node name="Attack Handler" type="Node" parent="." node_paths=PackedStringArray("Input_Handler")]
+[node name="Action Handler" type="Node" parent="." node_paths=PackedStringArray("Input_Handler")]
 script = ExtResource("3_btcbx")
 Input_Handler = NodePath("../Input Handler")
 
