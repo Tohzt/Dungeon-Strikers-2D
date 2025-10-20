@@ -14,14 +14,14 @@ func _process(_delta: float) -> void:
 		_connect_signals()
 
 func _connect_signals() -> void:
-	game.Player.hp_changed.connect(_on_hp_changed)
-	game.Player.mana_changed.connect(_on_mana_changed)
-	game.Player.stamina_changed.connect(_on_stamina_changed)
+	game.Player.EB.hp_changed.connect(_on_hp_changed)
+	game.Player.EB.mana_changed.connect(_on_mana_changed)
+	game.Player.EB.stamina_changed.connect(_on_stamina_changed)
 	
 	# Get initial values immediately after connecting
-	_on_hp_changed(game.Player.hp, game.Player.hp_max)
-	_on_mana_changed(game.Player.mana, game.Player.mana_max)
-	_on_stamina_changed(game.Player.stamina, game.Player.stamina_max)
+	_on_hp_changed(game.Player.EB.hp, game.Player.EB.hp_max)
+	_on_mana_changed(game.Player.EB.mana, game.Player.EB.mana_max)
+	_on_stamina_changed(game.Player.EB.stamina, game.Player.EB.stamina_max)
 
 func _on_hp_changed(new_hp: float, max_hp: float) -> void:
 	health_bar.max_value = max_hp

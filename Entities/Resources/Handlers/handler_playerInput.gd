@@ -55,12 +55,20 @@ func _input(event: InputEvent) -> void:
 		mouse_movement_timer = MOUSE_MOVEMENT_COOLDOWN
 		look_dir = (last_mouse_pos - Master.global_position).normalized()
 	
-	elif event is InputEventMouseButton:
+	if event.is_action("attack_left"):
 		action_left = event.is_action_pressed("attack_left")
+	
+	if event.is_action("attack_right"):
 		action_right = event.is_action_pressed("attack_right")
-
-	else:
+	
+	if event.is_action("dodge"):
 		dodge = event.is_action_pressed("dodge")
-		interact = event.is_action_pressed("interact")
+	
+	if event.is_action("interact"):
+		interact =  event.is_action_pressed("interact")
+	
+	if event.is_action("target"):
 		target_toggle = event.is_action_pressed("target")
+	
+	if event.is_action("target_scroll"):
 		target_scroll = event.is_action_pressed("target_scroll")

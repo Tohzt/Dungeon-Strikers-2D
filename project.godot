@@ -55,6 +55,7 @@ folder_colors={
 
 Entity="Anything that can be interacted with in some way"
 Particle=""
+Interact=""
 
 [input]
 

@@ -162,6 +162,7 @@ rotation = 3.14159
 polygon = PackedVector2Array(12.0001, -11.9999, 492, -11.9987, 492, 8.00128, 32, 8.00006, 31.9995, 228, 11.9995, 228)
 
 [node name="Area2D" type="Area2D" parent="."]
+visible = false
 position = Vector2(-570, -330)
 collision_mask = 2
 

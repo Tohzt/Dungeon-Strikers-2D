@@ -31,7 +31,6 @@ func _ready() -> void:
 		
 		Player = _player
 	
-	Player.reset()
 	Global.restore_player_weapons(Player)
  	
 	for room: RoomClass in $Rooms.get_children():

@@ -32,8 +32,6 @@ var mana_cost_default: float = 0.0
 var stamina_regen_rate: float = 2.0
 var stamina_cost: float = 1.0
 var stamina_cost_default: float = 1.0
-
-# Internal
 var stamina_regen_timer: Timer
 var stat_values: Dictionary = {}
 
@@ -62,7 +60,6 @@ var stamina: float:
 # ===== COMBAT & MOVEMENT =====
 var atk_pwr: float = 400.0  
 var def_base: float = 100.0
-var tar_pos: Vector2
 var target: Node2D = null
 
 # ===== STATE VARIABLES =====
@@ -87,10 +84,6 @@ func _is_active(TorF: bool) -> void:
 func _ready() -> void:
 	_setup_stat_properties()
 	_setup_stamina_regen_timer()
-
-
-func _process(_delta: float) -> void:
-	pass
 
 
 func _setup_stat_properties() -> void:
@@ -175,3 +168,7 @@ func end_iframes() -> void:
 	is_in_iframes = false
 	##HACK:
 	Master.modulate.a = 1.0
+
+
+func set_target() -> void:
+	print("setting target from EB")

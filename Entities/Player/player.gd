@@ -48,34 +48,26 @@ func _handle_target() -> void:
 		Input_Handler.target_scroll = false
 		# Get nearest entity, excluding the current target if it's still valid
 		var exclude_target := EB.target if EB.target and is_instance_valid(EB.target) else null
-		var nearest := Global.get_nearest(global_position, "Entity", exclude_target)
+		var nearest := Global.get_nearest(global_position, "Entity", 99, exclude_target)
 		if nearest.has("inst"):
 			EB.target = nearest["inst"]
 	
 	# Handle target cycling
-	if Input_Handler.target_toggle:
-		Input_Handler.target_toggle = false
-		
+	if Input_Handler.target_toggle: 
 		if EB.target:
 			EB.target = null
 			return
 #		
 		# Get nearest entity, excluding the current target if it's still valid
 		var exclude_target := EB.target if EB.target and is_instance_valid(EB.target) else null
-		var nearest := Global.get_nearest(global_position, "Entity", exclude_target)
+		var nearest := Global.get_nearest(global_position, "Entity", 99, exclude_target)
 		if nearest.has("inst"):
 			EB.target = nearest["inst"]
-	
-	# Update tar_pos based on target state
-	if EB.target and is_instance_valid(EB.target):
-		EB.tar_pos = EB.target.global_position - global_position
-	else:
-		EB.tar_pos = Vector2.ZERO
 
 
 func _handle_rotation(delta: float) -> void:
-	if EB.tar_pos and !EB.tar_pos.is_zero_approx():
-		rotation = lerp_angle(rotation, EB.tar_pos.angle() + PI/2, delta * Input_Handler.MOUSE_LOOK_STRENGTH)
+	if EB.target and !EB.target.position.is_zero_approx():
+		rotation = lerp_angle(rotation, EB.target.position.angle() + PI/2, delta * Input_Handler.MOUSE_LOOK_STRENGTH)
 	elif !Input_Handler.look_dir.is_zero_approx():
 		rotation = lerp_angle(rotation, Input_Handler.look_dir.angle() + PI/2, delta * Input_Handler.MOUSE_LOOK_STRENGTH)
 	elif !velocity.is_zero_approx():

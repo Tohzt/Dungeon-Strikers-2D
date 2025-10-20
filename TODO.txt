@@ -1,4 +1,4 @@
-- weapon cooldown before someone else can pick it up
++ weapon cooldown before someone else can pick it up
 	Weapon should keep wielders color when throw/dropped(?) for a few sec
 
 

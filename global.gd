@@ -11,6 +11,7 @@ const WEAPON: PackedScene = preload("res://Items/Weapons/weapon.tscn")
 const DISPLAY_DAMAGE: PackedScene = preload("res://HUD/display_damage.tscn")
 var player_display_name: String
 
+var resources_to_load: Array[Resource]
 var rooms: Array[RoomClass]
 var current_room: int = -1
 
@@ -46,7 +47,7 @@ enum Layers {
 	HUD = 32
 }
 
-var resources_to_load: Array[Resource]
+
 
 func is_current_room(room: RoomClass, make_current: bool = false) -> bool:
 	if current_room == rooms.find(room):
@@ -60,65 +61,33 @@ func set_current_room(room: RoomClass) -> void:
 	if game:
 		game.camera_target = room.global_position
 
-#func get_nearest(from: Vector2, type: String, ignore: Node2D = null) -> Dictionary:
-	#var entities: Array[Node] = get_tree().get_nodes_in_group(type)
-	#var entity_dist := INF
-	#for entity: Node2D in entities:
-		#if entity != ignore:
-			#if !entity.global_position.is_equal_approx(from):
-				#entity_dist = min(entity_dist, from.distance_to(entity.global_position))
-				#var obj: Dictionary = {
-					#"inst": entity,
-					#"dist": entity_dist
-				#}
-				#return obj
-	#return {"found": false}
 
-## Version 1: Sort entire array (useful if you might want multiple closest entities)
-#func get_nearest(from: Vector2, type: String, ignore: Node2D = null) -> Dictionary:
-	#var entities: Array[Node] = get_tree().get_nodes_in_group(type)
-	#var valid_entities: Array[Dictionary] = []
-	#
-	## Build array of valid entities with distances
-	#for entity: Node2D in entities:
-		#if entity != ignore and !entity.global_position.is_equal_approx(from):
-			#var distance = from.distance_to(entity.global_position)
-			#valid_entities.append({
-				#"inst": entity,
-				#"dist": distance
-			#})
-	#
-	## Return empty result if no valid entities found
-	#if valid_entities.is_empty():
-		#return {"found": false}
-	#
-	## Sort by distance (closest first)
-	#valid_entities.sort_custom(func(a, b): return a.dist < b.dist)
-	#
-	## Return the closest entity
-	#return valid_entities[0]
-
-# Version 2: More efficient - find minimum without sorting
-func get_nearest(from: Vector2, type: String, ignore: Node2D = null) -> Dictionary:
+func get_nearest(from: Vector2, type: String, dist: float, ignore: Node2D = null, ignore_array: Array[Node2D] = []) -> Dictionary:
 	var entities: Array[Node] = get_tree().get_nodes_in_group(type)
 	var closest_entity: Node2D = null
 	var min_distance := INF
 	
 	# Find the closest entity in a single pass
 	for entity: Node2D in entities:
-		if entity != ignore and !entity.global_position.is_equal_approx(from):
-			var distance := from.distance_to(entity.global_position)
-			if distance < min_distance:
-				min_distance = distance
-				closest_entity = entity
+		# Skip if entity is in ignore list
+		if entity == ignore or entity in ignore_array:
+			continue
+		if entity.global_position.is_equal_approx(from):
+			continue
+			
+		var distance := from.distance_to(entity.global_position)
+		if distance < min_distance:
+			min_distance = distance
+			closest_entity = entity
 	
 	# Return result
-	if closest_entity == null:
+	if !closest_entity or min_distance > dist:
 		return {"found": false}
 	else:
 		return {
 			"inst": closest_entity,
-			"dist": min_distance
+			"dist": min_distance,
+			"found": true
 		}
 
 
@@ -151,13 +120,12 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		# Add to scene tree first, then reparent
 		var Entities := get_tree().get_first_node_in_group("Entities")
 		Entities.add_child(left_weapon)
-		left_weapon.call_deferred("reparent", player.Hands.Left.hand)
-		left_weapon.global_position = player.Hands.Left.hand.global_position
-		# Set sprite position after the weapon is ready
-		#left_weapon.call_deferred("_set_held_sprite_position")
-		left_weapon.modulate = player.Sprite.modulate
-		left_weapon.Sprite.position = left_weapon.Properties.weapon_offset
-		left_weapon.Collision.position = left_weapon.Properties.weapon_offset
+		left_weapon.call_deferred("reparent", player.Hands.Left)
+		# Zero out weapon position since parent will handle positioning
+		left_weapon.call_deferred("set", "position", Vector2.ZERO)
+		left_weapon.modulate = player.EB.Sprite.modulate
+		left_weapon.Sprite.position = left_weapon.Properties.weapon_sprite_offset
+		left_weapon.Collision.position = left_weapon.Properties.weapon_col_offset
  		
 	if player_held_weapons["right_hand"]:
 		var right_weapon: WeaponClass = WEAPON.instantiate()
@@ -167,13 +135,12 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		# Add to scene tree first, then reparent
 		var Entities := get_tree().get_first_node_in_group("Entities")
 		Entities.add_child(right_weapon)
-		right_weapon.call_deferred("reparent", player.Hands.Right.hand)
-		right_weapon.global_position = player.Hands.Right.hand.global_position
-		# Set sprite position after the weapon is ready
-		#right_weapon.call_deferred("_set_held_sprite_position")
-		right_weapon.modulate = player.Sprite.modulate
-		right_weapon.Sprite.position = right_weapon.Properties.weapon_offset
-		right_weapon.Collision.position = right_weapon.Properties.weapon_offset
+		right_weapon.call_deferred("reparent", player.Hands.Right)
+		# Zero out weapon position since parent will handle positioning
+		right_weapon.call_deferred("set", "position", Vector2.ZERO)
+		right_weapon.modulate = player.EB.Sprite.modulate
+		right_weapon.Sprite.position = right_weapon.Properties.weapon_sprite_offset
+		right_weapon.Collision.position = right_weapon.Properties.weapon_col_offset
  
 func display_damage(damage: float, position: Vector2) -> void:
 	# Spawn a damage display label at the given position

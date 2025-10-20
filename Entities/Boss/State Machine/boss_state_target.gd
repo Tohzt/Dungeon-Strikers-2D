@@ -7,7 +7,7 @@ var current_attack: AttackBaseClass
 func enter_state() -> void:
 	##TODO: Get nearest target.. or whatever should take the agro
 	## Get all in range and calculate agro deltas
-	Master.target = Global.get_nearest(Master.global_position, "Entity")["inst"]
+	Master.target = Global.get_nearest(Master.global_position, "Entity", INF)["inst"]
 	super.enter_state()
 
 func update(_delta: float) -> void:

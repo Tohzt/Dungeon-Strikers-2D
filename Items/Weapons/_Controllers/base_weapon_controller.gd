@@ -16,6 +16,7 @@ func _ready() -> void:
 func update(delta: float) -> void:
 	if !weapon: weapon = get_parent()
 	cooldown_duration = clamp(cooldown_duration-delta, 0.0, cooldown_limit_in_sec)
+	#weapon.position = weapon.Properties.weapon_offset
 
 
 func handle_click() -> void: pass
@@ -35,7 +36,11 @@ func is_either_handed() -> bool:
 
 func on_equip() -> void:
 	hand = get_hand()
-	if hand: arm = hand.arm
+	if hand: 
+		arm = hand.arm
+		weapon.position = Vector2.ZERO
+		#weapon.global_position = arm.hand.global_position
+	##HACK: I dont think this is correct
 	if is_either_handed() and hand.handedness == "right":
 		in_offhand = true
 

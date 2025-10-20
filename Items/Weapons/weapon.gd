@@ -49,7 +49,7 @@ func _set_props() -> void:
 		Collision.shape.radius = Properties.weapon_col_radius
 		Collision.shape.height = Properties.weapon_col_height
 		Collision.rotation = Properties.weapon_col_rotation
-		Collision.position = Properties.weapon_col_position
+		Collision.position = Properties.weapon_col_offset
 	else:
 		print_debug("DEBUG: Collision shape is not a CapsuleShape2D")
 	
@@ -65,11 +65,12 @@ func _set_props() -> void:
 
 func _handle_held_or_pickup(delta: float) -> void:
 	if wielder and !is_thrown:
+		# Weapons are now children of hands, so they automatically follow hand movement
+		# Only handle rotation if needed for weapon-specific behavior
 		var weapon_angle: float = Properties.weapon_angle
 		if Controller.is_either_handed() and Controller.in_offhand:
 			weapon_angle = 180 - Properties.weapon_angle
-		var dir := deg_to_rad(weapon_angle + mod_angle)
-		rotation = lerp_angle(rotation, get_parent().rotation + dir, delta*10)
+		rotation = deg_to_rad(weapon_angle + mod_angle)
 		
 		if Properties.weapon_controller:
 			Controller.set_script(Properties.weapon_controller)
@@ -201,8 +202,8 @@ func handle_input(input_type: String, duration: float = 0.0) -> void:
 
 func _calculate_throw_direction(player: Node2D) -> Vector2:
 	# Prioritize target direction when target locking is active
-	if !player.EB.tar_pos.is_zero_approx():
-		return player.EB.tar_pos.normalized()
+	if player.EB.target:
+		return player.EB.target.position.normalized()
 	elif !player.Input_Handler.look_dir.is_zero_approx():
 		return player.Input_Handler.look_dir
 	else:
@@ -212,7 +213,7 @@ func _calculate_throw_direction(player: Node2D) -> Vector2:
 func _update_collisions(state: String) -> void:
 	match state:
 		"on-ground":
-			#modulate = Color.WEB_GRAY
+			modulate = Color.WEB_GRAY
 			set_collision_layer_value(4, true)  # Item
 			set_collision_layer_value(5, false) # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -223,7 +224,7 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_ON_GROUND)
 			
 		"in-hand":
-			#modulate = Color.BLUE
+			modulate = Color.BLUE
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, false)  # Weapon
 			set_collision_mask_value(2, false)  # Player
@@ -234,7 +235,7 @@ func _update_collisions(state: String) -> void:
 			set_z_index(Global.Layers.WEAPON_IN_HAND)
 			
 		"projectile":
-			#modulate = Color.RED
+			modulate = Color.RED
 			set_collision_layer_value(4, false) # Item
 			set_collision_layer_value(5, true)  # Weapon
 			set_collision_mask_value(1, true)  # World
@@ -243,3 +244,15 @@ func _update_collisions(state: String) -> void:
 			set_collision_mask_value(4, false)  # Item
 			set_collision_mask_value(5, false)  # Weapon
 			set_z_index(Global.Layers.PROJECTILES)
+
+func _debug_after_reparent() -> void:
+	print("=== WEAPON AFTER REPARENT DEBUG ===")
+	print("Weapon name: ", name)
+	print("Weapon parent: ", get_parent())
+	print("Weapon parent name: ", get_parent().name if get_parent() else "No parent")
+	print("Weapon parent global_position: ", get_parent().global_position if get_parent() else "No parent")
+	print("Weapon position: ", position)
+	print("Weapon global_position: ", global_position)
+	print("Weapon Sprite.position: ", Sprite.position)
+	print("Weapon Collision.position: ", Collision.position)
+	print("=== END WEAPON AFTER REPARENT DEBUG ===")

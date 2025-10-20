@@ -17,7 +17,7 @@ enum Types { SWORD, SHIELD, STAFF, BOW, ARROW, INSTANCE}
 # Visual and Sprite Properties
 @export_group("Visual")
 @export var weapon_sprite: Array[CompressedTexture2D]
-@export var weapon_offset: Vector2
+@export var weapon_sprite_offset: Vector2
 @export_range(0.0, 360.0) var weapon_angle: float
 
 # Collision Properties
@@ -25,7 +25,7 @@ enum Types { SWORD, SHIELD, STAFF, BOW, ARROW, INSTANCE}
 @export var weapon_col_radius: float
 @export var weapon_col_height: float
 @export var weapon_col_rotation: float
-@export var weapon_col_position: Vector2
+@export var weapon_col_offset: Vector2
 
 # Combat Properties
 @export_group("Combat")

@@ -1,16 +1,11 @@
-extends StaticBody2D
+class_name ChestClass extends StaticBody2D
 
 @export var has_items: bool
 @export var items: Array[Resource]
 var nearby: Array[Node2D]
 
 
-func _process(_delta: float) -> void:
-	if nearby and Input.is_action_just_pressed("interact"):
-		_open_chest()
-
-
-func _open_chest() -> void:
+func open_chest() -> void:
 	if items:
 		for item in items:
 			var _item: WeaponClass = Global.WEAPON.instantiate()

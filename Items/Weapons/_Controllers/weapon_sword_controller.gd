@@ -20,11 +20,11 @@ func handle_click() -> void:
 	_slash_start()
 
 func handle_hold(_duration: float = 0.0) -> void:
-	super.handle_hold()
 	hold_position = true
 	if is_slashing or slash_duration > 0.0: return
 	if !is_charging:
 		_charge_start()
+	super.handle_hold()
 
 func handle_release(_duration: float = 0.0) -> void:
 	super.handle_release()

@@ -23,7 +23,7 @@ func update(delta: float) -> void:
 		exit_to("target_state")
 
 func _detect_enemy() -> void:
-	var entity: Dictionary = Global.get_nearest(Master.global_position, "Entity")
+	var entity: Dictionary = Global.get_nearest(Master.global_position, "Entity", INF)
 	if entity:
 		if entity["dist"] <= DETECT_RANGE:
 			Master.target = entity["inst"]

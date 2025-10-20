@@ -13,6 +13,7 @@ var right_hold:    bool = false
 var left_release:  bool = false
 var right_release: bool = false
 var interact:      bool = false
+var interact_pressed: bool = false
 
 
 # Hold detection variables
@@ -27,16 +28,17 @@ var right_is_holding: bool = false
 
 func _process(delta: float) -> void:
 	_handle_cooldown(delta)
-	_update_action_input(delta)
+	_handle_action_input()
 	_handle_attacks()
-	if interact:
+	if interact_pressed:
+		interact_pressed = false
 		_trigger_interact()
 
 func _handle_cooldown(delta: float) -> void:
 	if cooldown > 0.0:
 		cooldown -= delta
 
-func _update_action_input(_delta: float) -> void:
+func _handle_action_input() -> void:
 	# Handle left mouse button hold detection
 	if Input_Handler.action_left and !left_is_holding:
 		left_hold_start_time = Time.get_ticks_msec() / 1000.0
@@ -78,6 +80,8 @@ func _update_action_input(_delta: float) -> void:
 		if hold_duration >= HOLD_THRESHOLD and !right_hold:
 			right_hold = true
 	
+	if Input_Handler.interact and !interact:
+		interact_pressed = true
 	interact = Input_Handler.interact
 
 
@@ -172,23 +176,24 @@ func _trigger_basic_attack(hand: PlayerHandClass, input_type: String) -> void:
 			hand.is_attacking = true 
 
 func _trigger_interact() -> void:
-	var try_left := true
-	var try_right := true
-	var weapons: Array = get_tree().get_nodes_in_group("Weapon")
-	weapons = weapons.filter(func (e: WeaponClass) -> bool: return true if !e.wielder else false)
-	if !weapons: return
-	for weapon: WeaponClass in weapons:
-		printt(weapon.name, weapon.global_position.distance_to(Master.global_position))
-		if weapon.global_position.distance_to(Master.global_position) < 50.0:
-			if weapon.can_pickup:
-				if try_left and weapon.Controller.is_left_handed():
-					try_left = false
-					attempt_pickup(weapon)
-					return
-				if try_right and weapon.Controller.is_right_handed():
-					try_right = false
-					attempt_pickup(weapon)
-					return
+	# Get all held weapons to ignore them in the search
+	var held_weapons: Array[Node2D] = []
+	if Master.Hands.Left.held_weapon:
+		held_weapons.append(Master.Hands.Left.held_weapon)
+	if Master.Hands.Right.held_weapon:
+		held_weapons.append(Master.Hands.Right.held_weapon)
+	
+	# Find nearest interactable, excluding held weapons
+	var nearest_interactable: Dictionary = Global.get_nearest(Master.position, "Interact", 100.0, null, held_weapons)
+	if nearest_interactable["found"]:
+		var _nearest: Node2D = nearest_interactable["inst"]
+		var interactable_groups: Array[StringName] = _nearest.get_groups()
+		if interactable_groups.has("Chest"):
+			_nearest.open_chest()
+			return
+		elif interactable_groups.has("Weapon"):
+			attempt_pickup(_nearest)
+			return
 
 func attempt_pickup(weapon: WeaponClass) -> void:
 	var target_hand: PlayerHandClass
@@ -198,7 +203,17 @@ func attempt_pickup(weapon: WeaponClass) -> void:
 		weapon.Properties.Handedness.RIGHT:
 			target_hand = Master.Hands.Right
 		weapon.Properties.Handedness.BOTH:
-			pass
+			# For both-handed weapons, prefer the hand that's free
+			if !Master.Hands.Left.held_weapon:
+				target_hand = Master.Hands.Left
+			elif !Master.Hands.Right.held_weapon:
+				target_hand = Master.Hands.Right
+			else:
+				##BUG: Not working
+				# Both hands occupied, drop left hand weapon and pick up with left hand
+				if Master.Hands.Left.held_weapon:
+					drop_weapon(Master.Hands.Left.held_weapon)
+				target_hand = Master.Hands.Left
 		weapon.Properties.Handedness.EITHER:
 			if !Master.Hands.Left.held_weapon:
 				target_hand = Master.Hands.Left
@@ -211,22 +226,66 @@ func attempt_pickup(weapon: WeaponClass) -> void:
 
 
 func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
+	print("=== WEAPON PICKUP DEBUG ===")
+	print("Player position: ", Master.position)
+	print("Player global_position: ", Master.global_position)
+	print("Target hand: ", target_hand.handedness)
+	print("Target hand position: ", target_hand.position)
+	print("Target hand global_position: ", target_hand.global_position)
+	print("Target hand.hand position: ", target_hand.hand.position)
+	print("Target hand.hand global_position: ", target_hand.hand.global_position)
+	
+	print("Weapon BEFORE pickup:")
+	print("  weapon.name: ", weapon.name)
+	print("  weapon.position: ", weapon.position)
+	print("  weapon.global_position: ", weapon.global_position)
+	print("  weapon.Sprite.position: ", weapon.Sprite.position)
+	print("  weapon.Collision.position: ", weapon.Collision.position)
+	print("  weapon.Properties: ", weapon.Properties)
+	print("  weapon.Properties.weapon_name: ", weapon.Properties.weapon_name)
+	print("  weapon.Properties.weapon_sprite_offset: ", weapon.Properties.weapon_sprite_offset)
+	print("  weapon.Properties.weapon_col_offset: ", weapon.Properties.weapon_col_offset)
+	
 	weapon.can_pickup = false
 	weapon.wielder = Master
 	weapon.is_thrown = false
 
 	weapon.modulate = Master.EB.Sprite.modulate
-	weapon.Sprite.position = weapon.Properties.weapon_offset
-	weapon.Collision.position = weapon.Properties.weapon_offset
-	weapon.global_position = target_hand.hand.global_position
 	weapon._update_collisions("in-hand")
+	
+	# Set sprite and collision offsets
+	var sprite_offset = weapon.Properties.weapon_sprite_offset
+	var col_offset = weapon.Properties.weapon_col_offset
+	print("Using sprite_offset: ", sprite_offset)
+	print("Using col_offset: ", col_offset)
+	weapon.Sprite.position = sprite_offset
+	weapon.Collision.position = col_offset
+	
+	print("Weapon AFTER position changes:")
+	print("  weapon.position: ", weapon.position)
+	print("  weapon.global_position: ", weapon.global_position)
+	print("  weapon.Sprite.position: ", weapon.Sprite.position)
+	print("  weapon.Collision.position: ", weapon.Collision.position)
 	
 	#if target_hand.held_weapon:
 		#drop_weapon(target_hand.held_weapon)
 	target_hand.held_weapon = weapon
 	
-	call_deferred("reparent", target_hand.hand)
+	# Reparent to the hand node (not the hand sprite)
+	print("About to reparent weapon to: ", target_hand.hand)
+	print("Target hand.hand parent: ", target_hand.hand.get_parent())
+	print("Target hand.hand parent global_position: ", target_hand.hand.get_parent().global_position if target_hand.hand.get_parent() else "No parent")
+	weapon.call_deferred("reparent", target_hand.hand)
+	weapon.call_deferred("_debug_after_reparent")
+	weapon.call_deferred("set", "position", Vector2.ZERO)
 	weapon.Controller.on_equip()
+	
+	print("Weapon AFTER reparenting (deferred):")
+	print("  weapon.position: ", weapon.position)
+	print("  weapon.global_position: ", weapon.global_position)
+	print("  weapon.Sprite.position: ", weapon.Sprite.position)
+	print("  weapon.Collision.position: ", weapon.Collision.position)
+	print("=== END WEAPON PICKUP DEBUG ===")
 
 
 func drop_weapon(weapon: WeaponClass) -> void:
@@ -247,4 +306,4 @@ func drop_weapon(weapon: WeaponClass) -> void:
 	
 	##TODO: Create Entities reference in Global
 	weapon.call_deferred("reparent", Master.get_parent())
-	weapon.global_position = Master.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20))
+	weapon.call_deferred("set", "global_position", Master.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20)))

@@ -14,7 +14,7 @@ size = Vector2(95, 74)
 [sub_resource type="CircleShape2D" id="CircleShape2D_4wqtw"]
 radius = 75.5265
 
-[node name="Chest" type="StaticBody2D" groups=["Entity"]]
+[node name="Chest" type="StaticBody2D" groups=["Chest", "Entity", "Interact"]]
 rotation = -0.780488
 script = ExtResource("1_ea7p8")
 items = Array[Resource]([ExtResource("2_avkk7"), ExtResource("3_hwjeg"), ExtResource("4_avkk7"), ExtResource("5_uxpd8"), ExtResource("6_8roag")])
