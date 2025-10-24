@@ -1,3 +1,4 @@
+##TODO: Add/Get swing props from properties
 class_name SwordController extends WeaponControllerBase
 
 @onready var sword := weapon
@@ -69,7 +70,7 @@ func _slashing(delta: float) -> void:
 		slash_duration -= delta
 		var swing_direction := 1.0 if !in_offhand else -1.0
 		var slash_position := get_default_arm_length() * 1.6
-		swing_arm(swing_direction * 3.0, delta, 6.0)
+		swing_arm(swing_direction, delta, 50.0)
 		set_arm_position(slash_position, delta, 6.0)
 		
 		if slash_duration <= 0:

@@ -14,6 +14,7 @@ func handle_hold() -> void:
 
 func handle_release() -> void:
 	super.handle_release()
+	print("Arrow handle_release() called - setting hold_position to false")
 	hold_position = false
 	#if is_in_ready_position:
 		#is_in_ready_position = false

@@ -132,21 +132,24 @@ func _handle_attacks() -> void:
 
 
 func _trigger_attack(hand_side: String, input_type: String) -> void:
+	print("_trigger_attack called - hand_side: ", hand_side, ", input_type: ", input_type)
+	print("interact state: ", interact)
 	var target_hand: PlayerHandClass
 	if hand_side == "left":
 		target_hand = Master.Hands.Left
 	else:
 		target_hand = Master.Hands.Right
 	
+	
 	##TODO: Input should be handled by _input_handler.
-	if interact and input_type == "click":
-		if target_hand.held_weapon:
-			target_hand.held_weapon.throw_weapon()
-			return
+	if interact and input_type == "click" and target_hand.held_weapon:
+		print("THROWING WEAPON VIA INTERACT!")
+		target_hand.held_weapon.throw_weapon(0.0, true)
+		return
 	
 	var stamina_cost := 0.0
 	var mana_cost    := 0.0
-	if input_type != "hold":
+	if input_type != "hold" and input_type != "release":
 		if target_hand.held_weapon:
 			stamina_cost = target_hand.held_weapon.Properties.weapon_stamina_cost
 			mana_cost    = target_hand.held_weapon.Properties.weapon_mana_cost
@@ -155,6 +158,7 @@ func _trigger_attack(hand_side: String, input_type: String) -> void:
 			mana_cost    = Master.EB.mana_cost_default
 		
 		if Master.EB.stamina < stamina_cost or Master.EB.mana < mana_cost: 
+			print("Insufficient stamina/mana - stamina: ", Master.EB.stamina, ", cost: ", stamina_cost, ", mana: ", Master.EB.mana, ", cost: ", mana_cost)
 			return
 	
 	Master.EB.stamina -= stamina_cost
@@ -162,6 +166,7 @@ func _trigger_attack(hand_side: String, input_type: String) -> void:
 	
 	# Handle weapon attacks
 	if target_hand.held_weapon:
+		print("Calling handle_input on weapon: ", target_hand.held_weapon.name, " with input_type: ", input_type)
 		target_hand.held_weapon.handle_input(input_type)
 	
 	# Handle basic attacks (can be combined with weapon attacks)
@@ -169,7 +174,7 @@ func _trigger_attack(hand_side: String, input_type: String) -> void:
 
 func _trigger_basic_attack(hand: PlayerHandClass, input_type: String) -> void:
 	# Basic attack logic - can be customized per weapon or used standalone
-	if input_type == "click":
+	if input_type == "click": 
 		# Only set is_attacking if no weapon is held
 		# This allows weapon controllers to manage the hand stated
 		if !hand.held_weapon:
@@ -254,8 +259,8 @@ func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
 	weapon._update_collisions("in-hand")
 	
 	# Set sprite and collision offsets
-	var sprite_offset = weapon.Properties.weapon_sprite_offset
-	var col_offset = weapon.Properties.weapon_col_offset
+	var sprite_offset := weapon.Properties.weapon_sprite_offset
+	var col_offset := weapon.Properties.weapon_col_offset
 	print("Using sprite_offset: ", sprite_offset)
 	print("Using col_offset: ", col_offset)
 	weapon.Sprite.position = sprite_offset
@@ -276,7 +281,6 @@ func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
 	print("Target hand.hand parent: ", target_hand.hand.get_parent())
 	print("Target hand.hand parent global_position: ", target_hand.hand.get_parent().global_position if target_hand.hand.get_parent() else "No parent")
 	weapon.call_deferred("reparent", target_hand.hand)
-	weapon.call_deferred("_debug_after_reparent")
 	weapon.call_deferred("set", "position", Vector2.ZERO)
 	weapon.Controller.on_equip()
 	

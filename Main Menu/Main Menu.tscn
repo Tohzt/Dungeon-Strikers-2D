@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://ddn5dflpnvmfn"]
+[gd_scene load_steps=16 format=3 uid="uid://ddn5dflpnvmfn"]
 
 [ext_resource type="Script" uid="uid://c6v4td75pemi0" path="res://Main Menu/main_menu.gd" id="1_col8w"]
 [ext_resource type="PackedScene" uid="uid://btf8e0wnlbd82" path="res://Entities/Player/player.tscn" id="2_5ms5j"]
 [ext_resource type="PackedScene" uid="uid://b31r5kemx5nnp" path="res://Main Menu/Stat Option.tscn" id="2_i0jnm"]
+[ext_resource type="PackedScene" uid="uid://ca18bdfs01cxc" path="res://Game/HUD/HUD.tscn" id="2_y6014"]
 [ext_resource type="PackedScene" uid="uid://b6tqbqvxpm0pi" path="res://Game/Room/Doors/door.tscn" id="4_8iwr2"]
 [ext_resource type="PackedScene" uid="uid://b4226omcdcsq6" path="res://Game/Room/room.tscn" id="4_wlfof"]
 [ext_resource type="PackedScene" uid="uid://b4041ff5ewhd3" path="res://Items/Chest/chest.tscn" id="5_4wqtw"]
@@ -17,6 +18,9 @@
 
 [node name="Main Menu" type="Node2D" groups=["Main Menu"]]
 script = ExtResource("1_col8w")
+
+[node name="Hud" parent="." node_paths=PackedStringArray("game") instance=ExtResource("2_y6014")]
+game = NodePath("..")
 
 [node name="Player" parent="." instance=ExtResource("2_5ms5j")]
 position = Vector2(570, 330)

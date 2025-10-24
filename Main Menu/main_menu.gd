@@ -69,6 +69,26 @@ func update_points(amt: int) -> void:
 	Player_Color = Color(_red, _green, _blue)
 	Player.EB.set_color(Player_Color)
 	
+	# Update player stats and max values in real-time
+	var strength_value: int = int(Strength.stat_value.value) + 10
+	var intelligence_value: int = int(Intelligence.stat_value.value) + 10
+	var endurance_value: int = int(Endurance.stat_value.value) + 10
+	
+	Player.EB.strength = strength_value
+	Player.EB.intelligence = intelligence_value
+	Player.EB.endurance = endurance_value
+	
+	##TODO: Confirm these are correct
+	# Update max values based on stats
+	Player.EB.hp_max = float(strength_value * 50)  # Scale strength to HP
+	Player.EB.mana_max = float(intelligence_value * 10)  # Scale intelligence to mana
+	Player.EB.stamina_max = float(endurance_value)
+	
+	# Update current values to match new max values
+	Player.EB.hp = Player.EB.hp_max
+	Player.EB.mana = Player.EB.mana_max
+	Player.EB.stamina = Player.EB.stamina_max
+	
 	STAT_POINTS += amt
 	var display: Label = $"Menu UI/Multiplayer/MarginContainer/VBoxContainer/Character Select/VBoxContainer/Points Remaining"
 	display.text = "(%d) points remaining" % STAT_POINTS

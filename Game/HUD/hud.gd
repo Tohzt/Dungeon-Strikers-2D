@@ -1,5 +1,5 @@
 class_name HUDClass extends CanvasLayer
-@export var game: GameClass
+@export var game: Node2D
 
 @onready var health_bar:  TextureProgressBar = $HealthBar
 @onready var stamina_bar: TextureProgressBar = $StaminaBar

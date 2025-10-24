@@ -100,10 +100,14 @@ func _handle_thrown() -> void:
 				reset_to_ground_state()
 
 
-func throw_weapon(mod_damage: float = 0.0) -> void:
+func throw_weapon(mod_damage: float = 0.0, force_throw_original: bool = false) -> void:
 	if !wielder: return
 	var throw_direction := _calculate_throw_direction(wielder)
 	var projectile: WeaponClass
+	
+	# Force throw_clone to false when throwing via interact
+	if force_throw_original:
+		throw_clone = false
 	
 	if throw_clone:
 		projectile = self.duplicate() as WeaponClass
@@ -244,15 +248,3 @@ func _update_collisions(state: String) -> void:
 			set_collision_mask_value(4, false)  # Item
 			set_collision_mask_value(5, false)  # Weapon
 			set_z_index(Global.Layers.PROJECTILES)
-
-func _debug_after_reparent() -> void:
-	print("=== WEAPON AFTER REPARENT DEBUG ===")
-	print("Weapon name: ", name)
-	print("Weapon parent: ", get_parent())
-	print("Weapon parent name: ", get_parent().name if get_parent() else "No parent")
-	print("Weapon parent global_position: ", get_parent().global_position if get_parent() else "No parent")
-	print("Weapon position: ", position)
-	print("Weapon global_position: ", global_position)
-	print("Weapon Sprite.position: ", Sprite.position)
-	print("Weapon Collision.position: ", Collision.position)
-	print("=== END WEAPON AFTER REPARENT DEBUG ===")

@@ -25,6 +25,7 @@ func handle_hold() -> void:
 
 func handle_release() -> void:
 	super.handle_release()
+	print("Bow handle_release() called - is_charging: ", is_charging, ", charge_duration: ", charge_duration)
 	if charge_duration == charge_limit_in_sec: _attack()
 	is_charging = false
 	charge_duration = 0.0
@@ -43,18 +44,26 @@ func update(delta: float) -> void:
 	if ammo and bow.Properties.weapon_synergies.has(ammo.Properties.weapon_type):
 		# If the arrow is in hold position, the bow should also be in hold position
 		if ammo.Controller.hold_position:
+			if not hold_position:
+				print("Bow: Arrow is in hold position, setting bow hold_position to true")
 			hold_position = true
 		else:
+			if hold_position:
+				print("Bow: Arrow released hold position, setting bow hold_position to false")
 			hold_position = false
 			# Reset charging state when arrow is released
 			if is_charging:
+				print("Bow: Resetting charging state due to arrow release")
 				is_charging = false
 				charge_duration = 0.0
 	else:
 		ammo = null
+		if hold_position:
+			print("Bow: No ammo, setting hold_position to false")
 		hold_position = false
 		# Reset charging state when no arrow
 		if is_charging:
+			print("Bow: No ammo, resetting charging state")
 			is_charging = false
 			charge_duration = 0.0
 	

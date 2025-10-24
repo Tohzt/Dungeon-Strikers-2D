@@ -154,7 +154,15 @@ func reset(active_status: bool = true) -> void:
 	intelligence = Master.Properties.player_intelligence + 10
 	endurance = Master.Properties.player_endurance + 10
 	
+	##TODO: Confirm these are correct
+	# Update max values based on stats
+	hp_max = float(strength * 50)  # Scale strength to HP
+	mana_max = float(intelligence * 10)  # Scale intelligence to mana
 	stamina_max = float(endurance)
+	
+	# Update current values to match new max values
+	hp = hp_max
+	mana = mana_max
 	stamina = stamina_max
 	
 	if stamina_regen_timer:
