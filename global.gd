@@ -120,7 +120,7 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		# Add to scene tree first, then reparent
 		var Entities := get_tree().get_first_node_in_group("Entities")
 		Entities.add_child(left_weapon)
-		left_weapon.call_deferred("reparent", player.Hands.Left)
+		left_weapon.call_deferred("reparent", player.Hands.Left.hand)
 		# Zero out weapon position since parent will handle positioning
 		left_weapon.call_deferred("set", "position", Vector2.ZERO)
 		left_weapon.modulate = player.EB.Sprite.modulate
@@ -135,7 +135,7 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		# Add to scene tree first, then reparent
 		var Entities := get_tree().get_first_node_in_group("Entities")
 		Entities.add_child(right_weapon)
-		right_weapon.call_deferred("reparent", player.Hands.Right)
+		right_weapon.call_deferred("reparent", player.Hands.Right.hand)
 		# Zero out weapon position since parent will handle positioning
 		right_weapon.call_deferred("set", "position", Vector2.ZERO)
 		right_weapon.modulate = player.EB.Sprite.modulate

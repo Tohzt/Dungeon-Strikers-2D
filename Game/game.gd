@@ -32,6 +32,9 @@ func _ready() -> void:
 		Player = _player
 	
 	Global.restore_player_weapons(Player)
+	
+	# Activate the player and initialize stats
+	Player.EB.reset()
  	
 	for room: RoomClass in $Rooms.get_children():
 		if !Global.rooms.has(room):
