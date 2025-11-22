@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://ddn5dflpnvmfn"]
+[gd_scene load_steps=17 format=3 uid="uid://ddn5dflpnvmfn"]
 
 [ext_resource type="Script" uid="uid://c6v4td75pemi0" path="res://Main Menu/main_menu.gd" id="1_col8w"]
 [ext_resource type="PackedScene" uid="uid://btf8e0wnlbd82" path="res://Entities/Player/player.tscn" id="2_5ms5j"]
@@ -15,6 +15,7 @@
 [ext_resource type="Resource" uid="uid://dfxnthrdfin2d" path="res://Items/Weapons/Staff/Staff.tres" id="10_y6014"]
 [ext_resource type="PackedScene" uid="uid://bxcrqtrb0qw0j" path="res://Entities/Dummy/dummy_anchor.tscn" id="12_4myfj"]
 [ext_resource type="PackedScene" uid="uid://dfhyv1dxxl7j" path="res://Items/Chain/chain.tscn" id="12_hat6j"]
+[ext_resource type="PackedScene" uid="uid://6q4nkh2kftvh" path="res://Items/Weapons/weapon.tscn" id="16_qr6km"]
 
 [node name="Main Menu" type="Node2D" groups=["Main Menu"]]
 script = ExtResource("1_col8w")
@@ -172,6 +173,14 @@ ball_scene = ExtResource("6_4wqtw")
 chain_segments = 2
 segment_distance = 60.0
 joint_damping = 0.0
+
+[node name="Weapon" parent="." instance=ExtResource("16_qr6km")]
+position = Vector2(673, 181)
+Properties = ExtResource("7_4myfj")
+
+[node name="Weapon2" parent="." instance=ExtResource("16_qr6km")]
+position = Vector2(438, 179)
+Properties = ExtResource("8_hat6j")
 
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu UI/Multiplayer/MarginContainer/VBoxContainer/Game Options/Join" to="." method="_on_join_pressed"]

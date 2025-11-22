@@ -208,17 +208,11 @@ func attempt_pickup(weapon: WeaponClass) -> void:
 		weapon.Properties.Handedness.RIGHT:
 			target_hand = Master.Hands.Right
 		weapon.Properties.Handedness.BOTH:
-			# For both-handed weapons, prefer the hand that's free
-			if !Master.Hands.Left.held_weapon:
-				target_hand = Master.Hands.Left
-			elif !Master.Hands.Right.held_weapon:
-				target_hand = Master.Hands.Right
-			else:
-				##BUG: Not working
-				# Both hands occupied, drop left hand weapon and pick up with left hand
-				if Master.Hands.Left.held_weapon:
-					drop_weapon(Master.Hands.Left.held_weapon)
-				target_hand = Master.Hands.Left
+			##TODO: Consider dropping any/all held weapons and picking up the new both-handed weapon
+			# For both-handed weapons, require both hands to be free
+			if Master.Hands.Left.held_weapon or Master.Hands.Right.held_weapon:
+				return  # Cannot pick up both-handed weapon if either hand is occupied
+			target_hand = Master.Hands.Left
 		weapon.Properties.Handedness.EITHER:
 			if !Master.Hands.Left.held_weapon:
 				target_hand = Master.Hands.Left
@@ -231,25 +225,6 @@ func attempt_pickup(weapon: WeaponClass) -> void:
 
 
 func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
-	print("=== WEAPON PICKUP DEBUG ===")
-	print("Player position: ", Master.position)
-	print("Player global_position: ", Master.global_position)
-	print("Target hand: ", target_hand.handedness)
-	print("Target hand position: ", target_hand.position)
-	print("Target hand global_position: ", target_hand.global_position)
-	print("Target hand.hand position: ", target_hand.hand.position)
-	print("Target hand.hand global_position: ", target_hand.hand.global_position)
-	
-	print("Weapon BEFORE pickup:")
-	print("  weapon.name: ", weapon.name)
-	print("  weapon.position: ", weapon.position)
-	print("  weapon.global_position: ", weapon.global_position)
-	print("  weapon.Sprite.position: ", weapon.Sprite.position)
-	print("  weapon.Collision.position: ", weapon.Collision.position)
-	print("  weapon.Properties: ", weapon.Properties)
-	print("  weapon.Properties.weapon_name: ", weapon.Properties.weapon_name)
-	print("  weapon.Properties.weapon_sprite_offset: ", weapon.Properties.weapon_sprite_offset)
-	print("  weapon.Properties.weapon_col_offset: ", weapon.Properties.weapon_col_offset)
 	
 	weapon.can_pickup = false
 	weapon.wielder = Master
@@ -261,35 +236,19 @@ func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
 	# Set sprite and collision offsets
 	var sprite_offset := weapon.Properties.weapon_sprite_offset
 	var col_offset := weapon.Properties.weapon_col_offset
-	print("Using sprite_offset: ", sprite_offset)
-	print("Using col_offset: ", col_offset)
 	weapon.Sprite.position = sprite_offset
 	weapon.Collision.position = col_offset
 	
-	print("Weapon AFTER position changes:")
-	print("  weapon.position: ", weapon.position)
-	print("  weapon.global_position: ", weapon.global_position)
-	print("  weapon.Sprite.position: ", weapon.Sprite.position)
-	print("  weapon.Collision.position: ", weapon.Collision.position)
+	# Drop existing weapon in target hand if it's different from the one being picked up
+	if target_hand.held_weapon and target_hand.held_weapon != weapon:
+		drop_weapon(target_hand.held_weapon)
 	
-	#if target_hand.held_weapon:
-		#drop_weapon(target_hand.held_weapon)
 	target_hand.held_weapon = weapon
 	
 	# Reparent to the hand node (not the hand sprite)
-	print("About to reparent weapon to: ", target_hand.hand)
-	print("Target hand.hand parent: ", target_hand.hand.get_parent())
-	print("Target hand.hand parent global_position: ", target_hand.hand.get_parent().global_position if target_hand.hand.get_parent() else "No parent")
 	weapon.call_deferred("reparent", target_hand.hand)
 	weapon.call_deferred("set", "position", Vector2.ZERO)
 	weapon.Controller.on_equip()
-	
-	print("Weapon AFTER reparenting (deferred):")
-	print("  weapon.position: ", weapon.position)
-	print("  weapon.global_position: ", weapon.global_position)
-	print("  weapon.Sprite.position: ", weapon.Sprite.position)
-	print("  weapon.Collision.position: ", weapon.Collision.position)
-	print("=== END WEAPON PICKUP DEBUG ===")
 
 
 func drop_weapon(weapon: WeaponClass) -> void:
