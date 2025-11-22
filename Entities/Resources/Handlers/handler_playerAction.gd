@@ -196,7 +196,7 @@ func _trigger_interact() -> void:
 		if interactable_groups.has("Chest"):
 			_nearest.open_chest()
 			return
-		elif interactable_groups.has("Weapon"):
+		elif _nearest.can_pickup and interactable_groups.has("Weapon"):
 			attempt_pickup(_nearest)
 			return
 
@@ -225,11 +225,28 @@ func attempt_pickup(weapon: WeaponClass) -> void:
 
 
 func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
+	# Null checks for safety
+	if !weapon or !target_hand or !weapon.Properties or !weapon.Sprite or !weapon.Collision:
+		return
 	
+	# Drop existing weapon in target hand if it's different from the one being picked up
+	if target_hand.held_weapon:# and target_hand.held_weapon != weapon:
+		drop_weapon(target_hand.held_weapon)
+	
+	# Set held_weapon reference immediately (needed for drop check above)
+	target_hand.held_weapon = weapon
+	
+	# Reparent to the hand node (not the hand sprite)
+	weapon.call_deferred("reparent", target_hand.hand)
+	weapon.call_deferred("set", "position", Vector2.ZERO)
+	
+	# Wait for deferred operations to complete
+	await get_tree().process_frame
+	
+	# Now set weapon state after reparenting is complete
 	weapon.can_pickup = false
 	weapon.wielder = Master
 	weapon.is_thrown = false
-
 	weapon.modulate = Master.EB.Sprite.modulate
 	weapon._update_collisions("in-hand")
 	
@@ -239,19 +256,16 @@ func pickup_weapon(weapon: WeaponClass, target_hand: PlayerHandClass) -> void:
 	weapon.Sprite.position = sprite_offset
 	weapon.Collision.position = col_offset
 	
-	# Drop existing weapon in target hand if it's different from the one being picked up
-	if target_hand.held_weapon and target_hand.held_weapon != weapon:
-		drop_weapon(target_hand.held_weapon)
-	
-	target_hand.held_weapon = weapon
-	
-	# Reparent to the hand node (not the hand sprite)
-	weapon.call_deferred("reparent", target_hand.hand)
-	weapon.call_deferred("set", "position", Vector2.ZERO)
-	weapon.Controller.on_equip()
+	# Call on_equip() with null check after state is set
+	if weapon.Controller and weapon.Controller.has_method("on_equip"):
+		weapon.Controller.on_equip()
 
 
 func drop_weapon(weapon: WeaponClass) -> void:
+	# Null check
+	if !weapon:
+		return
+	
 	weapon.modulate = Color.WHITE
 	weapon.Sprite.position = Vector2.ZERO
 	weapon.Collision.position = Vector2.ZERO
@@ -267,6 +281,8 @@ func drop_weapon(weapon: WeaponClass) -> void:
 	if hand_holding_weapon:
 		hand_holding_weapon.held_weapon = null
 	
-	##TODO: Create Entities reference in Global
-	weapon.call_deferred("reparent", Master.get_parent())
-	weapon.call_deferred("set", "global_position", Master.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20)))
+	# Only reparent if weapon is still in scene tree
+	if weapon.is_inside_tree():
+		##TODO: Create Entities reference in Global
+		weapon.call_deferred("reparent", Master.get_parent())
+		weapon.call_deferred("set", "global_position", Master.global_position + Vector2(randi_range(-20, 20), randi_range(-20, 20)))

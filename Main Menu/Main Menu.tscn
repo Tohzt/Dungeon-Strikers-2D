@@ -178,6 +178,10 @@ joint_damping = 0.0
 position = Vector2(673, 181)
 Properties = ExtResource("7_4myfj")
 
+[node name="Weapon" parent="Weapon" instance=ExtResource("16_qr6km")]
+position = Vector2(-114, 57)
+Properties = ExtResource("7_4myfj")
+
 [node name="Weapon2" parent="." instance=ExtResource("16_qr6km")]
 position = Vector2(438, 179)
 Properties = ExtResource("8_hat6j")

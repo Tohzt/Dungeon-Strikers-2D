@@ -34,8 +34,10 @@ func _set_props() -> void:
 	Sprite.texture = Properties.weapon_sprite[0]
 	
 	if Properties.weapon_controller:
-		Controller.set_script(Properties.weapon_controller)
-		Controller._ready()
+		# Only set script if it's not already set to avoid unnecessary reloading
+		if Controller.get_script() != Properties.weapon_controller:
+			Controller.set_script(Properties.weapon_controller)
+			Controller._ready()
 	
 	if Properties.weapon_name.is_empty():
 		var regex := RegEx.new()
@@ -56,9 +58,6 @@ func _set_props() -> void:
 	if wielder:
 		modulate = wielder.EB.Sprite.modulate
 		_update_collisions("in-hand")
-		
-		if Controller.has_method("on_equip"):
-			Controller.on_equip()
 	else:
 		_update_collisions("on-ground")
 
@@ -73,7 +72,7 @@ func _handle_held_or_pickup(delta: float) -> void:
 		rotation = deg_to_rad(weapon_angle + mod_angle)
 		
 		if Properties.weapon_controller:
-			Controller.set_script(Properties.weapon_controller)
+			# Script should already be set during initialization, just update
 			Controller.update(delta)
 	else:
 		can_pickup_cd = max(can_pickup_cd - delta, 0.0)
