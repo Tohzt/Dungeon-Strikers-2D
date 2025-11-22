@@ -47,7 +47,7 @@ func update(delta: float) -> void:
 func _move_to_ready_position() -> void:
 	var forward_rotation := deg_to_rad(180)
 	var sword_distance := 50.0
-	sword.mod_angle = 180-sword.Properties.weapon_angle
+	sword.mod_angle = 90-sword.Properties.weapon_angle
 	set_arm_rotation(forward_rotation, 0.016, 15.0)
 	set_arm_position(sword_distance, 0.016, 15.0)
 

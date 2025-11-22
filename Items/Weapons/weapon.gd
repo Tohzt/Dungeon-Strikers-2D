@@ -32,9 +32,9 @@ func _set_props() -> void:
 		return
 	
 	Sprite.texture = Properties.weapon_sprite[0]
+	Sprite.position = Properties.weapon_sprite_offset
 	
 	if Properties.weapon_controller:
-		# Only set script if it's not already set to avoid unnecessary reloading
 		if Controller.get_script() != Properties.weapon_controller:
 			Controller.set_script(Properties.weapon_controller)
 			Controller._ready()
@@ -47,13 +47,14 @@ func _set_props() -> void:
 			Properties.weapon_name = result.get_string(1)
 	self.name = Properties.weapon_name
 	
-	if Collision and Collision.shape is CapsuleShape2D:
-		Collision.shape.radius = Properties.weapon_col_radius
-		Collision.shape.height = Properties.weapon_col_height
-		Collision.rotation = Properties.weapon_col_rotation
+	if Collision:
+		if Collision.shape is CapsuleShape2D:
+			Collision.shape.radius = Properties.weapon_col_radius
+			Collision.shape.height = Properties.weapon_col_height
+			Collision.rotation = Properties.weapon_col_rotation
 		Collision.position = Properties.weapon_col_offset
 	else:
-		print_debug("DEBUG: Collision shape is not a CapsuleShape2D")
+		print_debug("DEBUG: Collision is null")
 	
 	if wielder:
 		modulate = wielder.EB.Sprite.modulate
