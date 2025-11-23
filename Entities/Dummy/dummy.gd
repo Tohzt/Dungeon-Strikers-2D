@@ -15,7 +15,18 @@ func _on_weapon_hit(body: Node2D) -> void:
 		var weapon_mod_damage: float = body.Properties.weapon_mod_damage
 		var weapon_total_damage: float = weapon_damage + weapon_mod_damage
 		var weapon_velocity: Vector2 = body.linear_velocity
-		var impact_force := weapon_velocity * weapon_total_damage
+		
+		# For melee attacks (held weapons with no velocity), calculate knockback differently
+		var impact_force: Vector2
+		if weapon_velocity.length() < 10.0:  # Very low velocity = held weapon
+			# Calculate direction from weapon to dummy
+			var knockback_direction: Vector2 = (global_position - body.global_position).normalized()
+			# Use damage-based knockback force for melee
+			impact_force = knockback_direction * weapon_total_damage * 50.0
+		else:
+			# For projectiles, use velocity-based knockback (existing behavior)
+			impact_force = weapon_velocity * weapon_total_damage
+		
 		apply_central_impulse(impact_force)
 		
 		Global.display_damage(weapon_total_damage, global_position)

@@ -71,4 +71,5 @@ func _input(event: InputEvent) -> void:
 		target_toggle = event.is_action_pressed("target")
 	
 	if event.is_action("target_scroll"):
-		target_scroll = event.is_action_pressed("target_scroll")
+		if event.is_action_pressed("target_scroll"):
+			target_scroll = true

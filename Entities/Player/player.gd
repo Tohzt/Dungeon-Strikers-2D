@@ -44,30 +44,43 @@ func _physics_process(delta: float) -> void:
 
 
 func _handle_target() -> void:
+	# Handle target scrolling (cycle through targets)
+	if Input_Handler.target_scroll:
+		print("DEBUG: target_scroll input detected - EB.target exists: ", EB.target != null)
 	if EB.target and Input_Handler.target_scroll:
+		var current_target_name: String = String(EB.target.name) if is_instance_valid(EB.target) else "null"
+		print("DEBUG: Scroll detected - Current target: ", current_target_name)
 		Input_Handler.target_scroll = false
 		# Get nearest entity, excluding the current target if it's still valid
-		var exclude_target := EB.target if EB.target and is_instance_valid(EB.target) else null
-		var nearest := Global.get_nearest(global_position, "Entity", 99, exclude_target)
-		if nearest.has("inst"):
+		var exclude_target: Node2D = EB.target if is_instance_valid(EB.target) else null
+		var exclude_name: String = String(exclude_target.name) if exclude_target else "null"
+		print("DEBUG: Excluding target: ", exclude_name)
+		var nearest := Global.get_nearest(global_position, "Entity", INF, exclude_target)
+		print("DEBUG: get_nearest result - found: ", nearest.get("found", false), ", dist: ", nearest.get("dist", INF), ", inst: ", nearest.get("inst", null))
+		if nearest.get("found", false):
 			EB.target = nearest["inst"]
+			var new_target_name: String = String(EB.target.name) if is_instance_valid(EB.target) else "null"
+			print("DEBUG: Target updated to: ", new_target_name)
+		else:
+			print("DEBUG: No new target found, keeping current target")
 	
-	# Handle target cycling
-	if Input_Handler.target_toggle: 
-		if EB.target:
+	# Handle target toggle (target nearest or clear current)
+	if Input_Handler.target_toggle:
+		Input_Handler.target_toggle = false
+		if EB.target and is_instance_valid(EB.target):
+			# Clear current target
 			EB.target = null
-			return
-#		
-		# Get nearest entity, excluding the current target if it's still valid
-		var exclude_target := EB.target if EB.target and is_instance_valid(EB.target) else null
-		var nearest := Global.get_nearest(global_position, "Entity", 99, exclude_target)
-		if nearest.has("inst"):
-			EB.target = nearest["inst"]
+		else:
+			# Find nearest entity
+			var nearest := Global.get_nearest(global_position, "Entity", INF)
+			if nearest.get("found", false):
+				EB.target = nearest["inst"]
 
 
 func _handle_rotation(delta: float) -> void:
-	if EB.target and !EB.target.position.is_zero_approx():
-		rotation = lerp_angle(rotation, EB.target.position.angle() + PI/2, delta * Input_Handler.MOUSE_LOOK_STRENGTH)
+	if EB.target and is_instance_valid(EB.target):
+		var direction: Vector2 = (EB.target.global_position - global_position).normalized()
+		rotation = lerp_angle(rotation, direction.angle() + PI/2, delta * Input_Handler.MOUSE_LOOK_STRENGTH)
 	elif !Input_Handler.look_dir.is_zero_approx():
 		rotation = lerp_angle(rotation, Input_Handler.look_dir.angle() + PI/2, delta * Input_Handler.MOUSE_LOOK_STRENGTH)
 	elif !velocity.is_zero_approx():

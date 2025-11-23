@@ -111,6 +111,7 @@ func save_player_weapons(player: PlayerClass) -> void:
 		player_held_weapons["right_hand"] = null
 
 func restore_player_weapons(player: PlayerClass) -> void:
+	# Note: This function uses call_deferred, so on_equip will be called next frame
 	# Restore weapons to the player's hands
 	if player_held_weapons["left_hand"]:
 		var left_weapon: WeaponClass = WEAPON.instantiate()
@@ -123,9 +124,16 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		left_weapon.call_deferred("reparent", player.Hands.Left.hand)
 		# Zero out weapon position since parent will handle positioning
 		left_weapon.call_deferred("set", "position", Vector2.ZERO)
+		
+		# Set up weapon state (can be done immediately)
+		left_weapon.can_pickup = false
+		left_weapon.is_thrown = false
 		left_weapon.modulate = player.EB.Sprite.modulate
 		left_weapon.Sprite.position = left_weapon.Properties.weapon_sprite_offset
 		left_weapon.Collision.position = left_weapon.Properties.weapon_col_offset
+		
+		# Call on_equip() deferred to ensure reparenting is complete
+		left_weapon.call_deferred("_restore_on_equip")
  		
 	if player_held_weapons["right_hand"]:
 		var right_weapon: WeaponClass = WEAPON.instantiate()
@@ -138,9 +146,16 @@ func restore_player_weapons(player: PlayerClass) -> void:
 		right_weapon.call_deferred("reparent", player.Hands.Right.hand)
 		# Zero out weapon position since parent will handle positioning
 		right_weapon.call_deferred("set", "position", Vector2.ZERO)
+		
+		# Set up weapon state (can be done immediately)
+		right_weapon.can_pickup = false
+		right_weapon.is_thrown = false
 		right_weapon.modulate = player.EB.Sprite.modulate
 		right_weapon.Sprite.position = right_weapon.Properties.weapon_sprite_offset
 		right_weapon.Collision.position = right_weapon.Properties.weapon_col_offset
+		
+		# Call on_equip() deferred to ensure reparenting is complete
+		right_weapon.call_deferred("_restore_on_equip")
  
 func display_damage(damage: float, position: Vector2) -> void:
 	# Spawn a damage display label at the given position

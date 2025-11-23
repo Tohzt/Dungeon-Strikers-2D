@@ -204,10 +204,17 @@ func handle_input(input_type: String, duration: float = 0.0) -> void:
 			Controller.handle_input(input_type, duration)
 
 
+# Called deferred after restore to complete weapon setup
+func _restore_on_equip() -> void:
+	_update_collisions("in-hand")
+	if Controller and Controller.has_method("on_equip"):
+		Controller.on_equip()
+
+
 func _calculate_throw_direction(player: Node2D) -> Vector2:
 	# Prioritize target direction when target locking is active
-	if player.EB.target:
-		return player.EB.target.position.normalized()
+	if player.EB.target and is_instance_valid(player.EB.target):
+		return (player.EB.target.global_position - player.global_position).normalized()
 	elif !player.Input_Handler.look_dir.is_zero_approx():
 		return player.Input_Handler.look_dir
 	else:

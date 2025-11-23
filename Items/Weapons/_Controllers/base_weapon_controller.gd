@@ -89,14 +89,15 @@ func get_offhand_weapon() -> WeaponClass:
 
 
 func set_arm_rotation(target_rotation: float, delta: float, speed: float = 10.0) -> void:
+	if !arm: return
 	arm.rotation = lerp_angle(arm.rotation, target_rotation, delta * speed)
 
 func set_arm_position(target_length: float, delta: float, speed: float = 10.0) -> void:
-	if arm:
-		var current_pos: Vector2 = arm.target_position
-		var current_length: float = current_pos.length()
-		var new_length: float = lerp(current_length, target_length, delta * speed)
-		arm.target_position = current_pos.normalized() * new_length
+	if !arm: return
+	var current_pos: Vector2 = arm.target_position
+	var current_length: float = current_pos.length()
+	var new_length: float = lerp(current_length, target_length, delta * speed)
+	arm.target_position = current_pos.normalized() * new_length
 
 
 func reset_arm_rotation(delta: float, speed: float = 10.0) -> void:
@@ -110,4 +111,5 @@ func reset_arm_position(delta: float, speed: float = 10.0) -> void:
 		set_arm_position(default_length, delta, speed)
 
 func swing_arm(direction: float, delta: float, speed: float = 3.0) -> void:
+	if !arm: return
 	arm.rotation += direction * speed * delta

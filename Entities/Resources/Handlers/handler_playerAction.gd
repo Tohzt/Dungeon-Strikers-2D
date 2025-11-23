@@ -142,7 +142,8 @@ func _trigger_attack(hand_side: String, input_type: String) -> void:
 	
 	
 	##TODO: Input should be handled by _input_handler.
-	if interact and input_type == "click" and target_hand.held_weapon:
+	# Check interact state directly to handle long holds
+	if Input.is_action_pressed("interact") and input_type == "click" and target_hand.held_weapon:
 		print("THROWING WEAPON VIA INTERACT!")
 		target_hand.held_weapon.throw_weapon(0.0, true)
 		return

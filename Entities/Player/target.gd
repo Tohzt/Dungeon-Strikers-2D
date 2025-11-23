@@ -10,7 +10,7 @@ func _process(_delta: float) -> void:
 	if !Master.EB.Sprite: return
 	modulate = Master.EB.Sprite.modulate
 	if Master.EB.target:
-		global_position = Master.target.global_position + offset
+		global_position = Master.EB.target.global_position + offset
 		if !visible: show()
 	else:
 		position = Vector2.ZERO
