@@ -14,6 +14,7 @@ var player_display_name: String
 var resources_to_load: Array[Resource]
 var rooms: Array[RoomClass]
 var current_room: int = -1
+var current_room_bounds: Rect2
 
 var input_type: String = "Keyboard"
 
@@ -59,6 +60,12 @@ func set_current_room(room: RoomClass) -> void:
 	current_room = rooms.find(room)
 	var game: GameClass = get_tree().current_scene
 	if game:
+		# Calculate and store room bounds
+		current_room_bounds = room.get_room_bounds()
+		# Update game's camera bounds
+		game.current_room_bounds = current_room_bounds
+		game.update_camera_limits()
+		# Keep camera_target for backward compatibility (may be removed later)
 		game.camera_target = room.global_position
 
 

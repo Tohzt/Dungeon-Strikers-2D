@@ -123,7 +123,12 @@ func take_damage(dmg: float, dir: Vector2) -> void:
 func apply_knockback(direction: Vector2, force: float) -> void:
 	if is_in_iframes: return
 	is_in_iframes = true
-	Master.Input_Handler.velocity += direction * force
+	# Apply knockback to the CharacterBody2D's velocity (not Input_Handler)
+	if Master is CharacterBody2D:
+		Master.velocity += direction * force
+	else:
+		# Fallback for other body types
+		Master.Input_Handler.velocity += direction * force
 	
 	##HACK:
 	Master.modulate.a = 0.5

@@ -1,6 +1,4 @@
-class_name RoomClass extends Node2D
-@export var current_room: bool = false
-@export var area: Area2D 
+extends RoomClass
 
 func _ready() -> void:
 	z_index = Global.Layers.FLOOR

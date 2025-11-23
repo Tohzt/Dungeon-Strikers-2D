@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://ca18bdfs01cxc" path="res://Game/HUD/HUD.tscn" id="2_fwxkx"]
 [ext_resource type="Script" uid="uid://c71ixtnhvv15y" path="res://Game/host_ui.gd" id="2_kysc5"]
 [ext_resource type="PackedScene" uid="uid://du4p0gdnajtii" path="res://Entities/Boss/boss.tscn" id="3_7gi1t"]
-[ext_resource type="PackedScene" uid="uid://b6tqbqvxpm0pi" path="res://Game/Room/Doors/door.tscn" id="3_jcm6v"]
-[ext_resource type="PackedScene" uid="uid://b4226omcdcsq6" path="res://Game/Room/room.tscn" id="4_nljok"]
+[ext_resource type="PackedScene" uid="uid://cgg53vkkel4lq" path="res://Entities/Ball/ball.tscn" id="4_oomkl"]
+[ext_resource type="PackedScene" uid="uid://ba2asl1rta0kr" path="res://Game/Arena/arena.tscn" id="4_qmv3x"]
 [ext_resource type="Script" uid="uid://b3axt5bvfo8o7" path="res://Game/spawn_points.gd" id="5_qmv3x"]
 
 [node name="Game" type="Node2D"]
@@ -19,51 +19,28 @@ game = NodePath("../..")
 [node name="Entities" type="Node2D" parent="." groups=["Entities"]]
 
 [node name="Boss" parent="Entities" instance=ExtResource("3_7gi1t")]
-position = Vector2(-148, -92)
+position = Vector2(47, -948)
+
+[node name="Ball" parent="Entities" instance=ExtResource("4_oomkl")]
+position = Vector2(3, -16)
 
 [node name="Items" type="Node2D" parent="."]
 
 [node name="Rooms" type="Node" parent="."]
 
-[node name="Room Center" parent="Rooms" instance=ExtResource("4_nljok")]
-current_room = true
-
-[node name="Room Bottom" parent="Rooms" instance=ExtResource("4_nljok")]
-position = Vector2(0, 660)
-
-[node name="Room Left" parent="Rooms" instance=ExtResource("4_nljok")]
-position = Vector2(-1140, 0)
-
-[node name="Room Right" parent="Rooms" instance=ExtResource("4_nljok")]
-position = Vector2(1140, 0)
-
-[node name="Room Top" parent="Rooms" instance=ExtResource("4_nljok")]
-position = Vector2(0, -660)
+[node name="Arena" parent="Rooms" instance=ExtResource("4_qmv3x")]
+z_index = -5
 
 [node name="Doors" type="Node" parent="."]
 
 [node name="Doors" type="Node2D" parent="Doors"]
 position = Vector2(-570, -330)
 
-[node name="Door" parent="Doors/Doors" instance=ExtResource("3_jcm6v")]
-position = Vector2(570, 0)
-
-[node name="Door2" parent="Doors/Doors" instance=ExtResource("3_jcm6v")]
-position = Vector2(1140, 330)
-rotation = -1.5708
-
-[node name="Door3" parent="Doors/Doors" instance=ExtResource("3_jcm6v")]
-position = Vector2(570, 660)
-
-[node name="Door4" parent="Doors/Doors" instance=ExtResource("3_jcm6v")]
-position = Vector2(0, 329)
-rotation = 1.5708
-
 [node name="Spawn Points" type="Node" parent="."]
 script = ExtResource("5_qmv3x")
 
 [node name="P1 Spawn" type="Marker2D" parent="Spawn Points"]
-position = Vector2(0, 660)
+position = Vector2(12, 1089)
 rotation = 1.5708
 
 [node name="P2 Spawn" type="Marker2D" parent="Spawn Points"]
